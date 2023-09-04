@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #7ea56a;">
+        <div class="container-fluid">
+            <img src="/static/img/logo.png" alt="Logo" style="width: 6em;">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          </div>
+        </div>
+      </nav>
+      
+    <h1 class="text-center mt-5 mb-5">hola</h1>
+    <div class="row">
+        <div class="col-md-2 mt-5 ">
+            <div class="nav-container pt-5">
+                <ul class="nav flex-column">
+                <li class="nav-item mb-2">
+                  <a class="nav-link" href="#">
+                    <img src="static/img/Matricula.jpeg" style="width: 1em; margin-right: 5px;">
+                    Nuevo alumno
+                </a> 
+                </li>
+                <li class="nav-item mb-3">
+                  <a class="nav-link" href="#">
+                    <img src="static/img/Alumnos.jpeg" style="width: 1em; margin-right: 5px;">
+                    Listado de alumnos
+                </a> 
+                </li>
+                <li class="nav-item mb-3">
+                  <a class="nav-link" href="#">
+                    <img src="static/img/Ingresos.jpeg" style="width: 1em; margin-right: 5px;">
+                    Ingresos
+                </a> 
+                </li>
+                <li class="nav-item mb-3">
+                  <a class="nav-link" href="#">
+                    <img src="static/img/Egresos.jpeg" style="width: 1em; margin-right: 5px;">
+                    Egresos
+                </a> 
+                </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10 container">
+        <div class="card"> 
+            <p class="text-left"> Alta de alumno</p>
+            <div class = "card-body">
+                <form action="/alumnos" method="POST">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label >Nombre</label>
+                            <input type="text" class="form-control mb-3" name="nombre">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Apellido</label>
+                            <input type="text" class="form-control mb-3" name="apellido">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Email</label>
+                            <input type="text" class="form-control mb-3" name="email">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Telefono</label>
+                            <input type="text" class="form-control mb-3" name="telefono">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Fecha de nacimiento</label>
+                            <input type="date" class="form-control mb-3" name="fecha_nacimiento">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Fecha de inicio</label>
+                            <input type="date" class="form-control mb-3" name="fecha_inicio">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Colegio</label>
+                            <input type="text" class="form-control mb-3" name="colegio">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Curso</label>
+                            <input type="text" class="form-control mb-3" name="curso">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Nivel educativo</label>
+                            <input type="text" class="form-control mb-3" name="nivel_educativo">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Nombre tutor</label>
+                            <input type="text" class="form-control mb-3" name="nombre_titular">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Telefono tutor</label>
+                            <input type="number" class="form-control mb-3" name="telefono_titular">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Dia</label>
+                            <input type="text" class="form-control mb-3" name="dia">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Horario</label>
+                            <input type="text" class="form-control mb-3" name="horario">
+                        </div>
+                        <div class="col-md-3">
+                            <label >Materia</label>
+                            <input type="text" class="form-control mb-3" name="materia">
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>
+                        </div>
+                    </div>
+                </form>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Telefono</th>
+                        <th scope="col">Nacimiento</th>
+                        <th scope="col">Inicio</th>
+                        <th scope="col">Colegio</th>
+                        <th scope="col">Curso</th>
+                        <th scope="col">Nivel</th>
+                        <th scope="col">Nombre tutor</th>
+                        <th scope="col">Telefono tutor</th>
+                        <th scope="col">Día</th>
+                        <th scope="col">Horario</th>
+                        <th scope="col">Materia</th>
+                        <th scope="col">Editar</th>
+                        <th scope="col">Eliminar</th>
+                    </thead>
+               
+                <tbody>
+                    {% for d in data %}
+                    <tr>
+                        <td> {{d.id}}</td>
+                        <td>{{d.nombre}}</td>
+                        <td>{{d.apellido}}</td>
+                        <td>{{d.email}}</td>
+                        <td>{{d.telefono}}</td>
+                        <td>{{d.fecha_nacimiento}}</td>
+                        <td>{{d.fecha_inicio}}</td>
+                        <td>{{d.colegio}}</td>
+                        <td>{{d.curso}}</td>
+                        <td>{{d.nivel_educativo}}</td>
+                        <td> {{d.nombre_titular}}</td>
+                        <td>{{d.telefono_titular}}</td>
+                        <td>{{d.dia}}</td>
+                        <td>{{d.horario}}</td>
+                        <td>{{d.materia}}</td>
+                        <td> <button class="btn btn-primary btn-sm-" id="btn-editar{{d.id}}" data-bs-toggle="modal" data-bs-target="#modal{{d.id}}">Editar</button></td>
+                        <td> <a href="{{url_for('eliminar', id=d.id)}}" class="btn btn-danger btn-sm">Eliminar</a></td>
+                    </tr>
+
+                    <!--MODAL -->
+
+                    <div class="modal fade" id="modal{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">{{d.nombre}}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            <form action="/editar/{{d.id}}" method="POST">  
+                                <label >Nombre</label>
+                                <input type="text" class="form-control mb-3" name="nombre" value="{{d.nombre}}">
+                                <label >Apellido</label>
+                                <input type="text" class="form-control mb-3" name="apellido" value="{{d.apellido}}">
+                                <label >Email</label>
+                                <input type="text" class="form-control mb-3" name="email" value="{{d.email}}">
+                                <label >Telefono</label>
+                                <input type="text" class="form-control mb-3" name="telefono" value="{{d.telefono}}">
+                                <label >nacimiento</label>
+                                <input type="text" class="form-control mb-3" name="fecha_nacimiento" value="{{d.fecha_nacimiento}}">
+                                <label >Inicio</label>
+                                <input type="text" class="form-control mb-3" name="fecha_inicio" value="{{d.fecha_inicio}}">
+                                <label >Colegio</label>
+                                <input type="text" class="form-control mb-3" name="colegio" value="{{d.colegio}}">
+                                <label >Curso</label>
+                                <input type="text" class="form-control mb-3" name="curso" value="{{d.curso}}">
+                                <label >Nivel educativo</label>
+                                <input type="text" class="form-control mb-3" name="nivel_educativo" value="{{d.nivel_educativo}}">
+                                <label >Nombre titular</label>
+                                <input type="text" class="form-control mb-3" name="nombre_titular" value="{{d.nombre_titular}}">
+                                <label >Telefono titular</label>
+                                <input type="text" class="form-control mb-3" name="telefono_titular" value="{{d.telefono_titular}}">
+                                <label >Dia</label>
+                                <input type="text" class="form-control mb-3" name="dia" value="{{d.dia}}">
+                                <label >Horario</label>
+                                <input type="text" class="form-control mb-3" name="horario" value="{{d.horario}}">
+                                <label >Materia</label>
+                                <input type="text" class="form-control mb-3" name="materia" value="{{d.materia}}">
+                            </div>
+                                <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+
+
+
+
+
+</body>
+</html>
