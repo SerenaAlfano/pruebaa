@@ -1,17 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os #Permite acceder a los directorios
 import database as db
+
 from flask_wtf.csrf import CSRFProtect
-from flask_login import LoginManager, login_user, logout_user, login_required
+
 
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
 
+
 app = Flask(__name__, template_folder = template_dir)
 
 #Rutas
-@app.route("/")
-def home(): 
+#Home
+@app.route('/')
+def inicio():
+    
+    return render_template('inicio.html')
+
+@app.route("/index")
+def alta(): 
     cursor = db.database.cursor()
     cursor.execute("SELECT * FROM alumnos")
     myresult = cursor.fetchall()
@@ -86,6 +94,6 @@ def editar(id):
         db.database.commit()
     return redirect(url_for('home'))
 
-
+app.secret_key = 'veronica'
 if __name__ == "__main__":
     app.run(debug =  True, port = 4000)
