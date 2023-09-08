@@ -1,0 +1,121 @@
+{% extends "./herencia.html" %}
+
+{% block title %} # {% endblock %}
+
+
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+{% endblock %}
+{% block body %} 
+
+<h1>Bienvenido, {{ current_user.fullname }}</h1>
+<a class="btn btn-secondary" href="{{ url_for('logout') }}">Logout</a>
+
+<head>
+    <meta charset="UTF-8"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">   
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="#">
+            <img src="/static/img/logo.png" alt="Logo">
+        </a>
+        <p class="txt-home" >{{ current_user.fullname }}</p>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown link
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a href="{{ url_for('logout') }}">Cerrar Sesión</a></li>
+            </ul>
+          </li>
+    </div>
+    <div class="menu">
+        <div class="menu-item">
+            <a href="{{ url_for('matricula') }}">
+            <h3>Matrícula</h3>
+            <img src="static/img/Matricula.jpeg" alt="Matricula">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ url_for('listado') }}">
+            <h3>Alumnos</h3>
+            <img src="static/img/Alumnos.jpeg" alt="Alumnos">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ url_for('ingresos') }}">
+            <h3>Ingresos</h3>
+            <img src="static/img/Ingresos.jpeg" alt="Ingresos">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ url_for('egresos') }}">
+            <h3>Egresos</h3>
+            <img src="static/img/Egresos.jpeg" alt="Egresos">
+            </a>
+        </div>
+    </div>
+</body>
+</html>
+</body>
+</html>
+
+
+
+
+<head>
+    <meta charset="UTF-8"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">   
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="#">
+            <img src="/static/img/logo.png" alt="Logo">
+        </a>
+        <p class="txt-home" >{{ current_user.fullname }}</p>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown link
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a href="{{ url_for('logout') }}">Cerrar Sesión</a></li>
+            </ul>
+          </li>
+    </div>
+    <div class="menu">
+        <div class="menu-item">
+            <a href="{{ url_for('matricula') }}">
+            <h3>Matrícula</h3>
+            <img src="static/img/Matricula.jpeg" alt="Matricula">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ url_for('listado') }}">
+            <h3>Alumnos</h3>
+            <img src="static/img/Alumnos.jpeg" alt="Alumnos">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ url_for('ingresos') }}">
+            <h3>Ingresos</h3>
+            <img src="static/img/Ingresos.jpeg" alt="Ingresos">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ url_for('egresos') }}">
+            <h3>Egresos</h3>
+            <img src="static/img/Egresos.jpeg" alt="Egresos">
+            </a>
+        </div>
+    </div>
+</body>
+</html>
+</body>
+</html>
+
+
+
+{% endblock %}
