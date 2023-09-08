@@ -164,10 +164,66 @@ def editaringresos(id_ingresos):
 
 
 #egresos
-@app.route('/egresos')
+@app.route("/egresos", methods=["GET", "POST"])
 def egresos():
+    if request.method == "POST":
+        # Tu lógica para agregar datos aquí
+        servicios = request.form["servicios"]
+        fecha_pago = request.form["fecha_pago"]
+        monto = request.form["monto"]
+        medios_de_pago = request.form["medios_de_pago"]
+
+        if servicios and fecha_pago and monto and medios_de_pago:
+            cursor = db.database.cursor()
+            sql = "INSERT INTO egresos (servicios, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s)"
+            data = (servicios, fecha_pago, monto, medios_de_pago)
+            cursor.execute(sql, data)
+            db.database.commit()
+        return redirect(url_for('egresos'))  # Redirige a la misma vista después de agregar datos
+
+# Tu lógica para mostrar la página de egresos con la lista de datos aquí
+    cursor = db.database.cursor()
+    cursor.execute("SELECT id, servicios, fecha_pago, monto, medios_de_pago FROM egresos")
+    myresult = cursor.fetchall()
+    # Convertirmos los datos a diccionario
+    insertObject = []
+    columnNames = [column[0] for column in cursor.description]
+    for record in myresult:
+        insertObject.append(dict(zip(columnNames, record)))
+    cursor.close()
     
-    return render_template('egresos.html')
+    return render_template("egresos.html", data=insertObject)
+
+
+
+#Eliminar
+@app.route("/eliminar_egresos/<string:id>")
+def eliminar_egresos(id):
+    cursor = db.database.cursor()
+    sql =  "DELETE FROM egresos WHERE id = %s"
+    data = (id,)
+    cursor.execute(sql,data)
+    db.database.commit()
+    return redirect(url_for('egresos'))
+
+
+#Actualizar
+@app.route("/editaregresos/<int:id>", methods = ["POST"])
+def editaregresos(id):
+    servicios = request.form["servicios"]
+    fecha_pago = request.form["fecha_pago"]
+    monto = request.form["monto"]
+    medios_de_pago = request.form["medios_de_pago"]
+
+    if servicios and fecha_pago and monto and medios_de_pago:
+            cursor = db.database.cursor()
+            sql = "UPDATE egresos SET servicios = %s, fecha_pago = %s, monto = %s, medios_de_pago = %s WHERE id = %s"
+            data = (servicios, fecha_pago, monto, medios_de_pago, id)
+            cursor.execute(sql, data)
+            db.database.commit()
+
+    return redirect(url_for('egresos'))
+
 
 app.secret_key = 'veronica'
 if __name__ == "__main__":

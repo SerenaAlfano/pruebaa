@@ -38,7 +38,7 @@
             </a> 
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{url_for('egresos')}}">
                 <img src="static/img/Egresos.jpeg" style="width: 1em; margin-right: 5px;">
                 Egresos
             </a> 
@@ -54,59 +54,59 @@
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label >Nombre</label>
-                            <input type="text" class="form-control mb-3" name="nombre">
+                            <input type="text" class="form-control mb-3" name="nombre"required>
                         </div>
                         <div class="col-md-3">
                             <label >Apellido</label>
-                            <input type="text" class="form-control mb-3" name="apellido">
+                            <input type="text" class="form-control mb-3" name="apellido"required>
                         </div>
                         <div class="col-md-3">
                             <label >Email</label>
-                            <input type="text" class="form-control mb-3" name="email">
+                            <input type="text" class="form-control mb-3" name="email"required>
                         </div>
                         <div class="col-md-3">
                             <label >Telefono</label>
-                            <input type="text" class="form-control mb-3" name="telefono">
+                            <input type="text" class="form-control mb-3" name="telefono"required>
                         </div>
                         <div class="col-md-3">
                             <label >Fecha de nacimiento</label>
-                            <input type="date" class="form-control mb-3" name="fecha_nacimiento">
+                            <input type="date" class="form-control mb-3" name="fecha_nacimiento"required>
                         </div>
                         <div class="col-md-3">
                             <label >Fecha de inicio</label>
-                            <input type="date" class="form-control mb-3" name="fecha_inicio">
+                            <input type="date" class="form-control mb-3" name="fecha_inicio"required>
                         </div>
                         <div class="col-md-3">
                             <label >Colegio</label>
-                            <input type="text" class="form-control mb-3" name="colegio">
+                            <input type="text" class="form-control mb-3" name="colegio"required>
                         </div>
                         <div class="col-md-3">
                             <label >Curso</label>
-                            <input type="text" class="form-control mb-3" name="curso">
+                            <input type="text" class="form-control mb-3" name="curso"required>
                         </div>
                         <div class="col-md-3">
                             <label >Nivel educativo</label>
-                            <input type="text" class="form-control mb-3" name="nivel_educativo">
+                            <input type="text" class="form-control mb-3" name="nivel_educativo"required>
                         </div>
                         <div class="col-md-3">
                             <label >Nombre tutor</label>
-                            <input type="text" class="form-control mb-3" name="nombre_titular">
+                            <input type="text" class="form-control mb-3" name="nombre_titular"required>
                         </div>
                         <div class="col-md-3">
                             <label >Telefono tutor</label>
-                            <input type="number" class="form-control mb-3" name="telefono_titular">
+                            <input type="number" class="form-control mb-3" name="telefono_titular"required>
                         </div>
                         <div class="col-md-3">
                             <label >Dia</label>
-                            <input type="text" class="form-control mb-3" name="dia">
+                            <input type="text" class="form-control mb-3" name="dia"required>
                         </div>
                         <div class="col-md-3">
                             <label >Horario</label>
-                            <input type="text" class="form-control mb-3" name="horario">
+                            <input type="text" class="form-control mb-3" name="horario"required>
                         </div>
                         <div class="col-md-3">
                             <label >Materia</label>
-                            <input type="text" class="form-control mb-3" name="materia">
+                            <input type="text" class="form-control mb-3" name="materia"required>
                         </div>
                         <div class="col-md-3">
                             <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>
@@ -170,56 +170,48 @@
                             <div class="modal-body">
                             <form action="/editar/{{d.id}}" method="POST">  
                                 <label >Nombre</label>
-                                <input type="text" class="form-control mb-3" name="nombre" value="{{d.nombre}}">
+                                <input type="text" class="form-control mb-3" name="nombre" value="{{d.nombre}}"required>
                                 <label >Apellido</label>
-                                <input type="text" class="form-control mb-3" name="apellido" value="{{d.apellido}}">
+                                <input type="text" class="form-control mb-3" name="apellido" value="{{d.apellido}}"required>
                                 <label >Email</label>
-                                <input type="text" class="form-control mb-3" name="email" value="{{d.email}}">
+                                <input type="text" class="form-control mb-3" name="email" value="{{d.email}}"required>
                                 <label >Telefono</label>
-                                <input type="text" class="form-control mb-3" name="telefono" value="{{d.telefono}}">
+                                <input type="text" class="form-control mb-3" name="telefono" value="{{d.telefono}}"required>
                                 <label >nacimiento</label>
-                                <input type="text" class="form-control mb-3" name="fecha_nacimiento" value="{{d.fecha_nacimiento}}">
+                                <input type="text" class="form-control mb-3" name="fecha_nacimiento" value="{{d.fecha_nacimiento}}"required>
                                 <label >Inicio</label>
-                                <input type="text" class="form-control mb-3" name="fecha_inicio" value="{{d.fecha_inicio}}">
+                                <input type="text" class="form-control mb-3" name="fecha_inicio" value="{{d.fecha_inicio}}"required>
                                 <label >Colegio</label>
-                                <input type="text" class="form-control mb-3" name="colegio" value="{{d.colegio}}">
+                                <input type="text" class="form-control mb-3" name="colegio" value="{{d.colegio}}"required>
                                 <label >Curso</label>
-                                <input type="text" class="form-control mb-3" name="curso" value="{{d.curso}}">
+                                <input type="text" class="form-control mb-3" name="curso" value="{{d.curso}}"required>
                                 <label >Nivel educativo</label>
-                                <input type="text" class="form-control mb-3" name="nivel_educativo" value="{{d.nivel_educativo}}">
-                                <label >Nombre titular</label>
-                                <input type="text" class="form-control mb-3" name="nombre_titular" value="{{d.nombre_titular}}">
-                                <label >Telefono titular</label>
-                                <input type="text" class="form-control mb-3" name="telefono_titular" value="{{d.telefono_titular}}">
+                                <input type="text" class="form-control mb-3" name="nivel_educativo" value="{{d.nivel_educativo}}"required>
+                                <label >Nombre tutor</label>
+                                <input type="text" class="form-control mb-3" name="nombre_titular" value="{{d.nombre_titular}}"required>
+                                <label >Telefono tutor</label>
+                                <input type="text" class="form-control mb-3" name="telefono_titular" value="{{d.telefono_titular}}"required>
                                 <label >Dia</label>
-                                <input type="text" class="form-control mb-3" name="dia" value="{{d.dia}}">
+                                <input type="text" class="form-control mb-3" name="dia" value="{{d.dia}}"required>
                                 <label >Horario</label>
-                                <input type="text" class="form-control mb-3" name="horario" value="{{d.horario}}">
+                                <input type="text" class="form-control mb-3" name="horario" value="{{d.horario}}"required>
                                 <label >Materia</label>
-                                <input type="text" class="form-control mb-3" name="materia" value="{{d.materia}}">
+                                <input type="text" class="form-control mb-3" name="materia" value="{{d.materia}}"required>
                             </div>
                                 <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
                                 </div>
                             </form>
                           </div>
                         </div>
                       </div>
-
                     {% endfor %}
                 </tbody>
             </table>
-
             </div>
-
         </div>
-
     </div>
     </div>
-
-
-
-
-
 </body>
 </html>
+

@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
 <body>
-   
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #7ea56a;">
         <div class="container-fluid">
             <div class="navbar">
@@ -38,7 +37,7 @@
             </a> 
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{url_for('egresos')}}">
                 <img src="static/img/Egresos.jpeg" style="width: 1em; margin-right: 5px;">
                 Egresos
             </a> 
@@ -54,23 +53,23 @@
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label >Nombre</label>
-                            <input type="text" class="form-control mb-3" name="nombre_alumno">
+                            <input type="text" class="form-control mb-3" name="nombre_alumno"required>
                         </div>
                         <div class="col-md-3">
                             <label >Apellido</label>
-                            <input type="text" class="form-control mb-3" name="apellido_alumno">
+                            <input type="text" class="form-control mb-3" name="apellido_alumno"required>
                         </div>
                         <div class="col-md-3">
                             <label >Fecha de pago</label>
-                            <input type="date" class="form-control mb-3" name="fecha_pago">
+                            <input type="date" class="form-control mb-3" name="fecha_pago"required>
                         </div>
                         <div class="col-md-3">
                             <label >Monto</label>
-                            <input type="text" class="form-control mb-3" name="monto">
+                            <input type="text" class="form-control mb-3" name="monto"required>
                         </div>
                         <div class="col-md-3">
                             <label >Medios de pago</label>
-                            <input type="text" class="form-control mb-3" name="medios_de_pago">
+                            <input type="text" class="form-control mb-3" name="medios_de_pago"required>
                         </div>
                         <div class="col-md-3">
                             <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>
@@ -120,17 +119,17 @@
                                         <form action="{{ url_for('editaringresos', id_ingresos=d.id_ingresos) }}" method="POST">
                                             <input type="hidden" name="id" value="{{ d.id }}">
                                             <label>Nombre</label>
-                                            <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}">
+                                            <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}"required>
                                             <label>Apellido</label>
-                                            <input type="text" class="form-control mb-3" name="apellido_alumno" value="{{ d.apellido_alumno }}">
+                                            <input type="text" class="form-control mb-3" name="apellido_alumno" value="{{ d.apellido_alumno }}"required>
                                             <label>Fecha de pago</label>
-                                            <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}">
+                                            <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}"required>
                                             <label>Monto</label>
-                                            <input type="text" class="form-control mb-3" name="monto" value="{{ d.monto }}">
+                                            <input type="text" class="form-control mb-3" name="monto" value="{{ d.monto }}"required>
                                             <label>Medio de pago</label>
-                                            <input type="text" class="form-control mb-3" name="medios_de_pago" value="{{ d.medios_de_pago }}">
+                                            <input type="text" class="form-control mb-3" name="medios_de_pago" value="{{ d.medios_de_pago }}"required>
                                             <div class="modal-footer">
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
                                             </div>
                                         </form>
                                     </div>
