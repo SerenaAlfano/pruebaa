@@ -144,3 +144,7 @@ body {
   justify-content: left !important;
   align-items: left !important;
 }
+
+.campo-obligatorio {
+  color: red;
+}

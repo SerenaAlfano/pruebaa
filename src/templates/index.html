@@ -53,66 +53,66 @@
                 <form action="/alumnos" method="POST">
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label >Nombre</label>
+                            <label >Nombre <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="nombre"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Apellido</label>
+                            <label >Apellido <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="apellido"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Email</label>
+                            <label >Email <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="email"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Telefono</label>
+                            <label >Telefono <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="telefono"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Fecha de nacimiento</label>
+                            <label >Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
                             <input type="date" class="form-control mb-3" name="fecha_nacimiento"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Fecha de inicio</label>
+                            <label >Fecha de inicio <span class="campo-obligatorio">*</span></label>
                             <input type="date" class="form-control mb-3" name="fecha_inicio"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Colegio</label>
+                            <label >Colegio <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="colegio"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Curso</label>
+                            <label >Curso <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="curso"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Nivel educativo</label>
+                            <label >Nivel educativo <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="nivel_educativo"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Nombre tutor</label>
+                            <label >Nombre tutor <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="nombre_titular"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Telefono tutor</label>
+                            <label >Telefono tutor <span class="campo-obligatorio">*</span></label>
                             <input type="number" class="form-control mb-3" name="telefono_titular"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Dia</label>
+                            <label >Dia <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="dia"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Horario</label>
+                            <label >Horario <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="horario"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Materia</label>
+                            <label >Materia <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="materia"required>
                         </div>
                         <div class="col-md-3">
                             <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>
                         </div>
                     </div>
-                    <a href="/" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
+                    <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
                 </form>
 
                 <table class="table table-bordered">
@@ -169,33 +169,33 @@
                             </div>
                             <div class="modal-body">
                             <form action="/editar/{{d.id}}" method="POST">  
-                                <label >Nombre</label>
+                                <label >Nombre <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nombre" value="{{d.nombre}}"required>
-                                <label >Apellido</label>
+                                <label >Apellido <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="apellido" value="{{d.apellido}}"required>
-                                <label >Email</label>
+                                <label >Email <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="email" value="{{d.email}}"required>
-                                <label >Telefono</label>
+                                <label >Telefono <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="telefono" value="{{d.telefono}}"required>
-                                <label >nacimiento</label>
+                                <label >Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="fecha_nacimiento" value="{{d.fecha_nacimiento}}"required>
-                                <label >Inicio</label>
+                                <label >Fecha de inicio <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="fecha_inicio" value="{{d.fecha_inicio}}"required>
-                                <label >Colegio</label>
+                                <label >Colegio <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="colegio" value="{{d.colegio}}"required>
-                                <label >Curso</label>
+                                <label >Curso <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="curso" value="{{d.curso}}"required>
-                                <label >Nivel educativo</label>
+                                <label >Nivel educativo <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nivel_educativo" value="{{d.nivel_educativo}}"required>
-                                <label >Nombre tutor</label>
+                                <label >Nombre tutor <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nombre_titular" value="{{d.nombre_titular}}"required>
-                                <label >Telefono tutor</label>
+                                <label >Telefono tutor <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="telefono_titular" value="{{d.telefono_titular}}"required>
-                                <label >Dia</label>
+                                <label >Dia <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="dia" value="{{d.dia}}"required>
-                                <label >Horario</label>
+                                <label >Horario <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="horario" value="{{d.horario}}"required>
-                                <label >Materia</label>
+                                <label >Materia <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="materia" value="{{d.materia}}"required>
                             </div>
                                 <div class="modal-footer">

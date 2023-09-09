@@ -53,26 +53,26 @@
                 <form action="{{ url_for('egresos')}}" method="POST">
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label >Nombre del servicio</label>
+                            <label >Nombre del servicio <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="servicios"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Fecha de pago</label>
+                            <label >Fecha de pago <span class="campo-obligatorio">*</span></label>
                             <input type="date" class="form-control mb-3" name="fecha_pago"required>
                         </div>
                         <div class="col-md-3">
-                            <label >Monto</label>
-                            <input type="text" class="form-control mb-3" name="monto"required>
+                            <label >Monto <span class="campo-obligatorio">*</span></label>
+                            <input type="number" class="form-control mb-3" name="monto" placeholder="$0.00" required/>
                         </div>
                         <div class="col-md-3">
-                            <label >Medios de pago</label>
+                            <label >Medios de pago <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="medios_de_pago"required>
                         </div>
                         <div class="col-md-3">
                             <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>
                         </div>
                     </div>
-                    <a href="/" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
+                    <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
                 </form>
 
               
@@ -113,13 +113,13 @@
                                     <div class="modal-body">
                                         <form action="{{ url_for('editaregresos', id=d.id) }}" method="POST">
                                             <input type="hidden" name="id" value="{{ d.id }}">
-                                            <label>Nombre del servicio</label>
+                                            <label>Nombre del servicio <span class="campo-obligatorio">*</span></label>
                                             <input type="text" class="form-control mb-3" name="servicios" value="{{ d.servicios}}"required>
-                                            <label>Fecha de pago</label>
+                                            <label>Fecha de pago <span class="campo-obligatorio">*</span></label>
                                             <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}"required>
-                                            <label>Monto</label>
-                                            <input type="text" class="form-control mb-3" name="monto" value="{{ d.monto }}"required>
-                                            <label>Medio de pago</label>
+                                            <label>Monto <span class="campo-obligatorio">*</span></label>
+                                            <input type="number" class="form-control mb-3" name="monto" placeholder="$0.00" value="{{ d.monto }}" required>
+                                            <label>Medio de pago <span class="campo-obligatorio">*</span></label>
                                             <input type="text" class="form-control mb-3" name="medios_de_pago" value="{{ d.medios_de_pago }}"required>
                                             <div class="modal-footer">
                                                 <button type="submit" class="btn btn-primary">Guardar cambios</button>

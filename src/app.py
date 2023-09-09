@@ -12,8 +12,16 @@ template_dir = os.path.join(template_dir,"src", "templates")
 app = Flask(__name__, template_folder = template_dir)
 
 #Rutas
-#Home
+#login
 @app.route('/')
+def pagina_inicio():
+    
+    return render_template('login.html')
+@app.route('/login', methods=['POST'])
+def login():
+        return redirect(url_for('inicio'))
+#Home
+@app.route('/inicio')
 def inicio():
     
     return render_template('inicio.html')
