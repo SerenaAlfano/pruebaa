@@ -11,29 +11,38 @@
 </head>
 
 <body>
-    <div class="navbar">
+    <div class="navbar mb-5" >
         <a href="{{ url_for('inicio') }}">
             <img src="/static/img/logo.png" alt="Logo">
         </a>
+  
     </div>
-    <div class="menu">
-        <div class="menu-item">
-            <a href="{{ url_for('alta') }}">
-            <h3>Matrícula</h3>
-            <img src="static/img/Matricula.jpeg" alt="Matricula">
-            </a>
-        </div>
-        <div class="menu-item">
-            <a href="{{ url_for('ingresos') }}">
-            <h3>Ingresos</h3>
-            <img src="static/img/Ingresos.jpeg" alt="Ingresos">
-            </a>
-        </div>
-        <div class="menu-item">
-            <a href="{{url_for('egresos')}}">
-            <h3>Egresos</h3>
-            <img src="static/img/Egresos.jpeg" alt="Egresos">
-            </a>
+    <div class="container text-center ">
+        <div class="row  justify-content-center">
+            <div class="col">
+                <div class="card p-3" style="width: 18rem; border-radius: 1em;">
+                    <a href="{{ url_for('alta') }}">
+                        <h5 class="card-title">Nuevo alumno</h5>
+                        <img src="static/img/Matricula.jpeg" class="card-img-top" alt="..."> 
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3" style="width: 18rem; border-radius: 1em;">
+                    <a href="{{ url_for('ingresos') }}">
+                        <h5 class="card-title">Ingresos</h5>
+                        <img src="static/img/ingresos.jpeg" class="card-img-top" alt="...">  
+                    </a>   
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3" style="width: 18rem; border-radius: 1em;">
+                    <a href="{{ url_for('egresos') }}">
+                        <h5 class="card-title">Egresos</h5>
+                        <img src="static/img/egresos.jpeg" class="card-img-top" alt="...">     
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </body>
