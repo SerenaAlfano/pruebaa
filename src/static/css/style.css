@@ -60,6 +60,12 @@ body {
   color: #696969;
   border-radius: 1em;
 }
+.perfil-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
 
 .img-perfil{
   background-color: #FBD374;

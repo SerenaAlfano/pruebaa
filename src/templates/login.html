@@ -18,7 +18,9 @@
             <img class="mb-4 mt-4 p-1" src="{{ url_for('static', filename='img/logo.png') }}" alt="" width="75em" height="60em">
         </div>
         <h1 class="txt-login h3 mb-3 fw-normal">Iniciar Sesión</h1>
-        <img class="mb-4 mt-4 img-perfil text-center" src="{{ url_for('static', filename='img/perfil.png') }}" alt="" width="70em" height="70em">
+        <div class="perfil-container">
+            <img class="mb-4 mt-4 img-perfil text-center" src="{{ url_for('static', filename='img/perfil.png') }}" alt="" width="70em" height="70em">
+        </div>  
         <div class="form-floating col-md-8 mx-auto">
             <input type="text"  class="form-control custom-input" id="username" name="username" required><br><br>
             <label for="username">Usuario:</label>
