@@ -8,8 +8,8 @@
     <div class="row">
         
         <div class="col-md-10 container">
+        <p class="text-left"> Egresos</p>
         <div class="card"> 
-            <p class="text-left"> Egresos</p>
             <div class = "card-body">
                 <form action="{{ url_for('egresos')}}" method="POST">
                     <div class="row mb-3">
@@ -30,7 +30,7 @@
                             <input type="text" class="form-control mb-3" name="medios_de_pago"required>
                         </div>
                         <div class="col-md-3">
-                            <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>
+                            <button class="btn-guardar mb-3 mt-4" type="submit">Guardar</button>
                         </div>
                     </div>
                     <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
@@ -44,8 +44,8 @@
                         <th scope="col">Fecha de pago</th>
                         <th scope="col">Monto</th>
                         <th scope="col">Medio de pago</th>
-                        <th scope="col">Editar</th>
-                        <th scope="col">Eliminar</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                     </thead>
                     <tbody>
                         {% for d in data %}
@@ -55,12 +55,9 @@
                             <td>{{ d.fecha_pago }}</td>
                             <td>{{ d.monto }}</td>
                             <td>{{ d.medios_de_pago }}</td>
-                            <td>
-                                <button class="btn btn-primary btn-sm" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}">Editar</button>
-                            </td>
-                            <td>
-                                <a href="{{ url_for('eliminar_egresos', id=d.id) }}" class="btn btn-danger btn-sm">Eliminar</a>
-                            </td>
+                            <td class="text-center "> <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}"></i></td>
+                            <td class="text-center"> <a href="{{ url_for('eliminar_egresos', id=d.id) }}" ><i class="btn-operacion bi bi-trash"></i></a></td>
+                          
                         </tr>
 
                         <!-- MODAL -->
@@ -83,7 +80,7 @@
                                             <label>Medio de pago <span class="campo-obligatorio">*</span></label>
                                             <input type="text" class="form-control mb-3" name="medios_de_pago" value="{{ d.medios_de_pago }}"required>
                                             <div class="modal-footer">
-                                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                                <button type="submit" class="btn-guardar">Guardar cambios</button>
                                     </div>
                                 </form>
                             </div>
