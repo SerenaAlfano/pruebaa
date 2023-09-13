@@ -1,25 +1,46 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 import os #Permite acceder a los directorios
 import database as db
-
+import datetime
 from flask_wtf.csrf import CSRFProtect
-
+from flask_login import LoginManager,logout_user
 
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
 
 
 app = Flask(__name__, template_folder = template_dir)
+# Models:
+from models.ModelUser import ModelUser
+
+# Entities:
+from models.entities.User import User
+
+login_manager_app = LoginManager(app)
+@login_manager_app.user_loader
+def load_user(id):
+    return ModelUser.get_by_id(db, id)
+
+
+#Validaciones
+
+
 
 #Rutas
 #login
 @app.route('/')
 def pagina_inicio():
-    
     return render_template('login.html')
+
 @app.route('/login', methods=['POST'])
 def login():
         return redirect(url_for('inicio'))
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return render_template('login.html')
+
 #Home
 @app.route('/inicio')
 def inicio():
