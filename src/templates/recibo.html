@@ -20,8 +20,47 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
               </div>
             </div>
-          </nav>
+          </nav>          
     <main>
+        <div class="row">
+        
+            <div class="col-md-10 container">
+            <div class="card"> 
+                <p class="text-left"> Recibo de pago</p>
+                <div class = "card-body">
+                    <form action="{{ url_for('recibo')}}" method="POST">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label >Nombre <span class="">*</span></label>
+                                <input type="text" class="form-control mb-3" name="nombre_alumno"required>
+                            </div>
+                            <div class="col-md-3">
+                                <label >dni <span class="">*</span></label>
+                                <input type="number" class="form-control mb-3" name="dni"required>
+                            </div>
+                            <div class="col-md-3">
+                                <label >Fecha de hoy <span class="">*</span></label>
+                                <input type="date" class="form-control mb-3" name="fecha"required>
+                            </div>
+                            <div class="col-md-3">
+                                <label >total <span class="">*</span></label>
+                                <input type="number" class="form-control mb-3" name="total" placeholder="$0.00" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label >Medios de pago <span class="">*</span></label>
+                                <input type="text" class="form-control mb-3" name="mediosdepago"required>
+                            </div>
+                            <div class="col-md-3">
+                                <label >Descripcion <span class="">*</span></label>
+                                <input type="text" class="form-control mb-3" name="descripcion"required>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>
+                            </div>
+                        </div>
+                        <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
+                    </form>
+    
         {% block content %}
         {% endblock %}
     </main>
