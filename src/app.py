@@ -27,6 +27,10 @@ def load_user(id):
 
 
 #Rutas
+#recibo
+@app.route('/recibo', methods=['GET', 'POST'])
+def recibo():
+    return render_template('recibo.html')
 #login
 @app.route('/')
 def pagina_inicio():
