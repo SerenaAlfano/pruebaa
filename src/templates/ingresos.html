@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+<head>
+    {% block title %}Ingresos{% endblock %}
+</head>
+<body>
+    {% block content %}
+   
+    <div class="row">
+        
+        <div class="col-md-10 container">
+        <div class="card"> 
+            <p class="text-left"> Ingresos</p>
+            <div class = "card-body">
+                <form action="{{ url_for('ingresos')}}" method="POST">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label >Nombre <span class="campo-obligatorio">*</span></label>
+                            <input type="text" class="form-control mb-3" name="nombre_alumno"required>
+                        </div>
+                        <div class="col-md-3">
+                            <label >Apellido <span class="campo-obligatorio">*</span></label>
+                            <input type="text" class="form-control mb-3" name="apellido_alumno"required>
+                        </div>
+                        <div class="col-md-3">
+                            <label >Fecha de pago <span class="campo-obligatorio">*</span></label>
+                            <input type="date" class="form-control mb-3" name="fecha_pago"required>
+                        </div>
+                        <div class="col-md-3">
+                            <label >Monto <span class="campo-obligatorio">*</span></label>
+                            <input type="number" class="form-control mb-3" name="monto" placeholder="$0.00" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label >Medios de pago <span class="campo-obligatorio">*</span></label>
+                            <input type="text" class="form-control mb-3" name="medios_de_pago"required>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>
+                        </div>
+                    </div>
+                    <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
+                </form>
+
+              
+                <table class="table table-bordered">
+                    <thead>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Fecha de pago</th>
+                        <th scope="col">Monto</th>
+                        <th scope="col">Medio de pago</th>
+                        <th scope="col">Editar</th>
+                        <th scope="col">Eliminar</th>
+                    </thead>
+                    <tbody>
+                        {% for d in data %}
+                        <tr>
+                            <td>{{ d.id_ingresos }}</td>
+                            <td>{{ d.nombre_alumno }}</td>
+                            <td>{{ d.apellido_alumno }}</td>
+                            <td>{{ d.fecha_pago }}</td>
+                            <td>{{ d.monto }}</td>
+                            <td>{{ d.medios_de_pago }}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}">Editar</button>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('eliminar_ingresos', id_ingresos=d.id_ingresos) }}" class="btn btn-danger btn-sm">Eliminar</a>
+                            </td>
+                        </tr>
+
+                        <!-- MODAL -->
+                        <div class="modal fade" id="modal{{ d.id_ingresos }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{ d.nombre_alumno }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ url_for('editaringresos', id_ingresos=d.id_ingresos) }}" method="POST">
+                                            <input type="hidden" name="id" value="{{ d.id }}">
+                                            <label>Nombre <span class="campo-obligatorio">*</span></label>
+                                            <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}"required>
+                                            <label>Apellido <span class="campo-obligatorio">*</span></label>
+                                            <input type="text" class="form-control mb-3" name="apellido_alumno" value="{{ d.apellido_alumno }}"required>
+                                            <label>Fecha de pago <span class="campo-obligatorio">*</span></label>
+                                            <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}"required>
+                                            <label>Monto <span class="campo-obligatorio">*</span></label>
+                                            <input type="number" class="form-control mb-3" name="monto" placeholder="$0.00" value="{{ d.monto }}" required>
+                                            <label>Medio de pago <span class="campo-obligatorio">*</span></label>
+                                            <input type="text" class="form-control mb-3" name="medios_de_pago" value="{{ d.medios_de_pago }}"required>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+</body>

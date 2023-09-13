@@ -60,10 +60,19 @@ body {
   color: #696969;
   border-radius: 1em;
 }
+.perfil-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
 
 .img-perfil{
   background-color: #FBD374;
   border-radius: 3em;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
 }
 
 /*Home*/
@@ -143,4 +152,8 @@ body {
 .form-label-alta{
   justify-content: left !important;
   align-items: left !important;
+}
+
+.campo-obligatorio {
+  color: red;
 }

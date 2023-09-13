@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Inicio</title>
     <meta charset="UTF-8"> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">   
@@ -10,29 +11,38 @@
 </head>
 
 <body>
-    <div class="navbar">
-        <a href="#">
+    <div class="navbar mb-5" >
+        <a href="{{ url_for('inicio') }}">
             <img src="/static/img/logo.png" alt="Logo">
         </a>
+  
     </div>
-    <div class="menu">
-        <div class="menu-item">
-            <a href="{{ url_for('alta') }}">
-            <h3>Matrícula</h3>
-            <img src="static/img/Matricula.jpeg" alt="Matricula">
-            </a>
-        </div>
-        <div class="menu-item">
-            <a href="https://www.google.com">
-            <h3>Ingresos</h3>
-            <img src="static/img/Ingresos.jpeg" alt="Ingresos">
-            </a>
-        </div>
-        <div class="menu-item">
-            <a href="https://www.google.com">
-            <h3>Egresos</h3>
-            <img src="static/img/Egresos.jpeg" alt="Egresos">
-            </a>
+    <div class="container text-center ">
+        <div class="row  justify-content-center">
+            <div class="col">
+                <div class="card p-3" style="width: 18rem; border-radius: 1em;">
+                    <a href="{{ url_for('alta') }}">
+                        <h5 class="card-title">Nuevo alumno</h5>
+                        <img src="static/img/Matricula.jpeg" class="card-img-top" alt="..."> 
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3" style="width: 18rem; border-radius: 1em;">
+                    <a href="{{ url_for('ingresos') }}">
+                        <h5 class="card-title">Ingresos</h5>
+                        <img src="static/img/ingresos.jpeg" class="card-img-top" alt="...">  
+                    </a>   
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3" style="width: 18rem; border-radius: 1em;">
+                    <a href="{{ url_for('egresos') }}">
+                        <h5 class="card-title">Egresos</h5>
+                        <img src="static/img/egresos.jpeg" class="card-img-top" alt="...">     
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </body>
