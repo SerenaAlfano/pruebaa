@@ -12,6 +12,10 @@ template_dir = os.path.join(template_dir,"src", "templates")
 app = Flask(__name__, template_folder = template_dir)
 
 #Rutas
+#recibo
+@app.route('/recibo', methods=['GET', 'POST'])
+def recibo():
+    return render_template('recibo.html')
 #login
 @app.route('/')
 def pagina_inicio():
