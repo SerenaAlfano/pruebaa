@@ -9,6 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $descripcion = $_POST['descripcion'];
 
     $recibo = "
+ 
     <!DOCTYPE html>
     <html>
     <head>
