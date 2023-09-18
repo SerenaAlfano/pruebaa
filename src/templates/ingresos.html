@@ -2,6 +2,7 @@
 
 <head>
     {% block title %}Ingresos{% endblock %}
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
     {% block content %}
@@ -16,43 +17,57 @@
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label >Nombre <span class="campo-obligatorio">*</span></label>
-                            <input type="text" class="form-control mb-3" name="nombre_alumno"required>
+                            <input type="text" class="form-control mb-3" name="nombre_alumno"required value="{{ form_data.nombre_alumno if form_data else '' }}">
                         </div>
                         <div class="col-md-3">
                             <label >Apellido <span class="campo-obligatorio">*</span></label>
-                            <input type="text" class="form-control mb-3" name="apellido_alumno"required>
+                            <input type="text" class="form-control mb-3" name="apellido_alumno"required value="{{ form_data.apellido_alumno if form_data else '' }}">
                         </div>
                         <div class="col-md-3">
                             <label >Fecha de pago <span class="campo-obligatorio">*</span></label>
-                            <input type="date" class="form-control mb-3" name="fecha_pago"required>
+                            <input type="date" class="form-control mb-3" name="fecha_pago"required value="{{ form_data.fecha_pago if form_data else '' }}">
                         </div>
                         <div class="col-md-3">
                             <label >Monto <span class="campo-obligatorio">*</span></label>
-                            <input type="number" class="form-control mb-3" name="monto" placeholder="$0.00" required>
+                            <input type="number" class="form-control mb-3" name="monto" placeholder="$0.00" required value="{{ form_data.monto if form_data else '' }}">
                         </div>
                         <div class="col-md-3">
-                            <label >Medios de pago <span class="campo-obligatorio">*</span></label>
-                            <input type="text" class="form-control mb-3" name="medios_de_pago"required>
+                            <label>Medios de pago <span class="campo-obligatorio">*</span></label>
+                                <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
+                                    <option value="Efectivo" {% if data.medios_de_pago == 'Efectivo' %}selected{% endif %}>Efectivo</option>
+                                    <option value="Mercado pago" {% if data.medios_de_pago == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
+                                    <option value="Cuenta DNI" {% if data.medios_de_pago == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
+                                </select>                                
                         </div>
                         <div class="col-md-3">
                             <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>
                         </div>
                     </div>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for category, message in messages %}
+                        {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                    </div>
                     <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
                 </form>
 
-              
-                <table class="table table-bordered">
+                <div class="table-container">
+                    <table class="table table-bordered">
                     <thead>
-                        <th scope="col">#</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Apellido</th>
-                        <th scope="col">Fecha de pago</th>
-                        <th scope="col">Monto</th>
-                        <th scope="col">Medio de pago</th>
-                        <th scope="col">Editar</th>
-                        <th scope="col">Eliminar</th>
+                        <th class="title" scope="col">#</th>
+                        <th class="title" scope="col">Nombre</th>
+                        <th class="title" scope="col">Apellido</th>
+                        <th class="title" scope="col">Fecha de pago</th>
+                        <th class="title" scope="col">Monto</th>
+                        <th class="title" scope="col">Medio de pago</th>
+                        <th class="title" scope="col"colspan="2">Acciones</th>
                     </thead>
+                </div>
                     <tbody>
                         {% for d in data %}
                         <tr>
@@ -89,8 +104,14 @@
                                             <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}"required>
                                             <label>Monto <span class="campo-obligatorio">*</span></label>
                                             <input type="number" class="form-control mb-3" name="monto" placeholder="$0.00" value="{{ d.monto }}" required>
-                                            <label>Medio de pago <span class="campo-obligatorio">*</span></label>
-                                            <input type="text" class="form-control mb-3" name="medios_de_pago" value="{{ d.medios_de_pago }}"required>
+                                            <div class="col-md-3">
+                                                <label>Medios de pago <span class="campo-obligatorio">*</span></label>
+                                                <select class="form-control mb-3 custom-select" name="medios_de_pago" required>
+                                                    {% for option in ['Efectivo', 'Mercado pago', 'Cuenta DNI'] %}
+                                                        <option value="{{ option }}" {% if d.medios_de_pago == option %}selected{% endif %}>{{ option }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                             <div class="modal-footer">
                                                 <button type="submit" class="btn btn-primary">Guardar cambios</button>
                                             </div>

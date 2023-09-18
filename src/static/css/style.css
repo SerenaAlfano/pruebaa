@@ -157,3 +157,17 @@ body {
 .campo-obligatorio {
   color: red;
 }
+
+th.title {
+  text-align: center;
+}
+
+.table-container {
+  overflow-x: auto;
+  max-width: 100%; /* Esto asegura que el contenedor no sea más ancho que la pantalla */
+}
+
+/* Establece el ancho del desplegable al 100% del contenedor */
+.custom-select {
+  width: 100%;
+}
