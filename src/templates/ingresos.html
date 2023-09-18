@@ -10,8 +10,8 @@
     <div class="row">
         
         <div class="col-md-10 container">
-        <p class="text-left"> Ingresos</p>
-        <div class="card">  
+        <div class="card"> 
+            <p class="text-left"> Ingresos</p>
             <div class = "card-body">
                 <form action="{{ url_for('ingresos')}}" method="POST">
                     <div class="row mb-3">
@@ -40,7 +40,7 @@
                                 </select>                                
                         </div>
                         <div class="col-md-3">
-                            <button class="btn-guardar mb-3 mt-4" type="submit">Guardar</button>
+                            <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>
                         </div>
                     </div>
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -59,7 +59,6 @@
                 <div class="table-container">
                     <table class="table table-bordered">
                     <thead>
-                        
                         <th class="title" scope="col">#</th>
                         <th class="title" scope="col">Nombre</th>
                         <th class="title" scope="col">Apellido</th>
@@ -78,9 +77,12 @@
                             <td>{{ d.fecha_pago }}</td>
                             <td>{{ d.monto }}</td>
                             <td>{{ d.medios_de_pago }}</td>
-                            <td class="text-center "> <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}"></i></td>
-                            <td class="text-center"> <a href="{{ url_for('eliminar_ingresos', id_ingresos=d.id_ingresos) }}" ><i class="btn-operacion bi bi-trash"></i></a></td>
-                          
+                            <td>
+                                <button class="btn btn-primary btn-sm" id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}">Editar</button>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('eliminar_ingresos', id_ingresos=d.id_ingresos) }}" class="btn btn-danger btn-sm">Eliminar</a>
+                            </td>
                         </tr>
 
                         <!-- MODAL -->
@@ -111,7 +113,7 @@
                                                 </select>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="submit" class="btn-guardar">Guardar cambios</button>
+                                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
                                             </div>
                                         </form>
                                     </div>
