@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from datetime import datetime
 import os #Permite acceder a los directorios
 import database as db
-import datetime
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager,logout_user
 
