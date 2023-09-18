@@ -18,26 +18,27 @@
   
     </div>
     <div class="container text-center ">
+        <h5 class="mb-5">Bienvenido</h5>
         <div class="row  justify-content-center">
             <div class="col">
                 <div class="card p-3" style="width: 18rem; border-radius: 1em;">
-                    <a href="{{ url_for('alta') }}">
-                        <h5 class="card-title">Nuevo alumno</h5>
+                    <a class="link-home" href="{{ url_for('alta') }}">
+                        <h5 class="card-title " >Nuevo alumno</h5>
                         <img src="static/img/Matricula.jpeg" class="card-img-top" alt="..."> 
                     </a>
                 </div>
             </div>
             <div class="col">
                 <div class="card p-3" style="width: 18rem; border-radius: 1em;">
-                    <a href="{{ url_for('ingresos') }}">
+                    <a class="link-home" href="{{ url_for('ingresos') }}">
                         <h5 class="card-title">Ingresos</h5>
                         <img src="static/img/ingresos.jpeg" class="card-img-top" alt="...">  
                     </a>   
                 </div>
             </div>
             <div class="col">
-                <div class="card p-3" style="width: 18rem; border-radius: 1em;">
-                    <a href="{{ url_for('egresos') }}">
+                <div  class="card p-3" style="width: 18rem; border-radius: 1em;">
+                    <a class="link-home" href="{{ url_for('egresos') }}">
                         <h5 class="card-title">Egresos</h5>
                         <img src="static/img/egresos.jpeg" class="card-img-top" alt="...">     
                     </a>
