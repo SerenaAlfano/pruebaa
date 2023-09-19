@@ -80,7 +80,13 @@
                             <td>{{ d.medios_de_pago }}</td>
                             <td class="text-center "> <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}"></i></td>
                             <td class="text-center"> <a href="{{ url_for('eliminar_ingresos', id_ingresos=d.id_ingresos) }}" ><i class="btn-operacion bi bi-trash"></i></a></td>
-                          
+                            <td class="text-center">
+                                <a href="{{ url_for('descargar_pdf', id_ingresos=d.id_ingresos) }}">
+                                    <i class="btn-operacion bi bi-file-earmark-pdf"></i>
+                                </a>
+                            </td>
+                            
+                            
                         </tr>
 
                         <!-- MODAL -->

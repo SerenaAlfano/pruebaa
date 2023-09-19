@@ -1,9 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from datetime import datetime
 import os #Permite acceder a los directorios
 import database as db
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager,logout_user
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from flask import make_response
 
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
@@ -429,6 +433,34 @@ def editaregresos(id):
             data=db.database
     return redirect(url_for('egresos'))
 
+@app.route('/descargar_pdf/<int:id_ingresos>')
+def descargar_pdf(id_ingresos):
+    # Obtén los datos del alumno con el ID proporcionado (similar a lo que hiciste en la ruta 'editaringresos')
+    cursor = db.database.cursor()
+    cursor.execute("SELECT nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
+    alumno = cursor.fetchone()
+    cursor.close()
+
+    if alumno is None:
+        return "Alumno no encontrado", 404
+
+    # Genera el PDF con los datos del alumno
+    pdf_buffer = BytesIO()
+    c = canvas.Canvas(pdf_buffer, pagesize=letter)
+    c.drawString(100, 750, "Nombre: " + alumno[0])
+    c.drawString(100, 730, "Apellido: " + alumno[1])
+    c.drawString(100, 710, "Fecha de Pago: " + str(alumno[2]))
+    c.drawString(100, 690, "Monto: $" + str(alumno[3]))
+    c.drawString(100, 670, "Medio de Pago: " + alumno[4])
+    c.save()
+
+    pdf_buffer.seek(0)
+
+    response = make_response(pdf_buffer.read())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename=alumno_{id_ingresos}.pdf'
+    
+    return response
 
 app.secret_key = 'veronica'
 if __name__ == "__main__":
