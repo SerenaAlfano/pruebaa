@@ -42,21 +42,35 @@
                             <input type="text" class="form-control mb-3" name="colegio"required value="{{ form_data.colegio if form_data else '' }}">
                         </div>
                         <div class="col-md-3">
-                            <label >Curso <span class="campo-obligatorio">*</span></label>
-                            <select class="form-control mb-3 custom-select" name="curso" required value="{{ form_data.curso if form_data else '' }}">
-                                {% for option in ['Primero', 'Segundo', 'Tercero','Cuarto','Quinto','Sexto'] %}
-                                <option value="{{ option }}" {% if data.curso == option %}selected{% endif %}>{{ option }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="label-with-arrow">
+                                Curso <span class="campo-obligatorio">*</span>
+                                <div class="select-container">
+                                    <select class="form-control mb-3 custom-select" name="curso" required value="{{ form_data.curso if form_data else '' }}">
+                                        {% for option in ['Primero', 'Segundo', 'Tercero','Cuarto','Quinto','Sexto'] %}
+                                        <option value="{{ option }}" {% if data.curso == option %}selected{% endif %}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                    </svg>
+                                </div>
+                            </label>
                         </div>
-                        <div class="col-md-3">
-                            <label>Nivel educativo <span class="campo-obligatorio">*</span></label>
-                            <select class="form-control mb-3 custom-select" name="nivel_educativo" required value="{{ form_data.nivel_educativo if form_data else '' }}">
-                                {% for option in ['Primario', 'Secundario', 'Terciario'] %}
-                                <option value="{{ option }}" {% if data.nivel_educativo == option %}selected{% endif %}>{{ option }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                    <div class="col-md-3">
+                        <label class="label-with-arrow">
+                            Nivel educativo <span class="campo-obligatorio">*</span>
+                            <div class="select-container">
+                                <select class="form-control mb-3 custom-select" name="nivel_educativo" required value="{{ form_data.nivel_educativo if form_data else '' }}">
+                                    {% for option in ['Primario', 'Secundario', 'Terciario'] %}
+                                    <option value="{{ option }}" {% if data.nivel_educativo == option %}selected{% endif %}>{{ option }}</option>
+                                    {% endfor %}
+                                </select>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                </svg>
+                            </div>
+                        </label>
+                    </div>
                         <div class="col-md-3">
                             <label >Nombre tutor <span class="campo-obligatorio">*</span></label>
                             <input type="text" class="form-control mb-3" name="nombre_titular"required value="{{ form_data.nombre_titular if form_data else '' }}">
@@ -66,25 +80,41 @@
                             <input type="number" class="form-control mb-3" name="telefono_titular"required value="{{ form_data.telefono_titular if form_data else '' }}">
                         </div>
                         <div class="col-md-3">
-                            <label >Dia <span class="campo-obligatorio">*</span></label>
-                            <select class="form-control mb-3 custom-select" name="dia" required value="{{ form_data.dia if form_data else '' }}">
-                                {% for option in ['Lunes', 'Martes', 'Miercoles','Jueves','Viernes'] %}
-                                <option value="{{ option }}" {% if data.dia == option %}selected{% endif %}>{{ option }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="label-with-arrow">
+                                Dia <span class="campo-obligatorio">*</span>
+                                <div class="select-container">
+                                    <select class="form-control mb-3 custom-select" name="dia" required value="{{ form_data.dia if form_data else '' }}">
+                                        {% for option in ['Lunes', 'Martes', 'Miercóles','Jueves','Viernes'] %}
+                                        <option value="{{ option }}" {% if data.dia == option %}selected{% endif %}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                    </svg>
+                                </div>
+                            </label>
                         </div>
+                        
                         <div class="col-md-3">
                             <label >Horario <span class="campo-obligatorio">*</span></label>
                             <input type="time" id="horario" name="horario"required value="{{ form_data.horario if form_data else '' }}">
                         </div>
                         <div class="col-md-3">
-                            <label >Materia <span class="campo-obligatorio">*</span></label>
-                            <select class="form-control mb-3 custom-select" name="materia" required value="{{ form_data.materia if form_data else '' }}">
-                                {% for option in ['Inglés', 'Matemática', 'Practicás del lenguaje'] %}
-                                <option value="{{ option }}" {% if data.materia == option %}selected{% endif %}>{{ option }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="label-with-arrow">
+                                Materia <span class="campo-obligatorio">*</span>
+                                <div class="select-container">
+                                    <select class="form-control mb-3 custom-select" name="materia" required value="{{ form_data.materia if form_data else '' }}">
+                                        {% for option in ['Inglés', 'Matemática', 'Practicás del lenguaje'] %}
+                                        <option value="{{ option }}" {% if data.materia == option %}selected{% endif %}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                    </svg>
+                                </div>
+                            </label>
                         </div>
+                        
                         <div class="col-md-3">
                             <button class="btn-guardar mb-3 mt-4" type="submit">Guardar alumno</button>
                         </div>
@@ -103,7 +133,7 @@
                 </form>
 
             <table>
-                <div class="table-container">
+                <div class="mi-table-container">
                     <table class="table table-bordered m-1 mb-5" style="background-color: white;">
                         <thead>
                             <th scope="col"></th>
@@ -123,6 +153,7 @@
                             <th scope="col" class="col-tabla">Materia</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
+                <div>
                 <tbody>
                     {% for d in data %}
                     <tr>

@@ -126,15 +126,31 @@ body {
 }
 
 
-.table-container {
+.mi-table-container {
   overflow-x: auto;
   max-width: 100%; /* Esto asegura que el contenedor no sea más ancho que la pantalla */
 }
 
-/* Establece el ancho del desplegable al 100% del contenedor */
 .custom-select {
   width: 100%;
 }
+
+.label-with-arrow {
+  position: relative;
+}
+
+.label-with-arrow select {
+  padding-right: 30px; /* Espacio para la flecha */
+}
+
+.label-with-arrow svg {
+  position: absolute;
+  top: 50%;
+  right: 5px; /* Ajusta el espacio entre el texto y la flecha */
+  transform: translateY(-50%);
+  fill: currentColor; /* Usa el color actual del texto para la flecha */
+}
+
 .btn-operacion{
   padding: 0.4em;
   background-color: #FBD374;
