@@ -1,9 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from datetime import datetime
 import os #Permite acceder a los directorios
 import database as db
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager,logout_user
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from flask import make_response
+from flask_paginate import Pagination, get_page_parameter
+
 
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
@@ -428,6 +434,53 @@ def editaregresos(id):
             db.database.commit()
             data=db.database
     return redirect(url_for('egresos'))
+
+#PDF de ingresos
+
+@app.route('/descargar_pdf/<int:id_ingresos>')
+def descargar_pdf(id_ingresos):
+    # Obtén los datos del alumno con el ID proporcionado 
+    cursor = db.database.cursor()
+    cursor.execute("SELECT nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
+    alumno = cursor.fetchone()
+    cursor.close()
+
+    if alumno is None:
+        return "Alumno no encontrado", 404
+
+    # Genera el PDF con los datos del alumno
+    pdf_buffer = BytesIO()
+    c = canvas.Canvas(pdf_buffer, pagesize=letter)
+
+      # Agrega la imagen en la parte superior izquierda (ajusta las coordenadas según tu diseño)
+    c.drawImage("src/static/img/logo_fondo_1.png", 40, 690, width=120, height=100)
+
+    # Agrega una línea que ocupe todo el ancho (ajusta las coordenadas según tu diseño)
+    c.line(50, 670, 550, 670)
+
+    # Agrega el título (ajusta las coordenadas y el estilo según tu diseño)
+    c.setFont("Helvetica", 16)
+    c.drawString(220, 700, "Recibo de Pago")
+
+    # Agrega el texto debajo del título (ajusta las coordenadas y el estilo según tu diseño)
+    c.setFont("Helvetica", 12)
+    texto_recibo = f"El recibo corresponde a {alumno[0]} {alumno[1]} por el monto de ${alumno[3]} en la fecha {alumno[2]}."
+    c.drawString(50, 610, texto_recibo)
+    
+    c.drawString(230, 130, "Firma del receptor: __________________________")
+
+
+    c.save()
+
+    pdf_buffer.seek(0)
+
+    response = make_response(pdf_buffer.read())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename={alumno[0]}_{alumno[1]}.pdf'
+    
+    return response
+
+
 
 
 app.secret_key = 'veronica'

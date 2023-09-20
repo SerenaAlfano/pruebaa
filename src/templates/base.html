@@ -17,7 +17,7 @@
                     <a href="{{ url_for('inicio') }}">
                         <img src="/static/img/logo.png" alt="Logo" >
                     </a>
-                    <a class="text-navbar ml-auto" href="{{ url_for('logout') }}">Cerrar Sesión</a>           
+                    <a class="text-right" style="margin-left:85em; color:white; text-decoration: none" href="{{ url_for('logout') }}">Cerrar Sesión</a>           
                 </div>
             </div>
         </nav>
@@ -26,28 +26,22 @@
     <ul class="nav justify-content-center mt-5 mb-3 ">
         <li class="nav-item">
             <a class="nav-link" href="{{url_for('alta')}}">
-                <img src="static/img/Matricula.jpeg" style="width: 1.8em; margin-right: 5px;">
+                <img src="static/img/Matricula.png" style="width: 1.8em; margin-right: 5px;">
                 Nuevo alumno
             </a> 
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{url_for('ingresos')}}">
-                <img src="static/img/Ingresos.jpeg" style="width: 1.8em; margin-right: 5px;">
+                <img src="static/img/ingresos.png" style="width: 1.8em; margin-right: 5px;">
                 Ingresos
             </a> 
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{url_for('egresos')}}">
-                <img src="static/img/Egresos.jpeg" style="width: 1.8em; margin-right: 5px;">
+                <img src="static/img/egresos.png" style="width: 1.8em; margin-right: 5px;">
                 Egresos
             </a> 
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('recibo')}}">
-                <img src="static/img/Egresos.jpeg" style="width: 1em; margin-right: 5px;">
-                recibo
-            </a> 
-        </li>
+        </li>     
       </ul>
         {% block content %}
         {% endblock %}
