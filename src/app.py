@@ -9,6 +9,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from flask import make_response
 
+
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
 
@@ -461,6 +462,27 @@ def descargar_pdf(id_ingresos):
     response.headers['Content-Disposition'] = f'attachment; filename=alumno_{id_ingresos}.pdf'
     
     return response
+
+
+@app.route('/resumen')
+def resumen():
+    form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
+
+    # Calcular el total de ingresos
+    cursor = db.database.cursor()
+    cursor.execute("SELECT SUM(monto) FROM ingresos")
+    total_ingresos = cursor.fetchone()[0] or 0
+    cursor.close()
+
+    # Calcular el total de egresos
+    cursor = db.database.cursor()
+    cursor.execute("SELECT SUM(monto) FROM egresos")
+    total_egresos = cursor.fetchone()[0] or 0
+    cursor.close()
+
+    saldo = total_ingresos - total_egresos
+
+    return render_template("resumen.html", total_ingresos=total_ingresos, total_egresos=total_egresos, saldo=saldo, form_data=form_data)
 
 app.secret_key = 'veronica'
 if __name__ == "__main__":
