@@ -54,82 +54,84 @@
                     {% endwith %}
                     </div>
                     <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
-                </form>
+                </form>            
 
-                <div class="table-container">
-                    <table class="table table-bordered">
-                    <thead>
+            </div>
+            <div class="table-container">
+                <table class="table table-bordered m-1 mb-5" style="background-color: white;">
+                <thead>
+                    
+                    <th class="title" scope="col"></th>
+                    <th class="title" scope="col">Nombre</th>
+                    <th class="title" scope="col">Apellido</th>
+                    <th class="title" scope="col">Fecha de pago</th>
+                    <th class="title" scope="col">Monto</th>
+                    <th class="title" scope="col">Medio de pago</th>
+                    <th class="title" scope="col"colspan="2"></th>
+                </thead>
+            </div>
+                <tbody>
+                    {% for d in data %}
+                    <tr>
+                        <td>{{ d.id_ingresos }}</td>
+                        <td>{{ d.nombre_alumno }}</td>
+                        <td>{{ d.apellido_alumno }}</td>
+                        <td>{{ d.fecha_pago }}</td>
+                        <td>{{ d.monto }}</td>
+                        <td>{{ d.medios_de_pago }}</td>
+                        <td class="text-center "> <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i></td>
+                        <td class="text-center"> <a href="{{ url_for('eliminar_ingresos', id_ingresos=d.id_ingresos) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="btn-operacion bi bi-trash"></i></a></td>
+                        <td class="text-center">
+                            <a href="{{ url_for('descargar_pdf', id_ingresos=d.id_ingresos) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar">
+                                <i class="btn-operacion bi bi-file-earmark-pdf"></i>
+                            </a>
+                        </td>
                         
-                        <th class="title" scope="col">#</th>
-                        <th class="title" scope="col">Nombre</th>
-                        <th class="title" scope="col">Apellido</th>
-                        <th class="title" scope="col">Fecha de pago</th>
-                        <th class="title" scope="col">Monto</th>
-                        <th class="title" scope="col">Medio de pago</th>
-                        <th class="title" scope="col"colspan="2">Acciones</th>
-                    </thead>
-                </div>
-                    <tbody>
-                        {% for d in data %}
-                        <tr>
-                            <td>{{ d.id_ingresos }}</td>
-                            <td>{{ d.nombre_alumno }}</td>
-                            <td>{{ d.apellido_alumno }}</td>
-                            <td>{{ d.fecha_pago }}</td>
-                            <td>{{ d.monto }}</td>
-                            <td>{{ d.medios_de_pago }}</td>
-                            <td class="text-center "> <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}"></i></td>
-                            <td class="text-center"> <a href="{{ url_for('eliminar_ingresos', id_ingresos=d.id_ingresos) }}" ><i class="btn-operacion bi bi-trash"></i></a></td>
-                            <td class="text-center">
-                                <a href="{{ url_for('descargar_pdf', id_ingresos=d.id_ingresos) }}">
-                                    <i class="btn-operacion bi bi-file-earmark-pdf"></i>
-                                </a>
-                            </td>
-                            
-                            
-                        </tr>
-
-                        <!-- MODAL -->
-                        <div class="modal fade" id="modal{{ d.id_ingresos }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">{{ d.nombre_alumno }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{{ url_for('editaringresos', id_ingresos=d.id_ingresos) }}" method="POST">
-                                            <input type="hidden" name="id" value="{{ d.id }}">
-                                            <label>Nombre <span class="campo-obligatorio">*</span></label>
-                                            <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}"required>
-                                            <label>Apellido <span class="campo-obligatorio">*</span></label>
-                                            <input type="text" class="form-control mb-3" name="apellido_alumno" value="{{ d.apellido_alumno }}"required>
-                                            <label>Fecha de pago <span class="campo-obligatorio">*</span></label>
-                                            <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}"required>
-                                            <label>Monto <span class="campo-obligatorio">*</span></label>
-                                            <input type="number" class="form-control mb-3" name="monto" placeholder="$0.00" value="{{ d.monto }}" required>
-                                            <div class="col-md-3">
-                                                <label>Medios de pago <span class="campo-obligatorio">*</span></label>
-                                                <select class="form-control mb-3 custom-select" name="medios_de_pago" required>
-                                                    {% for option in ['Efectivo', 'Mercado pago', 'Cuenta DNI'] %}
-                                                        <option value="{{ option }}" {% if d.medios_de_pago == option %}selected{% endif %}>{{ option }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn-guardar">Guardar cambios</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                        
+                    </tr>
+                 
+                    <!-- MODAL -->
+                    <div class="modal fade" id="modal{{ d.id_ingresos }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">{{ d.nombre_alumno }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ url_for('editaringresos', id_ingresos=d.id_ingresos) }}" method="POST">
+                                        <input type="hidden" name="id" value="{{ d.id }}">
+                                        <label>Nombre <span class="campo-obligatorio">*</span></label>
+                                        <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}"required>
+                                        <label>Apellido <span class="campo-obligatorio">*</span></label>
+                                        <input type="text" class="form-control mb-3" name="apellido_alumno" value="{{ d.apellido_alumno }}"required>
+                                        <label>Fecha de pago <span class="campo-obligatorio">*</span></label>
+                                        <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}"required>
+                                        <label>Monto <span class="campo-obligatorio">*</span></label>
+                                        <input type="number" class="form-control mb-3" name="monto" placeholder="$0.00" value="{{ d.monto }}" required>
+                                        <div class="col-md-3">
+                                            <label>Medios de pago <span class="campo-obligatorio">*</span></label>
+                                            <select class="form-control mb-3 custom-select" name="medios_de_pago" required>
+                                                {% for option in ['Efectivo', 'Mercado pago', 'Cuenta DNI'] %}
+                                                    <option value="{{ option }}" {% if d.medios_de_pago == option %}selected{% endif %}>{{ option }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn-guardar">Guardar cambios</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         </div>
     </div>
 </div>
 {% endblock %}
+
 </body>

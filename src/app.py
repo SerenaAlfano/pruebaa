@@ -8,6 +8,8 @@ from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from flask import make_response
+from flask_paginate import Pagination, get_page_parameter
+
 
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
@@ -433,9 +435,11 @@ def editaregresos(id):
             data=db.database
     return redirect(url_for('egresos'))
 
+#PDF de ingresos
+
 @app.route('/descargar_pdf/<int:id_ingresos>')
 def descargar_pdf(id_ingresos):
-    # Obtén los datos del alumno con el ID proporcionado (similar a lo que hiciste en la ruta 'editaringresos')
+    # Obtén los datos del alumno con el ID proporcionado 
     cursor = db.database.cursor()
     cursor.execute("SELECT nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
     alumno = cursor.fetchone()
@@ -447,20 +451,37 @@ def descargar_pdf(id_ingresos):
     # Genera el PDF con los datos del alumno
     pdf_buffer = BytesIO()
     c = canvas.Canvas(pdf_buffer, pagesize=letter)
-    c.drawString(100, 750, "Nombre: " + alumno[0])
-    c.drawString(100, 730, "Apellido: " + alumno[1])
-    c.drawString(100, 710, "Fecha de Pago: " + str(alumno[2]))
-    c.drawString(100, 690, "Monto: $" + str(alumno[3]))
-    c.drawString(100, 670, "Medio de Pago: " + alumno[4])
+
+      # Agrega la imagen en la parte superior izquierda (ajusta las coordenadas según tu diseño)
+    c.drawImage("src/static/img/logo_fondo_1.png", 40, 690, width=120, height=100)
+
+    # Agrega una línea que ocupe todo el ancho (ajusta las coordenadas según tu diseño)
+    c.line(50, 670, 550, 670)
+
+    # Agrega el título (ajusta las coordenadas y el estilo según tu diseño)
+    c.setFont("Helvetica", 16)
+    c.drawString(220, 700, "Recibo de Pago")
+
+    # Agrega el texto debajo del título (ajusta las coordenadas y el estilo según tu diseño)
+    c.setFont("Helvetica", 12)
+    texto_recibo = f"El recibo corresponde a {alumno[0]} {alumno[1]} por el monto de ${alumno[3]} en la fecha {alumno[2]}."
+    c.drawString(50, 610, texto_recibo)
+    
+    c.drawString(230, 130, "Firma del receptor: __________________________")
+
+
     c.save()
 
     pdf_buffer.seek(0)
 
     response = make_response(pdf_buffer.read())
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = f'attachment; filename=alumno_{id_ingresos}.pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename={alumno[0]}_{alumno[1]}.pdf'
     
     return response
+
+
+
 
 app.secret_key = 'veronica'
 if __name__ == "__main__":
