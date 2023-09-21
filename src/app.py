@@ -9,6 +9,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from flask import make_response
 from flask_paginate import Pagination, get_page_parameter
+import re
 
 
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
@@ -29,9 +30,35 @@ def load_user(id):
 
 
 #Validaciones
+def validar_nombre(nombre):
+    if re.match("^[A-Za-z]+$", nombre):
+        return True
+    else:
+        return False
+    
+def validar_apellido(apellido):
+    if re.match("^[A-Za-z]+$", apellido):
+        return True
+    else:
+        return False
 
-
-
+def validar_nombre_titular(nombre_titular):
+    if re.match("^[A-Za-z]+$", nombre_titular):
+        return True
+    else:
+        return False
+    
+def validar_nombre_alumno(nombre_alumno):
+    if re.match("^[A-Za-z]+$", nombre_alumno):
+        return True
+    else:
+        return False
+    
+def validar_apellido_alumno(apellido_alumno):
+    if re.match("^[A-Za-z]+$", apellido_alumno):
+        return True
+    else:
+        return False
 #Rutas
 #recibo
 @app.route('/recibo', methods=['GET', 'POST'])
@@ -87,6 +114,66 @@ def agregarAlumno():
     dia = request.form["dia"]
     horario = request.form["horario"]
     materia = request.form["materia"]
+     
+    if not validar_nombre(nombre):
+        flash("El nombre no es válido. Debe contener solo letras.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso':  curso,
+        'nivel_educativo':nivel_educativo,
+        'nombre_titular':nombre_titular,
+        'telefono_titular':telefono_titular,
+        'dia':dia,
+        'horario':horario,
+        'materia':materia
+        }
+        return redirect(url_for('alta'))
+    
+    if not validar_apellido(apellido):
+        flash("El apellido no es válido. Debe contener solo letras.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso':  curso,
+        'nivel_educativo':nivel_educativo,
+        'nombre_titular':nombre_titular,
+        'telefono_titular':telefono_titular,
+        'dia':dia,
+        'horario':horario,
+        'materia':materia
+        }
+        return redirect(url_for('alta'))
+    
+    if not validar_nombre_titular(nombre_titular):
+        flash("El nombre del tutor no es válido. Debe contener solo letras.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso':  curso,
+        'nivel_educativo':nivel_educativo,
+        'nombre_titular':nombre_titular,
+        'telefono_titular':telefono_titular,
+        'dia':dia,
+        'horario':horario,
+        'materia':materia
+        }
+        return redirect(url_for('alta'))
   
      # Obtén la fecha de nacimiento del formulario
     fecha_nacimiento_str = request.form["fecha_nacimiento"]
@@ -137,14 +224,14 @@ def eliminar(id):
     db.database.commit()
     return redirect(url_for('alta'))
 
-#Actualizar
-@app.route("/editar/<string:id>", methods = ["POST"])
+# Actualizar
+@app.route("/editar/<string:id>", methods=["POST"])
 def editar(id):
     nombre = request.form["nombre"]
     apellido = request.form["apellido"]
     email = request.form["email"]
     telefono = request.form["telefono"]
-    fecha_nacimiento= request.form["fecha_nacimiento"]
+    fecha_nacimiento = request.form["fecha_nacimiento"]
     fecha_inicio = request.form["fecha_inicio"]
     colegio = request.form["colegio"]
     curso = request.form["curso"]
@@ -154,8 +241,68 @@ def editar(id):
     dia = request.form["dia"]
     horario = request.form["horario"]
     materia = request.form["materia"]
- 
- # Obtén la fecha de nacimiento del formulario
+
+    if not validar_nombre_titular(nombre_titular):
+        flash("El nombre del tutor no es válido. Debe contener solo letras.", "error")
+        session['form_data'] = {
+            'nombre': nombre,
+            'apellido': apellido,
+            'email': email,
+            'telefono': telefono,
+            'fecha_nacimiento': fecha_nacimiento,
+            'fecha_inicio': fecha_inicio,
+            'colegio': colegio,
+            'curso': curso,
+            'nivel_educativo': nivel_educativo,
+            'nombre_titular': nombre_titular,
+            'telefono_titular': telefono_titular,
+            'dia': dia,
+            'horario': horario,
+            'materia': materia
+        }
+        return redirect(url_for('alta'))
+
+    if not validar_nombre(nombre):
+        flash("El nombre no es válido. Debe contener solo letras.", "error")
+        session['form_data'] = {
+            'nombre': nombre,
+            'apellido': apellido,
+            'email': email,
+            'telefono': telefono,
+            'fecha_nacimiento': fecha_nacimiento,
+            'fecha_inicio': fecha_inicio,
+            'colegio': colegio,
+            'curso': curso,
+            'nivel_educativo': nivel_educativo,
+            'nombre_titular': nombre_titular,
+            'telefono_titular': telefono_titular,
+            'dia': dia,
+            'horario': horario,
+            'materia': materia
+        }
+        return redirect(url_for('alta'))
+
+    if not validar_apellido(apellido):
+        flash("El apellido no es válido. Debe contener solo letras.", "error")
+        session['form_data'] = {
+            'nombre': nombre,
+            'apellido': apellido,
+            'email': email,
+            'telefono': telefono,
+            'fecha_nacimiento': fecha_nacimiento,
+            'fecha_inicio': fecha_inicio,
+            'colegio': colegio,
+            'curso': curso,
+            'nivel_educativo': nivel_educativo,
+            'nombre_titular': nombre_titular,
+            'telefono_titular': telefono_titular,
+            'dia': dia,
+            'horario': horario,
+            'materia': materia
+        }
+        return redirect(url_for('alta'))
+
+    # Obtén la fecha de nacimiento del formulario
     fecha_nacimiento_str = request.form["fecha_nacimiento"]
     fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, "%Y-%m-%d").date()
 
@@ -163,48 +310,49 @@ def editar(id):
     fecha_actual = datetime.now().date()
 
     # Compara la fecha de nacimiento con la fecha actual
-    
     if fecha_nacimiento >= fecha_actual:
         flash("La fecha de nacimiento debe ser en el pasado.", "error")
         session['form_data'] = {
-        'nombre': nombre,
-        'apellido': apellido,
-        'email': email,
-        'telefono': telefono,
-        'fecha_nacimiento': fecha_nacimiento_str,
-        'fecha_inicio': fecha_inicio,
-        'colegio': colegio,
-        'curso':  curso,
-        'nivel_educativo':nivel_educativo,
-        'nombre_titular':nombre_titular,
-        'telefono_titular':telefono_titular,
-        'dia':dia,
-        'horario':horario,
-        'materia':materia
+            'nombre': nombre,
+            'apellido': apellido,
+            'email': email,
+            'telefono': telefono,
+            'fecha_nacimiento': fecha_nacimiento_str,
+            'fecha_inicio': fecha_inicio,
+            'colegio': colegio,
+            'curso': curso,
+            'nivel_educativo': nivel_educativo,
+            'nombre_titular': nombre_titular,
+            'telefono_titular': telefono_titular,
+            'dia': dia,
+            'horario': horario,
+            'materia': materia
         }
         return redirect(url_for('alta'))
 
     if nombre and apellido and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and dia and horario and materia:
         cursor = db.database.cursor()
-        sql =  "UPDATE alumnos SET nombre = %s, apellido  = %s, email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s WHERE id = %s"
+        sql = "UPDATE alumnos SET nombre = %s, apellido  = %s, email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s WHERE id = %s"
         data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia, id)
-        cursor.execute(sql,data)
+        cursor.execute(sql, data)
         db.database.commit()
     return redirect(url_for('alta'))
 
 
-#Ingresos
-#CargaDatos
+# Ingresos
+# CargaDatos
 @app.route("/ingresos", methods=["GET", "POST"])
 def ingresos():
     form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
-     # Define fecha_pago with a default value (it can be None or any other appropriate default)
+    
+    # Define las variables con valores predeterminados (pueden ser None u otros valores apropiados)
     fecha_pago = None
     fecha_actual = None
-    nombre_alumno= None
-    apellido_alumno= None
-    monto= None
+    nombre_alumno = None
+    apellido_alumno = None
+    monto = None
     medios_de_pago = None
+    
     if request.method == "POST":
         # Tu lógica para agregar datos aquí
         nombre_alumno = request.form["nombre_alumno"]
@@ -213,47 +361,70 @@ def ingresos():
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
         
+        if not validar_nombre_alumno(nombre_alumno):
+            flash("El nombre no es válido. Debe contener solo letras.", "error")
+            session['form_data'] = {
+                'nombre_alumno': nombre_alumno,
+                'apellido_alumno': apellido_alumno,
+                'fecha_pago': fecha_pago,
+                'monto': monto,
+                'medios_de_pago': medios_de_pago
+            }
+            return redirect(url_for('ingresos'))
+        
+        if not validar_apellido_alumno(apellido_alumno):
+            flash("El apellido no es válido. Debe contener solo letras.", "error")
+            session['form_data'] = {
+                'apellido_alumno': apellido_alumno,
+                'fecha_pago': fecha_pago,
+                'monto': monto,
+                'medios_de_pago': medios_de_pago
+            }
+            return redirect(url_for('ingresos'))
+        
         # Obtén la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
         
         # Obtiene la fecha actual
         fecha_actual = datetime.now().date()
-
-    # Compara la fecha de pago con la fecha actual
-    if fecha_pago is not None and fecha_actual is not None and fecha_pago > fecha_actual:
-        flash("La fecha de pago debe ser actual o anterior.", "error")
-        session['form_data'] = {
-        'nombre_alumno': nombre_alumno,
-        'apellido_alumno': apellido_alumno,
-        'fecha_pago': fecha_pago_str,
-        'monto':monto,
-        'medios_de_pago':medios_de_pago
-        }
-        return redirect(url_for('ingresos'))
-    
-    if nombre_alumno and apellido_alumno and fecha_pago and monto and medios_de_pago:
-        cursor = db.database.cursor()
-        sql = "INSERT INTO ingresos (nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s, %s)"
-        data = (nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago)
-        cursor.execute(sql, data)
-        db.database.commit()
         
-        return redirect(url_for('ingresos'))  # Redirige a la misma vista después de agregar datos
-
-
-# Tu lógica para mostrar la página de ingresos con la lista de datos aquí
+        if fecha_pago is not None and fecha_actual is not None and fecha_pago > fecha_actual:
+            flash("La fecha de pago debe ser actual o anterior.", "error")
+            session['form_data'] = {
+                'nombre_alumno': nombre_alumno,
+                'apellido_alumno': apellido_alumno,
+                'fecha_pago': fecha_pago_str,
+                'monto': monto,
+                'medios_de_pago': medios_de_pago
+            }
+            return redirect(url_for('ingresos'))
+        
+        if nombre_alumno and apellido_alumno and fecha_pago and monto and medios_de_pago:
+            cursor = db.database.cursor()
+            sql = "INSERT INTO ingresos (nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s, %s)"
+            data = (nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago)
+            cursor.execute(sql, data)
+            db.database.commit()
+            
+            return redirect(url_for('ingresos'))  # Redirige a la misma vista después de agregar datos
+    
+    # Tu lógica para mostrar la página de ingresos con la lista de datos aquí
     cursor = db.database.cursor()
     cursor.execute("SELECT id_ingresos, nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos")
     myresult = cursor.fetchall()
-    # Convertirmos los datos a diccionario
+    
+    # Convertir los datos a un diccionario
     insertObject = []
     columnNames = [column[0] for column in cursor.description]
+    
     for record in myresult:
         insertObject.append(dict(zip(columnNames, record)))
+    
     cursor.close()
     
-    return render_template("ingresos.html", data=insertObject,form_data=form_data)
+    return render_template("ingresos.html", data=insertObject, form_data=form_data)
+
 
 
 
@@ -278,7 +449,7 @@ def editaringresos(id_ingresos):
         cursor.execute("SELECT nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
         registro_editar = cursor.fetchone()
         cursor.close()
-        data=db.database
+        data = db.database
         if registro_editar:
             return render_template("editar_ingresos.html", registro=registro_editar, data=data)
         else:
@@ -294,6 +465,27 @@ def editaringresos(id_ingresos):
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
 
+        if not validar_nombre_alumno(nombre_alumno):
+            flash("El nombre no es válido. Debe contener solo letras.", "error")
+            session['form_data'] = {
+                'nombre_alumno': nombre_alumno,
+                'apellido_alumno': apellido_alumno,
+                'fecha_pago': fecha_pago,
+                'monto': monto,
+                'medios_de_pago': medios_de_pago
+            }
+            return redirect(url_for('ingresos'))
+
+        if not validar_apellido_alumno(apellido_alumno):
+            flash("El apellido no es válido. Debe contener solo letras.", "error")
+            session['form_data'] = {
+                'apellido_alumno': apellido_alumno,
+                'fecha_pago': fecha_pago,
+                'monto': monto,
+                'medios_de_pago': medios_de_pago
+            }
+            return redirect(url_for('ingresos'))
+
         # Obtiene la fecha actual
         fecha_actual = datetime.now().date()
 
@@ -308,15 +500,16 @@ def editaringresos(id_ingresos):
                 'medios_de_pago': medios_de_pago
             }
             return redirect(url_for('editaringresos', id_ingresos=id_ingresos))
-        
+
         if nombre_alumno and apellido_alumno and fecha_pago and monto and medios_de_pago:
             cursor = db.database.cursor()
             sql = "UPDATE ingresos SET nombre_alumno = %s, apellido_alumno = %s, fecha_pago = %s, monto = %s, medios_de_pago = %s WHERE id_ingresos = %s"
             data = (nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago, id_ingresos)
             cursor.execute(sql, data)
             db.database.commit()
-            data=db.database
+            data = db.database
         return redirect(url_for('ingresos'))
+
 
 
 #egresos
