@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label >Telefono <span class="campo-obligatorio">*</span></label>
-                                    <input type="number" class="form-control mb-3" name="telefono"required value="{{ form_data.telefono if form_data else '' }}">
+                                    <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" required value="{{ form_data.telefono if form_data else '' }}">
                                 </div>
                                 <div class="col-md-3">
                                     <label >Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
@@ -77,7 +77,15 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label >Telefono tutor <span class="campo-obligatorio">*</span></label>
-                                    <input type="number" class="form-control mb-3" name="telefono_titular"required value="{{ form_data.telefono_titular if form_data else '' }}">
+                                    <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" required value="{{ form_data.telefono_titular if form_data else '' }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label >Nombre tutor<span class="optional-text">(Opcional)</span></label>
+                                    <input type="text" class="form-control mb-3" name="nombre_titular1"  value="{{ form_data.nombre_titular1 if form_data else '' }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label >Telefono tutor<span class="optional-text">(Opcional)</span></label>
+                                    <input type="tel" class="form-control mb-3" name="telefono_titular1"  maxlength="10" value="{{ form_data.telefono_titular1 if form_data else '' }}">
                                 </div>
                                 <div class="col-md-3">
                                     <label class="label-with-arrow">
@@ -112,10 +120,11 @@
                                             </svg>
                                         </div>
                                     </label>
-                                </div>
-                                <div class="col-md-3">
-                                    <button class="btn-guardar mb-3 mt-4" type="submit">Guardar alumno</button>
-                                </div>
+                                    <div class="col-md-3 text-center">
+                                        <div class="btn-container">
+                                            <button type="submit" class="btn-guardar">Guardar alumno</button>
+                                        <div>
+                                    </div>
                             </div>
               
                         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -147,11 +156,13 @@
                         <th scope="col" class="col-tabla">Nivel</th>
                         <th scope="col" class="col-tabla">Nombre tutor</th>
                         <th scope="col" class="col-tabla">Telefono tutor</th>
+                        <th scope="col" class="col-tabla">Nombre tutor</th>
+                        <th scope="col" class="col-tabla">Telefono tutor</th>
                         <th scope="col" class="col-tabla">Día</th>
                         <th scope="col" class="col-tabla">Horario</th>
                         <th scope="col" class="col-tabla">Materia</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
+                        <th class="title" scope="col"colspan="2">Acciones</th>
+                       
                             <tbody>
                 <div>
                                 {% for d in data %}
@@ -161,13 +172,15 @@
                                         <td>{{d.apellido}}</td>
                                         <td>{{d.email}}</td>
                                         <td>{{d.telefono}}</td>
-                                        <td>{{d.fecha_nacimiento}}</td>
-                                        <td>{{d.fecha_inicio}}</td>
+                                        <td>{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
+                                        <td>{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>
                                         <td>{{d.colegio}}</td>
                                         <td>{{d.curso}}</td>
                                         <td>{{d.nivel_educativo}}</td>
                                         <td> {{d.nombre_titular}}</td>
                                         <td>{{d.telefono_titular}}</td>
+                                        <td> {{d.nombre_titular1}}</td>
+                                        <td>{{d.telefono_titular1}}</td>
                                         <td>{{d.dia}}</td>
                                         <td>{{d.horario}}</td>
                                         <td>{{d.materia}}</td>
@@ -234,6 +247,14 @@
                                                                     <label >Telefono tutor <span class="campo-obligatorio">*</span></label>
                                                                     <input type="text" class="form-control mb-3" name="telefono_titular" value="{{d.telefono_titular}}"required>
                                                                 </div>   
+                                                                <div class="col-md-3">
+                                                                    <label >Nombre tutor<span class="optional-text">(Opcional)</span></label>
+                                                                    <input type="text" class="form-control mb-3" name="nombre_titular1" value="{{ form_data.nombre_titular1 if form_data else '' }}">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label >Telefono tutor<span class="optional-text">(Opcional)</span></label>
+                                                                    <input type="number" class="form-control mb-3" name="telefono_titular1" value="{{ form_data.telefono_titular1 if form_data else '' }}">
+                                                                </div>
                                                                 <div class="col-3"> 
                                                                     <label >Dia <span class="campo-obligatorio">*</span></label>
                                                                     <input type="text" class="form-control mb-3" name="dia" value="{{d.dia}}"required>
@@ -248,8 +269,10 @@
                                                                     <label >Materia <span class="campo-obligatorio">*</span></label>
                                                                     <input type="text" class="form-control mb-3" name="materia" value="{{d.materia}}"required>
                                                                 </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="submit" class="btn-guardar">Guardar cambios</button>
+                                                                <div class="col-md-3 text-center">
+                                                                    <div class="btn-container">
+                                                                        <button type="submit" class="btn-guardar">Guardar cambios</button>
+                                                                    <div>
                                                                 </div>
                                                             </div>
                                                         </form>
