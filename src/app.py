@@ -498,6 +498,8 @@ def ingresos():
             return redirect(url_for('ingresos'))
         
         if nombre_alumno and apellido_alumno and fecha_pago and monto and medios_de_pago:
+            monto = monto.replace('$', '').replace(',', '')  # Elimina "$" y comas
+            monto = float(monto) 
             cursor = db.database.cursor()
             sql = "INSERT INTO ingresos (nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s, %s)"
             data = (nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago)
@@ -644,6 +646,8 @@ def egresos():
         return redirect(url_for('egresos'))
 
     if servicios and fecha_pago and monto and medios_de_pago:
+        monto = monto.replace('$', '').replace(',', '')  # Elimina "$" y comas
+        monto = float(monto)  
         cursor = db.database.cursor()
         sql = "INSERT INTO egresos (servicios, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s)"
         data = (servicios, fecha_pago, monto, medios_de_pago)
