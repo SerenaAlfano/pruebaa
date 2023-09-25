@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from datetime import datetime
+import mysql.connector
+
 import os #Permite acceder a los directorios
 import database as db
 from flask_wtf.csrf import CSRFProtect
@@ -241,7 +243,15 @@ def agregarAlumno():
         return redirect(url_for('alta'))
 
     # Resto del código para agregar el alumno a la base de datos
-
+    cursor = db.database.cursor()
+    sql = "INSERT INTO alumnos (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, nombre_titular1, telefono_titular1, dia, horario, materia) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, nombre_titular1, telefono_titular1, dia, horario, materia) 
+    try:
+        cursor.execute(sql, data)
+        db.database.commit()  # Realiza el commit después de la inserción
+    except mysql.connector.Error as err:
+        # Maneja los errores de SQL aquí
+        print(f"Error de MySQL: {err}")
     return redirect(url_for('alta'))
 
 #Eliminar
