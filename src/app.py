@@ -14,7 +14,6 @@ from flask_paginate import Pagination, get_page_parameter
 import re
 
 
-
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
 
@@ -68,10 +67,10 @@ def validar_apellido_alumno(apellido_alumno):
     else:
         return False
 #Rutas
-#recibo
-@app.route('/recibo', methods=['GET', 'POST'])
-def recibo():
-    return render_template('recibo.html')
+#Resumen
+@app.route('/resumen', methods=['GET', 'POST'])
+def resumen():
+    return render_template('resumen.html')
 #login
 @app.route('/')
 def pagina_inicio():
@@ -448,7 +447,7 @@ def editar(id):
 
 
 # Ingresos
-# CargaDatos
+
 @app.route("/ingresos", methods=["GET", "POST"])
 def ingresos():
     form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
@@ -462,10 +461,33 @@ def ingresos():
     medios_de_pago = None
     
     if request.method == "POST":
-        # Tu lógica para agregar datos aquí
+        # Obtén la fecha de pago del formulario
+        fecha_pago_str = request.form["fecha_pago"]
+        fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
+
+        # Mueve la obtención del nombre_alumno aquí
         nombre_alumno = request.form["nombre_alumno"]
+
+        # Verifica si ya existe un pago para el mismo alumno en el mismo mes y año
+        cursor = db.database.cursor()
+        cursor.execute("SELECT COUNT(*) FROM ingresos WHERE nombre_alumno = %s AND MONTH(fecha_pago) = %s AND YEAR(fecha_pago) = %s", (nombre_alumno, fecha_pago.month, fecha_pago.year))
+        pago_existente = cursor.fetchone()[0]
+        cursor.close()
+
+        if pago_existente > 0:
+            flash("Ya existe un pago para este alumno en el mismo mes y año.", "error")
+            session['form_data'] = {
+                'nombre_alumno': nombre_alumno,
+                'apellido_alumno': apellido_alumno,
+                'fecha_pago': fecha_pago_str,
+                'monto': monto,
+                'medios_de_pago': medios_de_pago
+            }
+            return redirect(url_for('ingresos'))
+
+    if request.method == "POST":
+        # Tu lógica para agregar datos aquí
         apellido_alumno = request.form["apellido_alumno"]
-        fecha_pago = request.form["fecha_pago"]
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
         
@@ -474,7 +496,7 @@ def ingresos():
             session['form_data'] = {
                 'nombre_alumno': nombre_alumno,
                 'apellido_alumno': apellido_alumno,
-                'fecha_pago': fecha_pago,
+                'fecha_pago': fecha_pago_str,
                 'monto': monto,
                 'medios_de_pago': medios_de_pago
             }
@@ -483,8 +505,9 @@ def ingresos():
         if not validar_apellido_alumno(apellido_alumno):
             flash("El apellido no es válido. Debe contener solo letras.", "error")
             session['form_data'] = {
+                'nombre_alumno': nombre_alumno,
                 'apellido_alumno': apellido_alumno,
-                'fecha_pago': fecha_pago,
+                'fecha_pago': fecha_pago_str,
                 'monto': monto,
                 'medios_de_pago': medios_de_pago
             }
@@ -786,25 +809,7 @@ def descargar_pdf(id_ingresos):
     return response
 
 
-@app.route('/resumen')
-def resumen():
-    form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
 
-    # Calcular el total de ingresos
-    cursor = db.database.cursor()
-    cursor.execute("SELECT SUM(monto) FROM ingresos")
-    total_ingresos = cursor.fetchone()[0] or 0
-    cursor.close()
-
-    # Calcular el total de egresos
-    cursor = db.database.cursor()
-    cursor.execute("SELECT SUM(monto) FROM egresos")
-    total_egresos = cursor.fetchone()[0] or 0
-    cursor.close()
-
-    saldo = total_ingresos - total_egresos
-
-    return render_template("resumen.html", total_ingresos=total_ingresos, total_egresos=total_egresos, saldo=saldo, form_data=form_data)
 
 app.secret_key = 'veronica'
 if __name__ == "__main__":

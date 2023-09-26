@@ -128,7 +128,6 @@ body {
   color: red;
 }
 
-
 .custom-select {
   width: 100%;
 }
@@ -168,6 +167,10 @@ body {
   border-radius: 1em;
   padding: 0.5em;
   font-weight: 400;
+  text-decoration: none !important;
+}
+.btn-guardar:hover {
+  color: white;
 }
 
 /* Estilo para el texto "Opcional" */
@@ -181,4 +184,11 @@ body {
   background-color: white;
   padding: 1em; /* Ajusta el espaciado interior según sea necesario */
   text-align: center; /* Centra horizontalmente el botón */
+}
+.form-control{
+  width: 13em !important;
+}
+.btn-eliminar{
+  background-color: #FBD374;
+  color: white;
 }
