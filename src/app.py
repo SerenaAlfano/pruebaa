@@ -61,6 +61,24 @@ def validar_apellido_alumno(apellido_alumno):
         return True
     else:
         return False
+
+def validar_telefono(telefono):
+    # Expresión regular para validar un número de teléfono que contiene solo números y ciertos caracteres especiales como +, -, (, y )
+    patron = r"^[0-9+\-() ]+$"
+    
+    if re.match(patron, telefono):
+        return True
+    else:
+        return False 
+    
+def validar_telefono_titular(telefono_titular):
+    # Expresión regular para validar un número de teléfono que contiene solo números y ciertos caracteres especiales como +, -, (, y )
+    patron = r"^[0-9+\-() ]+$"
+    
+    if re.match(patron, telefono_titular):
+        return True
+    else:
+        return False 
 #Rutas
 #Resumen
 @app.route('/resumen', methods=['GET', 'POST'])
@@ -136,6 +154,26 @@ def agregarAlumno():
             'materia': materia
         }
         return redirect(url_for('alta'))
+    
+    if not validar_telefono(telefono):
+        flash("El número de teléfono no es válido. Debe contener solo dígitos.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso': curso,
+        'nivel_educativo': nivel_educativo,
+        'nombre_titular': nombre_titular,
+        'telefono_titular': telefono_titular,
+        'dia': dia,
+        'horario': horario,
+        'materia': materia
+        }
+        return redirect(url_for('alta'))
 
     if not validar_apellido(apellido):
         flash("El apellido no es válido. Debe contener solo letras.", "error")
@@ -174,6 +212,26 @@ def agregarAlumno():
             'dia': dia,
             'horario': horario,
             'materia': materia
+        }
+        return redirect(url_for('alta'))
+    
+    if not validar_telefono_titular(telefono_titular):
+        flash("El número de teléfono tutor no es válido. Debe contener solo dígitos.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso': curso,
+        'nivel_educativo': nivel_educativo,
+        'nombre_titular': nombre_titular,
+        'telefono_titular': telefono_titular,
+        'dia': dia,
+        'horario': horario,
+        'materia': materia
         }
         return redirect(url_for('alta'))
 
@@ -262,6 +320,46 @@ def editar(id):
             'dia': dia,
             'horario': horario,
             'materia': materia
+        }
+        return redirect(url_for('alta'))
+    
+    if not validar_telefono(telefono):
+        flash("El número de teléfono no es válido. Debe contener solo dígitos.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso': curso,
+        'nivel_educativo': nivel_educativo,
+        'nombre_titular': nombre_titular,
+        'telefono_titular': telefono_titular,
+        'dia': dia,
+        'horario': horario,
+        'materia': materia
+        }
+        return redirect(url_for('alta'))
+    
+    if not validar_telefono_titular(telefono_titular):
+        flash("El número de teléfono del tutor no es válido. Debe contener solo dígitos.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso': curso,
+        'nivel_educativo': nivel_educativo,
+        'nombre_titular': nombre_titular,
+        'telefono_titular': telefono_titular,
+        'dia': dia,
+        'horario': horario,
+        'materia': materia
         }
         return redirect(url_for('alta'))
 
