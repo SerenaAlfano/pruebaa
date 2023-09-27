@@ -1,1 +1,1 @@
-models.entities.User
+from flask_wtf.csrf import CSRFProtect

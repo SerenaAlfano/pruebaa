@@ -253,6 +253,7 @@ def agregarAlumno():
         # Maneja los errores de SQL aquí
         print(f"Error de MySQL: {err}")
     return redirect(url_for('alta'))
+   
 
 #Eliminar
 @app.route("/eliminar/<string:id>")
@@ -478,7 +479,6 @@ def ingresos():
             flash("Ya existe un pago para este alumno en el mismo mes y año.", "error")
             session['form_data'] = {
                 'nombre_alumno': nombre_alumno,
-                'apellido_alumno': apellido_alumno,
                 'fecha_pago': fecha_pago_str,
                 'monto': monto,
                 'medios_de_pago': medios_de_pago
@@ -487,31 +487,10 @@ def ingresos():
 
     if request.method == "POST":
         # Tu lógica para agregar datos aquí
-        apellido_alumno = request.form["apellido_alumno"]
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
         
-        if not validar_nombre_alumno(nombre_alumno):
-            flash("El nombre no es válido. Debe contener solo letras.", "error")
-            session['form_data'] = {
-                'nombre_alumno': nombre_alumno,
-                'apellido_alumno': apellido_alumno,
-                'fecha_pago': fecha_pago_str,
-                'monto': monto,
-                'medios_de_pago': medios_de_pago
-            }
-            return redirect(url_for('ingresos'))
-        
-        if not validar_apellido_alumno(apellido_alumno):
-            flash("El apellido no es válido. Debe contener solo letras.", "error")
-            session['form_data'] = {
-                'nombre_alumno': nombre_alumno,
-                'apellido_alumno': apellido_alumno,
-                'fecha_pago': fecha_pago_str,
-                'monto': monto,
-                'medios_de_pago': medios_de_pago
-            }
-            return redirect(url_for('ingresos'))
+       
         
         # Obtén la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]
@@ -524,27 +503,29 @@ def ingresos():
             flash("La fecha de pago debe ser actual o anterior.", "error")
             session['form_data'] = {
                 'nombre_alumno': nombre_alumno,
-                'apellido_alumno': apellido_alumno,
+           
                 'fecha_pago': fecha_pago_str,
                 'monto': monto,
                 'medios_de_pago': medios_de_pago
             }
             return redirect(url_for('ingresos'))
         
-        if nombre_alumno and apellido_alumno and fecha_pago and monto and medios_de_pago:
-            monto = monto.replace('$', '').replace(',', '')  # Elimina "$" y comas
-            monto = float(monto) 
+        if nombre_alumno and fecha_pago and monto and medios_de_pago:
+        # Remove the existing SQL statement
             cursor = db.database.cursor()
-            sql = "INSERT INTO ingresos (nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s, %s)"
-            data = (nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago)
+            sql = "INSERT INTO ingresos (nombre_alumno, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s)"
+            data = (nombre_alumno, fecha_pago, monto, medios_de_pago)
             cursor.execute(sql, data)
             db.database.commit()
+            cursor.close()
+            return redirect(url_for('ingresos'))
+
             
-            return redirect(url_for('ingresos'))  # Redirige a la misma vista después de agregar datos
+        
     
     # Tu lógica para mostrar la página de ingresos con la lista de datos aquí
     cursor = db.database.cursor()
-    cursor.execute("SELECT id_ingresos, nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos")
+    cursor.execute("SELECT id_ingresos, nombre_alumno,  fecha_pago, monto, medios_de_pago FROM ingresos")
     myresult = cursor.fetchall()
     
     # Convertir los datos a un diccionario
@@ -555,8 +536,22 @@ def ingresos():
         insertObject.append(dict(zip(columnNames, record)))
     
     cursor.close()
-    
-    return render_template("ingresos.html", data=insertObject, form_data=form_data)
+    # Obtener la lista de nombres y apellidos de los alumnos
+    # Tu lógica para mostrar la página de ingresos con la lista de datos aquí
+    cursor = db.database.cursor()
+    cursor.execute("SELECT id_ingresos, nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos")
+    myresult = cursor.fetchall()
+
+    # Obtener la lista de nombres y apellidos de los alumnos
+    cursor.execute("SELECT nombre, apellido FROM alumnos")
+    alumnos = cursor.fetchall()
+    cursor.close()
+
+    # Crear una lista de nombres y apellidos concatenados
+    nombres_apellidos = [f"{alumno[0]} {alumno[1]}" for alumno in alumnos]
+
+    return render_template("ingresos.html", data=insertObject, form_data=form_data, nombres_apellidos=nombres_apellidos)
+
 
 
 
@@ -579,7 +574,7 @@ def editaringresos(id_ingresos):
 
     if request.method == "GET":
         cursor = db.database.cursor()
-        cursor.execute("SELECT nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
+        cursor.execute("SELECT nombre_alumno,fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
         registro_editar = cursor.fetchone()
         cursor.close()
         data = db.database
@@ -592,32 +587,13 @@ def editaringresos(id_ingresos):
 
     if request.method == "POST":
         nombre_alumno = request.form["nombre_alumno"]
-        apellido_alumno = request.form["apellido_alumno"]
+
         fecha_pago_str = request.form["fecha_pago"]
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
 
-        if not validar_nombre_alumno(nombre_alumno):
-            flash("El nombre no es válido. Debe contener solo letras.", "error")
-            session['form_data'] = {
-                'nombre_alumno': nombre_alumno,
-                'apellido_alumno': apellido_alumno,
-                'fecha_pago': fecha_pago,
-                'monto': monto,
-                'medios_de_pago': medios_de_pago
-            }
-            return redirect(url_for('ingresos'))
-
-        if not validar_apellido_alumno(apellido_alumno):
-            flash("El apellido no es válido. Debe contener solo letras.", "error")
-            session['form_data'] = {
-                'apellido_alumno': apellido_alumno,
-                'fecha_pago': fecha_pago,
-                'monto': monto,
-                'medios_de_pago': medios_de_pago
-            }
-            return redirect(url_for('ingresos'))
+       
 
         # Obtiene la fecha actual
         fecha_actual = datetime.now().date()
@@ -627,17 +603,17 @@ def editaringresos(id_ingresos):
             flash("La fecha de pago debe ser actual o anterior.", "error")
             session['form_data'] = {
                 'nombre_alumno': nombre_alumno,
-                'apellido_alumno': apellido_alumno,
+           
                 'fecha_pago': fecha_pago_str,
                 'monto': monto,
                 'medios_de_pago': medios_de_pago
             }
             return redirect(url_for('editaringresos', id_ingresos=id_ingresos))
 
-        if nombre_alumno and apellido_alumno and fecha_pago and monto and medios_de_pago:
+        if nombre_alumno and fecha_pago and monto and medios_de_pago:
             cursor = db.database.cursor()
-            sql = "UPDATE ingresos SET nombre_alumno = %s, apellido_alumno = %s, fecha_pago = %s, monto = %s, medios_de_pago = %s WHERE id_ingresos = %s"
-            data = (nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago, id_ingresos)
+            sql = "UPDATE ingresos SET nombre_alumno = %s,  fecha_pago = %s, monto = %s, medios_de_pago = %s WHERE id_ingresos = %s"
+            data = (nombre_alumno, fecha_pago, monto, medios_de_pago, id_ingresos)
             cursor.execute(sql, data)
             db.database.commit()
             data = db.database
@@ -769,7 +745,7 @@ def editaregresos(id):
 def descargar_pdf(id_ingresos):
     # Obtén los datos del alumno con el ID proporcionado 
     cursor = db.database.cursor()
-    cursor.execute("SELECT nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
+    cursor.execute("SELECT nombre_alumno,fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
     alumno = cursor.fetchone()
     cursor.close()
 
@@ -792,7 +768,7 @@ def descargar_pdf(id_ingresos):
 
     # Agrega el texto debajo del título (ajusta las coordenadas y el estilo según tu diseño)
     c.setFont("Helvetica", 12)
-    texto_recibo = f"El recibo corresponde a {alumno[0]} {alumno[1]} por el monto de ${alumno[3]} en la fecha {alumno[2]}."
+    texto_recibo = f"El recibo corresponde a {alumno[0]} por el monto de ${alumno[2]} en la fecha {alumno[1]}."
     c.drawString(50, 610, texto_recibo)
     
     c.drawString(230, 130, "Firma del receptor: __________________________")

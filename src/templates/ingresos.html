@@ -16,12 +16,13 @@
                 <form action="{{ url_for('ingresos')}}" method="POST">
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label >Nombre <span class="campo-obligatorio">*</span></label>
-                            <input type="text" class="form-control mb-3" name="nombre_alumno"required value="{{ form_data.nombre_alumno if form_data else '' }}">
-                        </div>
-                        <div class="col-md-3">
-                            <label >Apellido <span class="campo-obligatorio">*</span></label>
-                            <input type="text" class="form-control mb-3" name="apellido_alumno"required value="{{ form_data.apellido_alumno if form_data else '' }}">
+                            <label for="nombre_alumno">Nombre del Alumno:</label>
+                            <select name="nombre_alumno" id="nombre_alumno" class="form-control mb-3" >
+                              {% for alumno in nombres_apellidos %}
+                                <option value="{{ alumno }}">{{ alumno }}</option>
+                              {% endfor %}
+                            </select>
+
                         </div>
                         <div class="col-md-3">
                             <label >Fecha de pago <span class="campo-obligatorio">*</span></label>
@@ -106,7 +107,7 @@
                     
                     <th class="title" scope="col"></th>
                     <th class="title" scope="col">Nombre</th>
-                    <th class="title" scope="col">Apellido</th>
+               
                     <th class="title" scope="col">Fecha de pago</th>
                     <th class="title" scope="col">Monto</th>
                     <th class="title" scope="col">Medio de pago</th>
@@ -118,7 +119,7 @@
                     <tr>
                         <td>{{ d.id_ingresos }}</td>
                         <td>{{ d.nombre_alumno }}</td>
-                        <td>{{ d.apellido_alumno }}</td>
+           
                         <td>{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
                         <td>${{ '{:,.2f}'.format(d.monto) }}</td>
                         <td>{{ d.medios_de_pago }}</td>
@@ -143,65 +144,65 @@
                                 </div>
                                 <div class="modal-body">
                                     <form action="{{ url_for('editaringresos', id_ingresos=d.id_ingresos) }}" method="POST">
-                                        <input type="hidden" name="id" value="{{ d.id }}">
-                                        <label>Nombre <span class="campo-obligatorio">*</span></label>
-                                        <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}"required>
-                                        <label>Apellido <span class="campo-obligatorio">*</span></label>
-                                        <input type="text" class="form-control mb-3" name="apellido_alumno" value="{{ d.apellido_alumno }}"required>
-                                        <label>Fecha de pago <span class="campo-obligatorio">*</span></label>
-                                        <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}"required>
-                                        <div class="col-md-3">
-                                            <label>Monto <span class="campo-obligatorio">*</span></label>
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text">$</span>
-                                                <input type="text" class="form-control" name="monto" placeholder="0.00" required
-                                                       value="{{ form_data.monto if form_data else '' }}" id="montoInput">
-                                            </div>
+                                        <div class="row">
+                                                <input type="hidden" name="id" value="{{ d.id }}">
+                                                <div class="col-6">
+                                                    <label>Nombre <span class="campo-obligatorio">*</span></label>
+                                                    <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}"required>    
+                                                    <label>Fecha de pago <span class="campo-obligatorio">*</span></label>                                        
+                                                    <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}"required>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label>Monto <span class="campo-obligatorio">*</span></label>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text">$</span>
+                                                        <input type="text" class="form-control" name="monto" placeholder="0.00" required
+                                                            value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                                    </div>
+                                                                         
+                                                    <label>Medios de pago <span class="campo-obligatorio">*</span></label>
+                                                    <select class="form-control mb-3 custom-select" name="medios_de_pago" required>
+                                                        {% for option in ['Efectivo', 'Mercado pago', 'Cuenta DNI'] %}
+                                                            <option value="{{ option }}" {% if d.medios_de_pago == option %}selected{% endif %}>{{ option }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div> 
                                         </div>
-                                        
-                                        <script>
-                                        // Obtener el campo de entrada por su ID
-                                        var montoInput = document.getElementById('montoInput');
-                                        
-                                        // Agregar un manejador de eventos para el evento 'input'
-                                        montoInput.addEventListener('input', function() {
-                                            // Obtener la posición actual del cursor
-                                            var cursorPosition = montoInput.selectionStart;
-                                          
-                                            // Obtener el valor actual del campo
-                                            var valor = montoInput.value;
-                                            
-                                            // Quitar cualquier carácter que no sea un número o punto
-                                            valor = valor.replace(/[^0-9.]/g, '');
-                                            
-                                            // Formatear el valor con dos decimales
-                                            valor = parseFloat(valor).toFixed(2);
-                                            
-                                            // Agregar separadores de miles y el signo de dólar
-                                            valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
-                                            
-                                            // Asignar el valor formateado de nuevo al campo
-                                            montoInput.value = valor;
-                                            
-                                            // Restaurar la posición del cursor después del formato
-                                            var newPos = cursorPosition + (valor.length - montoInput.value.length);
-                                            montoInput.setSelectionRange(newPos, newPos);
-                                        });
-                                        </script> 
-                                        <div class="col-md-3">
-                                            <label>Medios de pago <span class="campo-obligatorio">*</span></label>
-                                            <select class="form-control mb-3 custom-select" name="medios_de_pago" required>
-                                                {% for option in ['Efectivo', 'Mercado pago', 'Cuenta DNI'] %}
-                                                    <option value="{{ option }}" {% if d.medios_de_pago == option %}selected{% endif %}>{{ option }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <div class="col-md-3 text-center">
+                                        <div class=" text-center">
                                             <div class="btn-container">
                                                 <button type="submit" class="btn-guardar">Guardar cambios</button>
                                             <div>
                                         </div>
                                         </div>
+                                        <script>
+                                            // Obtener el campo de entrada por su ID
+                                            var montoInput = document.getElementById('montoInput');
+                                            
+                                            // Agregar un manejador de eventos para el evento 'input'
+                                            montoInput.addEventListener('input', function() {
+                                                // Obtener la posición actual del cursor
+                                                var cursorPosition = montoInput.selectionStart;
+                                              
+                                                // Obtener el valor actual del campo
+                                                var valor = montoInput.value;
+                                                
+                                                // Quitar cualquier carácter que no sea un número o punto
+                                                valor = valor.replace(/[^0-9.]/g, '');
+                                                
+                                                // Formatear el valor con dos decimales
+                                                valor = parseFloat(valor).toFixed(2);
+                                                
+                                                // Agregar separadores de miles y el signo de dólar
+                                                valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                                
+                                                // Asignar el valor formateado de nuevo al campo
+                                                montoInput.value = valor;
+                                                
+                                                // Restaurar la posición del cursor después del formato
+                                                var newPos = cursorPosition + (valor.length - montoInput.value.length);
+                                                montoInput.setSelectionRange(newPos, newPos);
+                                            });
+                                            </script> 
                                     </form>
                                 </div>
                             </div>
