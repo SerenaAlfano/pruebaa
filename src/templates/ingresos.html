@@ -98,7 +98,12 @@
                     </div>
                     <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
                 </form>            
-
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Buscar Ingreso:</label>
+                        <input type="text" class="form-control" id="busquedaInput" placeholder="Escriba el nombre del alumno, apellido, fecha, etc">
+                    </div>
+                </div>
             </div>
             <div class="table-container">
                 <table class="table table-bordered m-1 mb-5" style="background-color: white;">
@@ -158,36 +163,28 @@
                                                        value="{{ form_data.monto if form_data else '' }}" id="montoInput">
                                             </div>
                                         </div>
-                                        
                                         <script>
-                                        // Obtener el campo de entrada por su ID
-                                        var montoInput = document.getElementById('montoInput');
-                                        
-                                        // Agregar un manejador de eventos para el evento 'input'
-                                        montoInput.addEventListener('input', function() {
-                                            // Obtener la posición actual del cursor
-                                            var cursorPosition = montoInput.selectionStart;
-                                          
-                                            // Obtener el valor actual del campo
-                                            var valor = montoInput.value;
+                                            // Obtener el campo de entrada por su ID
+                                            var montoInput = document.getElementById('montoInput');
                                             
-                                            // Quitar cualquier carácter que no sea un número o punto
-                                            valor = valor.replace(/[^0-9.]/g, '');
+                                            // Agregar un manejador de eventos para el evento 'input'
+                                            montoInput.addEventListener('input', function() {
+                                                // Obtener el valor actual del campo
+                                                var valor = montoInput.value;
                                             
-                                            // Formatear el valor con dos decimales
-                                            valor = parseFloat(valor).toFixed(2);
+                                                // Quitar cualquier carácter que no sea un número o punto
+                                                valor = valor.replace(/[^0-9.]/g, '');
                                             
-                                            // Agregar separadores de miles y el signo de dólar
-                                            valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                                // Formatear el valor con dos decimales y separador de miles
+                                                valor = parseFloat(valor).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
                                             
-                                            // Asignar el valor formateado de nuevo al campo
-                                            montoInput.value = valor;
+                                                // Agregar el signo de dólar al principio
+                                                valor = '$' + valor;
                                             
-                                            // Restaurar la posición del cursor después del formato
-                                            var newPos = cursorPosition + (valor.length - montoInput.value.length);
-                                            montoInput.setSelectionRange(newPos, newPos);
-                                        });
-                                        </script> 
+                                                // Asignar el valor formateado de nuevo al campo
+                                                montoInput.value = valor;
+                                            });
+                                            </script>                                                                            
                                         <div class="col-md-3">
                                             <label>Medios de pago <span class="campo-obligatorio">*</span></label>
                                             <select class="form-control mb-3 custom-select" name="medios_de_pago" required>
@@ -208,6 +205,35 @@
                         </div>
                     </div>
                     {% endfor %}
+                    <script>
+                        // Obtener el campo de búsqueda y la tabla
+                        var busquedaInput = document.getElementById('busquedaInput');
+                        var tablaIngresos = document.querySelector('.table');
+                        
+                        // Agregar un evento de escucha para la entrada del usuario
+                        busquedaInput.addEventListener('input', function() {
+                            var consulta = busquedaInput.value.toLowerCase();
+                        
+                            // Obtener todas las filas de la tabla
+                            var filas = tablaIngresos.querySelectorAll('tbody tr');
+                        
+                            // Iterar a través de las filas y ocultar/mostrar según la consulta
+                            for (var i = 0; i < filas.length; i++) {
+                                var fila = filas[i];
+                                var nombreAlumno = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                                var apellidoAlumno = fila.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                                var fechaPago = fila.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                                var monto = fila.querySelector('td:nth-child(5)').textContent.toLowerCase();
+                                var medioPago = fila.querySelector('td:nth-child(6)').textContent.toLowerCase();
+                        
+                                if (nombreAlumno.includes(consulta) || apellidoAlumno.includes(consulta) || fechaPago.includes(consulta) || monto.includes(consulta) || medioPago.includes(consulta)) {
+                                    fila.style.display = ''; // Mostrar la fila
+                                } else {
+                                    fila.style.display = 'none'; // Ocultar la fila
+                                }
+                            }
+                        });
+                        </script>                        
                 </tbody>
             </table>
         </div>

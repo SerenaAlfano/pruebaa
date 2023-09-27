@@ -48,11 +48,6 @@ def validar_nombre_titular(nombre_titular):
         return True
     else:
         return False
-def validar_nombre_titular1(nombre_titular1):
-    if re.match("^[A-Za-z]+$", nombre_titular1):
-        return True
-    else:
-        return False
     
 def validar_nombre_alumno(nombre_alumno):
     if re.match("^[A-Za-z]+$", nombre_alumno):
@@ -117,8 +112,6 @@ def agregarAlumno():
     nivel_educativo = request.form["nivel_educativo"]
     nombre_titular = request.form["nombre_titular"]
     telefono_titular = request.form["telefono_titular"]
-    nombre_titular1 = request.form.get("nombre_titular1", "")  # Si no se proporciona, se establece como una cadena vacía
-    telefono_titular1 = request.form.get("telefono_titular1", "")  # Si no se proporciona, se establece como una cadena vacía
     dia = request.form["dia"]
     horario = request.form["horario"]
     materia = request.form["materia"]
@@ -137,8 +130,6 @@ def agregarAlumno():
             'nivel_educativo': nivel_educativo,
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,
-            'nombre_titular1': nombre_titular1,
-            'telefono_titular1': telefono_titular1,
             'dia': dia,
             'horario': horario,
             'materia': materia
@@ -159,8 +150,6 @@ def agregarAlumno():
             'nivel_educativo': nivel_educativo,
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,
-            'nombre_titular1': nombre_titular1,
-            'telefono_titular1': telefono_titular1,
             'dia': dia,
             'horario': horario,
             'materia': materia
@@ -181,36 +170,11 @@ def agregarAlumno():
             'nivel_educativo': nivel_educativo,
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,
-            'nombre_titular1': nombre_titular1,
-            'telefono_titular1': telefono_titular1,
             'dia': dia,
             'horario': horario,
             'materia': materia
         }
         return redirect(url_for('alta'))
-
-    if nombre_titular1:
-        if not validar_nombre_titular(nombre_titular1):
-            flash("El nombre del titular (opcional) no es válido. Debe contener solo letras.", "error")
-            session['form_data'] = {
-                'nombre': nombre,
-                'apellido': apellido,
-                'email': email,
-                'telefono': telefono,
-                'fecha_nacimiento': fecha_nacimiento,
-                'fecha_inicio': fecha_inicio,
-                'colegio': colegio,
-                'curso': curso,
-                'nivel_educativo': nivel_educativo,
-                'nombre_titular': nombre_titular,
-                'telefono_titular': telefono_titular,
-                'nombre_titular1': nombre_titular1,
-                'telefono_titular1': telefono_titular1,
-                'dia': dia,
-                'horario': horario,
-                'materia': materia
-            }
-            return redirect(url_for('alta'))
 
     # Obtén la fecha de nacimiento del formulario
     fecha_nacimiento_str = request.form["fecha_nacimiento"]
@@ -233,8 +197,6 @@ def agregarAlumno():
             'nivel_educativo': nivel_educativo,
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,
-            'nombre_titular1': nombre_titular1,
-            'telefono_titular1': telefono_titular1,
             'dia': dia,
             'horario': horario,
             'materia': materia
@@ -269,8 +231,6 @@ def editar(id):
     nivel_educativo = request.form["nivel_educativo"]
     nombre_titular = request.form["nombre_titular"]
     telefono_titular = request.form["telefono_titular"]
-    nombre_titular1 = request.form.get("nombre_titular1", "")  # Si no se proporciona, se establece como una cadena vacía
-    telefono_titular1 = request.form.get("telefono_titular1", "")  # Si no se proporciona, se establece como una cadena vacía
     dia = request.form["dia"]
     horario = request.form["horario"]
     materia = request.form["materia"]
@@ -289,8 +249,6 @@ def editar(id):
             'nivel_educativo': nivel_educativo,
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,
-            'nombre_titular1': nombre_titular1,
-            'telefono_titular1': telefono_titular1,
             'dia': dia,
             'horario': horario,
             'materia': materia
@@ -311,8 +269,6 @@ def editar(id):
             'nivel_educativo': nivel_educativo,
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,
-            'nombre_titular1': nombre_titular1,
-            'telefono_titular1': telefono_titular1,
             'dia': dia,
             'horario': horario,
             'materia': materia
@@ -333,8 +289,6 @@ def editar(id):
             'nivel_educativo': nivel_educativo,
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,
-            'nombre_titular1': nombre_titular1,
-            'telefono_titular1': telefono_titular1,
             'dia': dia,
             'horario': horario,
             'materia': materia
@@ -363,8 +317,6 @@ def editar(id):
             'nivel_educativo': nivel_educativo,
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,
-            'nombre_titular1': nombre_titular1,
-            'telefono_titular1': telefono_titular1,
             'dia': dia,
             'horario': horario,
             'materia': materia
@@ -397,41 +349,16 @@ def editar(id):
             'nivel_educativo': nivel_educativo,
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,
-            'nombre_titular1': nombre_titular1,
-            'telefono_titular1': telefono_titular1,
             'dia': dia,
             'horario': horario,
             'materia': materia
         }
         return redirect(url_for('alta'))
-    
-    if nombre_titular1:
-        if not validar_nombre_titular(nombre_titular1):
-            flash("El nombre del titular (opcional) no es válido. Debe contener solo letras.", "error")
-            session['form_data'] = {
-                'nombre': nombre,
-                'apellido': apellido,
-                'email': email,
-                'telefono': telefono,
-                'fecha_nacimiento': fecha_nacimiento,
-                'fecha_inicio': fecha_inicio,
-                'colegio': colegio,
-                'curso': curso,
-                'nivel_educativo': nivel_educativo,
-                'nombre_titular': nombre_titular,
-                'telefono_titular': telefono_titular,
-                'nombre_titular1': nombre_titular1,
-                'telefono_titular1': telefono_titular1,
-                'dia': dia,
-                'horario': horario,
-                'materia': materia
-            }
-            return redirect(url_for('alta'))
 
-    if nombre and apellido and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and nombre_titular1 and telefono_titular1 and dia and horario and materia:
+    if nombre and apellido and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and dia and horario and materia:
         cursor = db.database.cursor()
-        sql = "UPDATE alumnos SET nombre = %s, apellido  = %s, email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s,nombre_titular1 = %s, telefono_titular1 = %s, dia = %s, horario = %s, materia = %s WHERE id = %s"
-        data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular,nombre_titular1, telefono_titular1, dia, horario, materia, id)
+        sql = "UPDATE alumnos SET nombre = %s, apellido  = %s, email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s WHERE id = %s"
+        data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia, id)
         cursor.execute(sql, data)
         db.database.commit()
     return redirect(url_for('alta'))

@@ -89,6 +89,12 @@
                     {% endwith %}
                     <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Buscar Egreso:</label>
+                        <input type="text" class="form-control" id="busquedaInput" placeholder="Escriba el nombre del servicio, monto, etc">
+                    </div>
+                </div>
                 <div class="table-container">
                     <table class="table table-bordered m-1 mb-5" style="background-color: white;">
                     <thead>
@@ -182,6 +188,34 @@
                             </div>
                         </div>
                         {% endfor %}
+                        <script>
+                            // Obtener el campo de búsqueda y la tabla
+                            var busquedaInput = document.getElementById('busquedaInput');
+                            var tablaEgresos = document.querySelector('.table');
+                            
+                            // Agregar un evento de escucha para la entrada del usuario
+                            busquedaInput.addEventListener('input', function() {
+                                var consulta = busquedaInput.value.toLowerCase();
+                            
+                                // Obtener todas las filas de la tabla
+                                var filas = tablaEgresos.querySelectorAll('tbody tr');
+                            
+                                // Iterar a través de las filas y ocultar/mostrar según la consulta
+                                for (var i = 0; i < filas.length; i++) {
+                                    var fila = filas[i];
+                                    var nombreServicio = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                                    var fechaPago = fila.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                                    var monto = fila.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                                    var medioPago = fila.querySelector('td:nth-child(5)').textContent.toLowerCase();
+                            
+                                    if (nombreServicio.includes(consulta) || fechaPago.includes(consulta) || monto.includes(consulta) || medioPago.includes(consulta)) {
+                                        fila.style.display = ''; // Mostrar la fila
+                                    } else {
+                                        fila.style.display = 'none'; // Ocultar la fila
+                                    }
+                                }
+                            });
+                            </script>
                     </tbody>
                 </table>
             </div>
