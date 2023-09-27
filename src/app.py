@@ -206,8 +206,8 @@ def agregarAlumno():
 
     # Resto del código para agregar el alumno a la base de datos
     cursor = db.database.cursor()
-    sql = "INSERT INTO alumnos (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, nombre_titular1, telefono_titular1, dia, horario, materia) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, nombre_titular1, telefono_titular1, dia, horario, materia) 
+    sql = "INSERT INTO alumnos (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) 
     try:
         cursor.execute(sql, data)
         db.database.commit()  # Realiza el commit después de la inserción
@@ -438,6 +438,8 @@ def ingresos():
             return redirect(url_for('ingresos'))
         
         if nombre_alumno and fecha_pago and monto and medios_de_pago:
+            monto = monto.replace('$', '').replace(',', '')  # Elimina "$" y comas
+            monto = float(monto)  
         # Remove the existing SQL statement
             cursor = db.database.cursor()
             sql = "INSERT INTO ingresos (nombre_alumno, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s)"

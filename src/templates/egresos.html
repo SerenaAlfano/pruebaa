@@ -87,7 +87,6 @@
                     </div>
                     {% endif %}
                     {% endwith %}
-                    <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -98,7 +97,7 @@
                 <div class="table-container">
                     <table class="table table-bordered m-1 mb-5" style="background-color: white;">
                     <thead>
-                        <th class="title" scope="col">#</th>
+                
                         <th class="title" scope="col">Nombre del servicio o gasto</th>
                         <th class="title" scope="col">Fecha de pago</th>
                         <th class="title" scope="col">Monto</th>
@@ -109,7 +108,7 @@
                     <tbody>
                         {% for d in data %}
                         <tr>
-                            <td>{{ d.id }}</td>
+                       
                             <td>{{ d.servicios }}</td>
                             <td>{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
                             <td>${{ '{:,.2f}'.format(d.monto) }}</td>

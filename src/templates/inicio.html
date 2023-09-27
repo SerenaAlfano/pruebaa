@@ -20,35 +20,51 @@
     <div class="container text-center ">
         <h5 class="mb-5">Bienvenido</h5>
         <div class="row  justify-content-center">
-            <div class="col">
-                <div class="card p-3" style="width: 18rem; border-radius: 1em;">
+            <div class="col-md-4">
+                <div class="card p-3" style="width: 16rem; border-radius: 1em;">
                     <a class="link-home" href="{{ url_for('alta') }}">
                         <h5 class="card-title " >Nuevo alumno</h5>
-                        <img src="static/img/Matricula.png" class="card-img-top" alt="..."> 
+                        <img src="static/img/nuevo-alumno.svg" class="card-img-top" alt="..."> 
                     </a>
                 </div>
             </div>
-            <div class="col">
-                <div class="card p-3" style="width: 18rem; border-radius: 1em;">
+            <div class="col-md-4">
+                <div class="card p-3" style="width: 16rem; border-radius: 1em;">
                     <a class="link-home" href="{{ url_for('ingresos') }}">
                         <h5 class="card-title">Ingresos</h5>
-                        <img src="static/img/ingresos.png" class="card-img-top" alt="...">  
+                        <img src="static/img/ingresos.svg" class="card-img-top" alt="...">  
                     </a>   
                 </div>
             </div>
-            <div class="col">
-                <div  class="card p-3" style="width: 18rem; border-radius: 1em;">
+            <div class="col-md-4">
+                <div  class="card p-3" style="width: 16rem; border-radius: 1em;">
                     <a class="link-home" href="{{ url_for('egresos') }}">
                         <h5 class="card-title">Egresos</h5>
-                        <img src="static/img/egresos.png" class="card-img-top" alt="...">     
+                        <img src="static/img/egresos.svg" class="card-img-top" alt="...">     
                     </a>
                 </div>
             </div>
-            <div class="col">
-                <div  class="card p-3" style="width: 18rem; border-radius: 1em;">
+            <div class="col-md-4">
+                <div  class="card p-3" style="width: 16rem; border-radius: 1em;">
                     <a class="link-home" href="{{ url_for('resumen') }}">
-                        <h5 class="card-title">Resumen</h5>
-                        <img src="static/img/egresos.png" class="card-img-top" alt="...">     
+                        <h5 class="card-title">Caja</h5>
+                        <img src="static/img/caja.svg" class="card-img-top" alt="...">     
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div  class="card p-3" style="width: 16rem; border-radius: 1em;">
+                    <a class="link-home" href="{{ url_for('resumen') }}">
+                        <h5 class="card-title">Agenda</h5>
+                        <img src="static/img/calendario.svg" class="card-img-top" alt="...">     
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div  class="card p-3" style="width: 16rem; border-radius: 1em;">
+                    <a class="link-home" href="{{ url_for('resumen') }}">
+                        <h5 class="card-title">Control de pagos</h5>
+                        <img src="static/img/control-pagos.svg" class="card-img-top" alt="...">     
                     </a>
                 </div>
             </div>
