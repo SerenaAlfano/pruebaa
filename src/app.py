@@ -668,6 +668,21 @@ def editaregresos(id):
             data=db.database
     return redirect(url_for('egresos'))
 
+#Caja
+@app.route('/caja')
+def caja():
+    return render_template('resumen.html')
+
+#Agenda
+@app.route('/agenda')
+def agenda():
+    return render_template('agenda.html')
+
+#Agenda
+@app.route('/control')
+def control():
+    return render_template('control.html')
+
 #PDF de ingresos
 
 @app.route('/descargar_pdf/<int:id_ingresos>')
