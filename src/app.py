@@ -482,7 +482,6 @@ def ingresos():
     fecha_pago = None
     fecha_actual = None
     nombre_alumno = None
-    apellido_alumno = None
     monto = None
     medios_de_pago = None
     
@@ -524,11 +523,10 @@ def ingresos():
         # Obtiene la fecha actual
         fecha_actual = datetime.now().date()
         
-        if fecha_pago is not None and fecha_actual is not None and fecha_pago > fecha_actual:
+        if fecha_pago > fecha_actual:
             flash("La fecha de pago debe ser actual o anterior.", "error")
             session['form_data'] = {
                 'nombre_alumno': nombre_alumno,
-           
                 'fecha_pago': fecha_pago_str,
                 'monto': monto,
                 'medios_de_pago': medios_de_pago
@@ -537,7 +535,7 @@ def ingresos():
         
         if nombre_alumno and fecha_pago and monto and medios_de_pago:
             monto = monto.replace('$', '').replace(',', '')  # Elimina "$" y comas
-            monto = float(monto)  
+            monto = float(monto) 
         # Remove the existing SQL statement
             cursor = db.database.cursor()
             sql = "INSERT INTO ingresos (nombre_alumno, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s)"
@@ -606,7 +604,7 @@ def editaringresos(id_ingresos):
         cursor.close()
         data = db.database
         if registro_editar:
-            return render_template("editar_ingresos.html", registro=registro_editar, data=data)
+            return render_template("ingresos.html", registro=registro_editar, data=data)
         else:
             # Manejar el caso si no se encuentra el registro a editar
             flash("Registro no encontrado.", "error")
@@ -663,6 +661,24 @@ def egresos():
         fecha_pago = request.form["fecha_pago"]
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
+
+        # Verificar si el servicio es un gasto fijo mensual
+        gastos_fijos_mensuales = ["luz", "agua", "gas", "internet"]
+        if servicios.lower() in gastos_fijos_mensuales:
+             # Verificar si el servicio ya se ha registrado este mes
+             cursor = db.database.cursor()
+             cursor.execute("SELECT COUNT(*) FROM egresos WHERE servicios = %s AND MONTH(fecha_pago) = MONTH(CURRENT_DATE())", (servicios,))
+             count = cursor.fetchone()[0]
+             cursor.close()
+             if count > 0:
+                flash(f"El servicio {servicios} ya se ha registrado este mes.", "error")
+                session['form_data'] = {
+                    'servicios': servicios,
+                    'fecha_pago': fecha_pago,
+                    'monto': monto,
+                    'medios_de_pago': medios_de_pago
+                }
+                return redirect(url_for('egresos'))
         
          # Obtén la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]

@@ -16,7 +16,7 @@
                     <form action="{{ url_for('ingresos')}}" method="POST">
                         <div class="row mb-3">
                             <div class="col-md-3">
-                                <label for="nombre_alumno">Nombre del Alumno:</label>
+                                <label for="nombre_alumno">Nombre</label>
                                 <select name="nombre_alumno" id="nombre_alumno" class="form-control mb-3">
                                     {% for alumno in nombres_apellidos %}
                                         <option value="{{ alumno }}">{{ alumno }}</option>
@@ -31,8 +31,7 @@
                                 <label>Monto <span class="campo-obligatorio">*</span></label>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">$</span>
-                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required
-                                           value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
                                 </div>
                             </div>
                             <script>
@@ -84,6 +83,16 @@
                                     <button type="submit" class="btn-guardar">Guardar</button>
                                 </div>
                             </div>
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                            <div class="alert alert-danger" role="alert">
+                                {% for category, message in messages %}
+                                {{ message }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% endwith %}
+                            </div>
                         </div>
                     </form>            
                     <div class="row mb-3">
@@ -106,7 +115,7 @@
                     <tbody>
                         {% for d in data %}
                         <tr>
-                            <td>{{ d.nombre_alumno }}</td>
+                            <td>{{ d.nombre_alumno.title() }}</td>
                             <td>{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
                             <td>${{ '{:,.2f}'.format(d.monto) }}</td>
                             <td>{{ d.medios_de_pago }}</td>
@@ -140,11 +149,42 @@
                                                     <label>Fecha de pago <span class="campo-obligatorio">*</span></label>                                        
                                                     <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-md-3">
                                                     <label>Monto <span class="campo-obligatorio">*</span></label>
                                                     <div class="input-group mb-3">
                                                         <span class="input-group-text">$</span>
                                                         <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                                    </div>
+                                                </div>
+                                                <script>
+                                                // Obtener el campo de entrada por su ID
+                                                var montoInput = document.getElementById('montoInput');
+                                                
+                                                // Agregar un manejador de eventos para el evento 'input'
+                                                montoInput.addEventListener('input', function() {
+                                                    // Obtener la posición actual del cursor
+                                                    var cursorPosition = montoInput.selectionStart;
+                                                  
+                                                    // Obtener el valor actual del campo
+                                                    var valor = montoInput.value;
+                                                    
+                                                    // Quitar cualquier carácter que no sea un número o punto
+                                                    valor = valor.replace(/[^0-9.]/g, '');
+                                                    
+                                                    // Formatear el valor con dos decimales
+                                                    valor = parseFloat(valor).toFixed(2);
+                                                    
+                                                    // Agregar separadores de miles y el signo de dólar
+                                                    valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                                    
+                                                    // Asignar el valor formateado de nuevo al campo
+                                                    montoInput.value = valor;
+                                                    
+                                                    // Restaurar la posición del cursor después del formato
+                                                    var newPos = cursorPosition + (valor.length - montoInput.value.length);
+                                                    montoInput.setSelectionRange(newPos, newPos);
+                                                });
+                                                </script> 
                                                         <div class="col-md-3">
                                                             <label class="label-with-arrow">
                                                                 Medios de pago <span class="campo-obligatorio">*</span>

@@ -15,6 +15,21 @@
                                 <label >Nombre del servicio o gasto <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="servicios" required value="{{ form_data.servicios if form_data else '' }}">
                             </div>
+                            <script>
+                                // Obtener el valor ingresado por el usuario en el campo de entrada de texto
+                                const tipoGastoManual = document.querySelector('input[name="servicios"]').value.trim().toLowerCase();
+                                
+                                // Verificar si el tipo de gasto es uno de los gastos fijos mensuales
+                                const gastosFijosMensuales = ["luz", "gas", "agua", "internet"];
+                                
+                                if (gastosFijosMensuales.includes(tipoGastoManual)) {
+                                    // Aquí debes consultar el backend para verificar si este gasto ya se registró este mes
+                                    // Si ya se registró, muestra un mensaje de error y evita enviar el formulario
+                                    // Si no se registró, permite enviar el formulario sin restricciones
+                                } else {
+                                    // Para otros gastos, permite enviar el formulario sin restricciones
+                                }
+                            </script>                            
                             <div class="col-md-3">
                                 <label >Fecha de pago <span class="campo-obligatorio">*</span></label>
                                 <input type="date" class="form-control mb-3" name="fecha_pago" required value="{{ form_data.fecha_pago if form_data else '' }}">
@@ -23,8 +38,7 @@
                                 <label>Monto <span class="campo-obligatorio">*</span></label>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">$</span>
-                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required
-                                           value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
                                 </div>
                             </div>
                             <script>
@@ -109,7 +123,7 @@
                         {% for d in data %}
                         <tr>
                        
-                            <td>{{ d.servicios }}</td>
+                            <td>{{ d.servicios.title() }}</td>
                             <td>{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
                             <td>${{ '{:,.2f}'.format(d.monto) }}</td>
                             <td>{{ d.medios_de_pago }}</td>
@@ -135,8 +149,7 @@
                                                 <label>Monto <span class="campo-obligatorio">*</span></label>
                                                 <div class="input-group mb-3">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required
-                                                           value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
                                                 </div>
                                             </div>
                                             <script>
@@ -195,32 +208,33 @@
                         </div>
                         {% endfor %}
                         <script>
-                            // Obtener el campo de búsqueda y la tabla
-                            var busquedaInput = document.getElementById('busquedaInput');
-                            var tablaEgresos = document.querySelector('.table');
-                            
-                            // Agregar un evento de escucha para la entrada del usuario
-                            busquedaInput.addEventListener('input', function() {
-                                var consulta = busquedaInput.value.toLowerCase();
-                            
-                                // Obtener todas las filas de la tabla
-                                var filas = tablaEgresos.querySelectorAll('tbody tr');
-                            
-                                // Iterar a través de las filas y ocultar/mostrar según la consulta
-                                for (var i = 0; i < filas.length; i++) {
-                                    var fila = filas[i];
-                                    var nombreServicio = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                                    var fechaPago = fila.querySelector('td:nth-child(3)').textContent.toLowerCase();
-                                    var monto = fila.querySelector('td:nth-child(4)').textContent.toLowerCase();
-                                    var medioPago = fila.querySelector('td:nth-child(5)').textContent.toLowerCase();
-                            
-                                    if (nombreServicio.includes(consulta) || fechaPago.includes(consulta) || monto.includes(consulta) || medioPago.includes(consulta)) {
-                                        fila.style.display = ''; // Mostrar la fila
-                                    } else {
-                                        fila.style.display = 'none'; // Ocultar la fila
-                                    }
-                                }
-                            });
+// Obtener el campo de búsqueda y la tabla
+var busquedaInput = document.getElementById('busquedaInput');
+var tablaEgresos = document.querySelector('.table');
+
+// Agregar un evento de escucha para la entrada del usuario
+busquedaInput.addEventListener('input', function() {
+    var consulta = busquedaInput.value.toLowerCase(); // Convertir consulta a minúsculas
+
+    // Obtener todas las filas de la tabla
+    var filas = tablaEgresos.querySelectorAll('tbody tr');
+
+    // Iterar a través de las filas y ocultar/mostrar según la consulta
+    for (var i = 0; i < filas.length; i++) {
+        var fila = filas[i];
+        var servicios = fila.querySelector('td:nth-child(2)').textContent.toLowerCase(); // Convertir servicios a minúsculas
+        var fecha_Pago = fila.querySelector('td:nth-child(3)').textContent.toLowerCase(); // Convertir fecha_Pago a minúsculas
+        var monto = fila.querySelector('td:nth-child(4)').textContent.toLowerCase(); // Convertir monto a minúsculas
+        var medios_de_pago = fila.querySelector('td:nth-child(5)').textContent.toLowerCase(); // Convertir medios_de_pago a minúsculas
+
+        if (servicios.includes(consulta) || fecha_Pago.includes(consulta) || monto.includes(consulta) || medios_de_pago.includes(consulta)) {
+            fila.style.display = ''; // Mostrar la fila
+        } else {
+            fila.style.display = 'none'; // Ocultar la fila
+        }
+    }
+});
+
                             </script>
                     </tbody>
                 </table>
