@@ -192,3 +192,40 @@ body {
   background-color: #FBD374;
   color: white;
 }
+
+.calendar {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#prev-month, #next-month {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calendar-table th {
+  background-color: #f0f0f0;
+  padding: 8px;
+}
+
+.calendar-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+#month-year {
+  font-size: 24px;
+  font-weight: bold;
+}
