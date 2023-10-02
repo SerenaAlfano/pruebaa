@@ -1,4 +1,29 @@
 {% extends "base.html" %}
 <head>
     {% block title %}Egresos{% endblock %}
+    <title>Agenda</title>
 </head>
+<body>
+    <div class="calendar">
+        <div class="calendar-header">
+            <span id="prev-month">&#9665;</span>
+            <h1 id="month-year">Octubre 2023</h1>
+            <span id="next-month">&#9655;</span>
+        </div>
+        <table class="calendar-table">
+            <thead>
+                <tr>
+                    <th>Domingo</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                    <th>Sábado</th>
+                </tr>
+            </thead>
+            <tbody id="calendar-body"></tbody>
+        </table>
+    </div>
+    <script src="script.js"></script>
+</body>
