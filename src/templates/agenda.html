@@ -3,6 +3,7 @@
     {% block title %}Agenda{% endblock %}
 </head>
 <body>
+    {% block content %}
     <div class="calendar">
         <div class="calendar-header">
             <span id="prev-month">&#9665;</span>
@@ -25,4 +26,5 @@
         </table>
     </div>
     <script src="script.js"></script>
+    {% endblock %}
 </body>

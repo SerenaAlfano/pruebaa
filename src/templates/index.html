@@ -17,6 +17,7 @@
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nombre" required value="{{ form_data.nombre if form_data else '' }}">
+                                <div id="nombre-error" class="text-danger"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Apellido <span class="campo-obligatorio">*</span></label>
