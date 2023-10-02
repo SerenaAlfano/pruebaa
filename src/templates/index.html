@@ -8,42 +8,42 @@
 
     {% block content %}
 
-        <div class="col-md-10 container">
-            <p class="text-left">Nuevo alumno</p>
-            <div class="card mb-5">
+        <div class="col-md-12 container">
+            <h3 class="text-left subtitulo mt-3">Nuevo alumno</h3>
+            <div class="card-contenedor mb-5">
                 <div class="card-body">
                     <form action="/alumnos" method="POST">
                         <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label>Nombre <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nombre" required value="{{ form_data.nombre if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label>Apellido <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Apellido <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="apellido" required value="{{ form_data.apellido if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label>Email <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="email" required value="{{ form_data.email if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label>Telefono <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
                                 <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" required value="{{ form_data.telefono if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label>Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
                                 <input type="date" class="form-control mb-3" name="fecha_nacimiento" required value="{{ form_data.fecha_nacimiento if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label>Fecha de inicio <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Fecha de inicio <span class="campo-obligatorio">*</span></label>
                                 <input type="date" class="form-control mb-3" name="fecha_inicio" required value="{{ form_data.fecha_inicio if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label>Colegio <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Colegio <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="colegio" required value="{{ form_data.colegio if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label class="label-with-arrow">
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form label-with-arrow">
                                     Curso <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
                                         <select class="form-control mb-3" name="curso" required value="{{ form_data.curso if form_data else '' }}">
@@ -57,8 +57,8 @@
                                     </div>
                                 </label>
                             </div>
-                            <div class="col-md-3">
-                                <label class="label-with-arrow">
+                            <div class="col-md-3 col-sm-12" >
+                                <label class="label-form label-with-arrow">
                                     Nivel educativo <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
                                         <select class="form-control mb-3" name="nivel_educativo" required value="{{ form_data.nivel_educativo if form_data else '' }}">
@@ -72,16 +72,16 @@
                                     </div>
                                 </label>
                             </div>
-                            <div class="col-md-3">
-                                <label>Nombre tutor <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Nombre tutor <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nombre_titular" required value="{{ form_data.nombre_titular if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label>Telefono tutor <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label  class="label-form">Telefono tutor <span class="campo-obligatorio">*</span></label>
                                 <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" required value="{{ form_data.telefono_titular if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label class="label-with-arrow">
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form label-with-arrow">
                                     Dia <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
                                         <select class="form-control mb-3" name="dia" required value="{{ form_data.dia if form_data else '' }}">
@@ -95,12 +95,12 @@
                                     </div>
                                 </label>
                             </div>
-                            <div class="col-md-3">
-                                <label>Horario <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Horario <span class="campo-obligatorio">*</span></label>
                                 <input class="form-control mb-3" type="time" id="horario" name="horario" required value="{{ form_data.horario if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label class="label-with-arrow">
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form label-with-arrow">
                                     Materia <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
                                         <select class="form-control mb-3" name="materia" required value="{{ form_data.materia if form_data else '' }}">
@@ -114,7 +114,7 @@
                                     </div>
                                 </label>
                             </div>
-                            <div class="text-center">
+                            <div class="col-md-3 col-sm-12">
                                 <div class="btn-container">
                                     <button type="submit" class="btn-guardar">Guardar alumno</button>
                                 </div>
@@ -133,10 +133,9 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label>Buscar Alumno:</label>
-                        <input type="text" class="form-control" id="busquedaInput" placeholder="Escriba el nombre del alumno, apellido, fecha, materia, etc">
+                <div class="row mb-3">    
+                    <div class="form-inline">
+                        <input type="text" class="form-control" id="busquedaInput" placeholder="Buscar alumno">
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -157,28 +156,27 @@
                                 <th scope="col" class="col-tabla">Día</th>
                                 <th scope="col" class="col-tabla">Horario</th>
                                 <th scope="col" class="col-tabla">Materia</th>
-                                <th class="title" scope="col" colspan="2">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for d in data %}
                             <tr>      
-                                <td>{{ d.nombre.title() }}</td>
-                                <td>{{ d.apellido.title() }}</td>
-                                <td>{{ d.email.title() }}</td>
-                                <td>{{ d.telefono }}</td>
-                                <td>{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
-                                <td>{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>
-                                <td>{{ d.colegio.title() }}</td>
-                                <td>{{ d.curso }}</td>
-                                <td>{{ d.nivel_educativo }}</td>
-                                <td>{{ d.nombre_titular.title() }}</td>
-                                <td>{{ d.telefono_titular }}</td>
-                                <td>{{ d.dia }}</td>
-                                <td>{{ d.horario }}</td>
-                                <td>{{ d.materia }}</td>
+                                <td class="td-table">{{ d.nombre.title() }}</td>
+                                <td class="td-table">{{ d.apellido.title() }}</td>
+                                <td class="td-table">{{ d.email.title() }}</td>
+                                <td class="td-table">{{ d.telefono }}</td>
+                                <td class="td-table">{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
+                                <td class="td-table">{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>
+                                <td class="td-table">{{ d.colegio.title() }}</td>
+                                <td class="td-table">{{ d.curso }}</td>
+                                <td class="td-table">{{ d.nivel_educativo }}</td>
+                                <td class="td-table">{{ d.nombre_titular.title() }}</td>
+                                <td class="td-table">{{ d.telefono_titular }}</td>
+                                <td class="td-table">{{ d.dia }}</td>
+                                <td class="td-table">{{ d.horario }}</td>
+                                <td class="td-table">{{ d.materia }}</td>
                                 <td class="text-center"> 
-                                    <i class="btn-operacion bi bi-pencil-square" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i>
+                                    <i class="btn-operacion bi bi-pencil-square text-center" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i>
                                 </td>
                                 <td class="text-center">
                                      <i class="btn-operacion bi bi bi-trash "id="confirmarEliminar{{d.id}}" data-bs-toggle="modal" data-bs-target="#confirmarEliminar{{d.id}}"data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"></i></td>                         
@@ -213,111 +211,120 @@
                                         </div>
                                         <div class="modal-body">
                                             <form action="/editar/{{ d.id }}" method="POST">
-                                                <div class="col-md-3">
-                                                    <label>Nombre <span class="campo-obligatorio">*</span></label>
-                                                    <input type="text" class="form-control mb-3" name="nombre" required value="{{ d.nombre }}">
+                                                <div class="p-2">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-sm-6">
+                                                            <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control mb-3" name="nombre" required value="{{ d.nombre }}">
+                                                        </div>
+                                                            <div class="col-md-3">
+                                                                <label>Apellido <span class="campo-obligatorio">*</span></label>
+                                                                <input type="text" class="form-control mb-3" name="apellido" value="{{ d.apellido }}" required>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
+                                                                <input type="text" class="form-control mb-3" name="email" value="{{ d.email }}" required>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
+                                                                <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" value="{{ d.telefono }}" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <label class="label-form">Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
+                                                            <input type="date" class="form-control mb-3" name="fecha_nacimiento" value="{{ d.fecha_nacimiento }}" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-form">Fecha de inicio <span class="campo-obligatorio">*</span></label>
+                                                            <input type="date" class="form-control mb-3" name="fecha_inicio" value="{{ d.fecha_inicio }}" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-form">Colegio <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control mb-3" name="colegio" value="{{ d.colegio }}" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-form label-with-arrow">
+                                                                Curso <span class="campo-obligatorio">*</span>
+                                                                <div class="select-container">
+                                                                    <select class="form-control mb-3" name="curso" required value="{{ form_data.curso if form_data else '' }}">
+                                                                        {% for option in ['Primero', 'Segundo', 'Tercero','Cuarto','Quinto','Sexto'] %}
+                                                                        <option value="{{ option }}" {% if data.curso == option %}selected{% endif %}>{{ option }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <label class="label-form label-with-arrow">
+                                                                Nivel educativo <span class="campo-obligatorio">*</span>
+                                                                <div class="select-container">
+                                                                    <select class="form-control mb-3" name="nivel_educativo" required value="{{ form_data.nivel_educativo if form_data else '' }}">
+                                                                        {% for option in ['Primario', 'Secundario', 'Terciario'] %}
+                                                                        <option value="{{ option }}" {% if data.nivel_educativo == option %}selected{% endif %}>{{ option }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-form"> Nombre tutor <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control mb-3" name="nombre_titular" value="{{ d.nombre_titular }}" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-form">Telefono tutor <span class="campo-obligatorio">*</span></label>
+                                                            <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" value="{{ d.telefono_titular }}" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-form label-with-arrow">
+                                                                Dia <span class="campo-obligatorio">*</span>
+                                                                <div class="select-container">
+                                                                    <select class="form-control mb-3" name="dia" required value="{{ form_data.dia if form_data else '' }}">
+                                                                        {% for option in ['Lunes', 'Martes', 'Miercoles','Jueves','Viernes'] %}
+                                                                        <option value="{{ option }}" {% if data.dia == option %}selected{% endif %}>{{ option }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <label class="label-form">Horario <span class="campo-obligatorio">*</span></label>
+                                                            <input class="form-control mb-3" type="time" id="horario" name="horario" value="{{ d.horario }}" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-with-arrow">
+                                                                Materia <span class="campo-obligatorio">*</span>
+                                                                <div class="select-container">
+                                                                    <select class="form-control mb-3" name="materia" required value="{{ form_data.materia if form_data else '' }}">
+                                                                        {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
+                                                                        <option value="{{ option }}" {% if data.materia == option %}selected{% endif %}>{{ option }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <button type="submit" class="btn-guardar">Guardar cambios</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                    <div class="col-3">
-                                                        <label>Apellido <span class="campo-obligatorio">*</span></label>
-                                                        <input type="text" class="form-control mb-3" name="apellido" value="{{ d.apellido }}" required>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <label>Email <span class="campo-obligatorio">*</span></label>
-                                                        <input type="text" class="form-control mb-3" name="email" value="{{ d.email }}" required>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <label>Telefono <span class="campo-obligatorio">*</span></label>
-                                                        <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" value="{{ d.telefono }}" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-3">
-                                                        <label>Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
-                                                        <input type="date" class="form-control mb-3" name="fecha_nacimiento" value="{{ d.fecha_nacimiento }}" required>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <label>Fecha de inicio <span class="campo-obligatorio">*</span></label>
-                                                        <input type="date" class="form-control mb-3" name="fecha_inicio" value="{{ d.fecha_inicio }}" required>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <label>Colegio <span class="campo-obligatorio">*</span></label>
-                                                        <input type="text" class="form-control mb-3" name="colegio" value="{{ d.colegio }}" required>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <label class="label-with-arrow">
-                                                            Curso <span class="campo-obligatorio">*</span>
-                                                            <div class="select-container">
-                                                                <select class="form-control mb-3" name="curso" required value="{{ form_data.curso if form_data else '' }}">
-                                                                    {% for option in ['Primero', 'Segundo', 'Tercero','Cuarto','Quinto','Sexto'] %}
-                                                                    <option value="{{ option }}" {% if data.curso == option %}selected{% endif %}>{{ option }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                                </svg>
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <label class="label-with-arrow">
-                                                            Nivel educativo <span class="campo-obligatorio">*</span>
-                                                            <div class="select-container">
-                                                                <select class="form-control mb-3" name="nivel_educativo" required value="{{ form_data.nivel_educativo if form_data else '' }}">
-                                                                    {% for option in ['Primario', 'Secundario', 'Terciario'] %}
-                                                                    <option value="{{ option }}" {% if data.nivel_educativo == option %}selected{% endif %}>{{ option }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                                </svg>
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <label>Nombre tutor <span class="campo-obligatorio">*</span></label>
-                                                        <input type="text" class="form-control mb-3" name="nombre_titular" value="{{ d.nombre_titular }}" required>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <label>Telefono tutor <span class="campo-obligatorio">*</span></label>
-                                                        <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" value="{{ d.telefono_titular }}" required>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <label class="label-with-arrow">
-                                                            Dia <span class="campo-obligatorio">*</span>
-                                                            <div class="select-container">
-                                                                <select class="form-control mb-3" name="dia" required value="{{ form_data.dia if form_data else '' }}">
-                                                                    {% for option in ['Lunes', 'Martes', 'Miercoles','Jueves','Viernes'] %}
-                                                                    <option value="{{ option }}" {% if data.dia == option %}selected{% endif %}>{{ option }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                                </svg>
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <label>Horario <span class="campo-obligatorio">*</span></label>
-                                                        <input class="form-control mb-3" type="time" id="horario" name="horario" value="{{ d.horario }}" required>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <label class="label-with-arrow">
-                                                            Materia <span class="campo-obligatorio">*</span>
-                                                            <div class="select-container">
-                                                                <select class="form-control mb-3" name="materia" required value="{{ form_data.materia if form_data else '' }}">
-                                                                    {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
-                                                                    <option value="{{ option }}" {% if data.materia == option %}selected{% endif %}>{{ option }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                                </svg>
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <button type="submit" class="btn-guardar">Guardar cambios</button>
-                                                    </div>
                                                 </div>
                                             </form>
                                         </div>

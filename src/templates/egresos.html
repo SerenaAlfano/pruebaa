@@ -4,15 +4,14 @@
 </head>
 <body>
     {% block content %}
-    <div class="row">
-        <div class="col-md-10 container">
-            <p class="text-left"> Egresos</p>
-            <div class="card"> 
+        <div class="col-md-12 container">
+            <h3 class="text-left subtitulo mt-3">Egresos</h3>
+            <div class="card-contenedor mb-5"> 
                 <div class="card-body">
                     <form action="{{ url_for('egresos')}}" method="POST">
                         <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label >Nombre del servicio o gasto <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label  class="label-form">Nombre del servicio o gasto <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="servicios" required value="{{ form_data.servicios if form_data else '' }}">
                             </div>
                             <script>
@@ -31,11 +30,11 @@
                                 }
                             </script>                            
                             <div class="col-md-3">
-                                <label >Fecha de pago <span class="campo-obligatorio">*</span></label>
+                                <label class="label-form" >Fecha de pago <span class="campo-obligatorio">*</span></label>
                                 <input type="date" class="form-control mb-3" name="fecha_pago" required value="{{ form_data.fecha_pago if form_data else '' }}">
                             </div>
                             <div class="col-md-3">
-                                <label>Monto <span class="campo-obligatorio">*</span></label>
+                                <label  class="label-form">Monto <span class="campo-obligatorio">*</span></label>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">$</span>
                                     <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
@@ -71,7 +70,7 @@
                             });
                             </script> 
                             <div class="col-md-3">
-                                <label class="label-with-arrow">
+                                <label class="form-label label-with-arrow">
                                     Medios de pago <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
                                         <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
@@ -85,11 +84,11 @@
                                     </div>
                                 </label>
                             </div>
-                            <div class="col-md-3 text-center">
+                     
                                 <div class="btn-container">
                                     <button type="submit" class="btn-guardar">Guardar</button>
                                 </div>
-                            </div>
+                          
                         </div>
                     </form>
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -103,30 +102,29 @@
                     {% endwith %}
                 </div>
                 <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label>Buscar Egreso:</label>
-                        <input type="text" class="form-control" id="busquedaInput" placeholder="Escriba el nombre del servicio, monto, etc">
+                    <div class="form-inline">
+                        <input type="text" class="form-control" id="busquedaInput" placeholder="Buscar alumno">
                     </div>
                 </div>
-                <div class="table-container">
+                <div class="table-responsive">
                     <table class="table table-bordered m-1 mb-5" style="background-color: white;">
                     <thead>
                 
-                        <th class="title" scope="col">Nombre del servicio o gasto</th>
-                        <th class="title" scope="col">Fecha de pago</th>
-                        <th class="title" scope="col">Monto</th>
-                        <th class="title" scope="col">Medio de pago</th>
-                        <th class="title" scope="col" colspan="2">Acciones</th>
+                        <th class="col-tabla" scope="col">Nombre del servicio o gasto</th>
+                        <th class="col-tabla" scope="col">Fecha de pago</th>
+                        <th class="col-tabla" scope="col">Monto</th>
+                        <th class="col-tabla" scope="col">Medio de pago</th>
+                        <th class="col-tabla" scope="col" colspan="2">Acciones</th>
                     </thead>
                 </div>
                     <tbody>
                         {% for d in data %}
                         <tr>
                        
-                            <td>{{ d.servicios.title() }}</td>
-                            <td>{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
-                            <td>${{ '{:,.2f}'.format(d.monto) }}</td>
-                            <td>{{ d.medios_de_pago }}</td>
+                            <td class="td-table">{{ d.servicios.title() }}</td>
+                            <td class="td-table">{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
+                            <td class="td-table">${{ '{:,.2f}'.format(d.monto) }}</td>
+                            <td class="td-table">{{ d.medios_de_pago }}</td>
                             <td class="text-center "> <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}"></i></td>
                             <td class="text-center"> <a href="{{ url_for('eliminar_egresos', id=d.id) }}" ><i class="btn-operacion bi bi-trash"></i></a></td>
                         </tr>
@@ -140,12 +138,18 @@
                                     </div>
                                     <div class="modal-body">
                                         <form action="{{ url_for('editaregresos', id=d.id) }}" method="POST">
-                                            <input type="hidden" name="id" value="{{ d.id }}">
-                                            <label>Nombre del servicio <span class="campo-obligatorio">*</span></label>
-                                            <input type="text" class="form-control mb-3" name="servicios" value="{{ d.servicios }}" required value="{{ form_data.servicios if form_data else '' }}">
-                                            <label>Fecha de pago <span class="campo-obligatorio">*</span></label>
-                                            <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required value="{{ form_data.fecha_pago if form_data else '' }}">
-                                            <div class="col-md-3">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <input type="hidden" name="id" value="{{ d.id }}">
+                                                    <label>Nombre del servicio <span class="campo-obligatorio">*</span></label>
+                                                    <input type="text" class="form-control mb-3" name="servicios" value="{{ d.servicios }}" required value="{{ form_data.servicios if form_data else '' }}">
+                                                </div>
+                                                <div class="col-md-6">
+                                                <label>Fecha de pago <span class="campo-obligatorio">*</span></label>
+                                                <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required value="{{ form_data.fecha_pago if form_data else '' }}">
+                                            </div>
+                                            </div>
+                                                <div class="col-md-3">
                                                 <label>Monto <span class="campo-obligatorio">*</span></label>
                                                 <div class="input-group mb-3">
                                                     <span class="input-group-text">$</span>
@@ -238,7 +242,6 @@ busquedaInput.addEventListener('input', function() {
                             </script>
                     </tbody>
                 </table>
-            </div>
         </div>
     </div>
     {% endblock %}

@@ -8,24 +8,18 @@ body {
     background-color: #f5f5f5 !important;
 }
 
-
-
-
-
-
 /*Log In*/
 .top-bar{
   height:4em; 
   background-color: #FBD374;
   display: flex;
   align-items: center;
+  border-radius: 0.5em;
 }
 .top-bar img {
   margin-right: 10px; 
 }
-.contenedor-login{
-  margin-top: 7em;
-}
+
 
 .form-signin {
   width: 100%;
@@ -37,19 +31,21 @@ body {
 }
 
 .input-login{
-  height: 3em !important;
-  border-radius: 0.5em;
+  height: 2.5em !important;
+  border-radius: 1em;
   border: none;
+  background-color: #f5f5f5;
 }
 
 .txt-login{
   color: #ffff;
   font-weight: 300;
+  font-size: 1.5em;
 }
 
 .btn-login{
   background-color: #FBD374;
-  color: #696969;
+  color: #ffff;
   border-radius: 1em;
   border: none;
 
@@ -78,35 +74,46 @@ body {
 .text-navbar{
   color: #f5f5f5;
   text-decoration: none;
-  margin-left: auto !important;
+
 }
 .link-home {
-  text-decoration: none;
+  text-decoration: none !important;
   color: #333333;
-  margin-left: auto;
-}
-.link-home:hover {
-  color: #333333 ;
-  font-size: 1em;
+
 }
 .navbar img {
   float: left;
   margin-right: 10px;
   height: 40px;
 }
-
 .txt-home{
   margin: 0 auto;
 }
-
-
-/*TAM-MENU*/
-.nav-container {
-  text-align: left; /* Alinea el contenido hacia la izquierda */
+.login-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; /* Ancho del formulario, ajusta según tus necesidades */
+  text-align: center; /* Alinea el contenido al centro */
 }
-
-.nav-item {
-  text-align: left; /* Alinea los elementos de la lista hacia la izquierda */
+.card {
+  width: 12rem;
+  height: 12rem;
+  transition: width 0.3s ease, height 0.3s ease; /* Agrega una transición suave */
+  border-radius: 1em;
+}
+.card:hover{
+  width: 12.2rem !important;
+  height: 12.2rem !;
+}
+.card-title{
+  color: #333333;
+  font-weight: 400;
+}
+.card-title:hover{
+  color: #7ea56a;
+  font-weight: 500;
 }
 
 /*TABS*/
@@ -131,7 +138,9 @@ body {
 .custom-select {
   width: 100%;
 }
-
+.label-form{
+  font-size: 0.9em;
+}
 .label-with-arrow {
   position: relative;
 }
@@ -150,15 +159,19 @@ body {
 
 .btn-operacion{
   padding: 0.4em;
-  background-color: #FBD374;
-  color: white;
+  color: #7ea56a;
+  font-weight: 600;
   border-radius: 1em;
   cursor: pointer;
 }
 .col-tabla{
   width: 6%;
+  font-size: 0.8em;
   font-weight: 500;
   text-align: center;
+}
+.td-table{
+  font-size: 0.8em;
 }
 .btn-guardar {
   background-color: #FBD374;
@@ -186,9 +199,46 @@ body {
   text-align: center; /* Centra horizontalmente el botón */
 }
 .form-control{
-  width: 13em !important;
+  width: 11em !important;
+  height: 1.8em;
 }
 .btn-eliminar{
   background-color: #FBD374;
   color: white;
 }
+.card-contenedor{
+  background-color: #fff;
+}
+
+.nav-item {
+  margin: 0 10px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #ffff !important;
+  padding: 10px;
+  border-bottom: 3px solid transparent;
+}
+
+.nav-link:hover {
+  border-color: #FBD374; /* Cambia el color de borde al hacer hover */
+}
+
+.subtitulo{
+  color: #7ea56a;
+  font-size: 1.5em;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  /* Estilos CSS para pantallas más pequeñas */
+  .label-form {
+      font-size: 16px;
+  }
+}
+
+
+
+
+

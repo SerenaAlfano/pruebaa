@@ -1,16 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from datetime import datetime
 import mysql.connector
-
 import os #Permite acceder a los directorios
 import database as db
-from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager,logout_user
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from flask import make_response
 from flask_paginate import Pagination, get_page_parameter
+
 import re
 
 
@@ -80,10 +79,7 @@ def validar_telefono_titular(telefono_titular):
     else:
         return False 
 #Rutas
-#Resumen
-@app.route('/resumen', methods=['GET', 'POST'])
-def resumen():
-    return render_template('resumen.html')
+
 #login
 @app.route('/')
 def pagina_inicio():
@@ -544,9 +540,7 @@ def ingresos():
             db.database.commit()
             cursor.close()
             return redirect(url_for('ingresos'))
-
-            
-        
+    
     
     # Tu lógica para mostrar la página de ingresos con la lista de datos aquí
     cursor = db.database.cursor()
@@ -782,9 +776,9 @@ def editaregresos(id):
             data=db.database
     return redirect(url_for('egresos'))
 
-#Caja
-@app.route('/caja')
-def caja():
+#Resumen
+@app.route('/resumen', methods=['GET', 'POST'])
+def resumen():
     return render_template('resumen.html')
 
 #Agenda
@@ -796,6 +790,9 @@ def agenda():
 @app.route('/control')
 def control():
     return render_template('control.html')
+
+#Notificar deudas
+
 
 #PDF de ingresos
 

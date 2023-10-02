@@ -11,51 +11,56 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
 <body>
-        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #7ea56a;">
-            <div class="container-fluid">
-                <div class="navbar">
-                    <a href="{{ url_for('inicio') }}">
-                        <img src="/static/img/logo.png" alt="Logo" >
-                    </a>
-                    <a class="text-right" style="margin-left:85em; color:white; text-decoration: none" href="{{ url_for('logout') }}">Cerrar Sesión</a>           
-                </div>
-            </div>
-        </nav>
+    <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #7ea56a;">
+        <div class="container-fluid ">
+            <a href="{{ url_for('inicio') }}">
+                <img src="/static/img/logo.png" alt="Logo" >
+            </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+            <ul class="navbar-nav mx-auto text-center ">
+              <li class="nav-item">
+                <a class="nav-link " href="{{url_for('alta')}}">
+                    Alumnos
+                </a> 
+              </li>
+              <li class="nav-item">
+                <a class="nav-link " href="{{url_for('ingresos')}}">
+                    Ingresos
+                </a> 
+              </li>
+              <li class="nav-item">
+                <a class="nav-link " href="{{url_for('egresos')}}">
+                    Egresos
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{url_for('resumen')}}">
+                    Caja
+                </a> 
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{url_for('resumen')}}">
+                    Agenda
+                </a> 
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{url_for('resumen')}}">
+                    Pagos
+                </a> 
+              </li>
+            </ul>
+            <div class="text-center ">
+                <a class="nav-link" href="{{ url_for('logout') }}">Cerrar Sesión</a>  
+              </div>
+          </div>
+        </div>
+      </nav>
     <main>
          
-    <ul class="nav justify-content-center mt-5 mb-3 ">
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('alta')}}">
-                Nuevo alumno
-            </a> 
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('ingresos')}}">
-                Ingresos
-            </a> 
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('egresos')}}">
-                Egresos
-            </a> 
-        </li>   
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('resumen')}}">
-                Caja
-            </a> 
-        </li>  
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('agenda')}}">
-                Agenda
-            </a> 
-        </li>  
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('control')}}">
-                Control de pagos
-            </a> 
-        </li>    
-        
-      </ul>
+   
         {% block content %}
         {% endblock %}
     </main>

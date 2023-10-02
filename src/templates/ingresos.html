@@ -5,33 +5,31 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    {% block content %}
-   
-    <div class="row">
-        
-        <div class="col-md-10 container">
-            <p class="text-left">Ingresos</p>
-            <div class="card">  
+    {% block content %} 
+        <div class="col-md-12 container">
+            <h3 class="text-left subtitulo mt-3">Ingresos</h3>
+            <div class="card-contenedor mb-5">  
                 <div class="card-body">
                     <form action="{{ url_for('ingresos')}}" method="POST">
                         <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label for="nombre_alumno">Nombre</label>
-                                <select name="nombre_alumno" id="nombre_alumno" class="form-control mb-3">
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form" for="nombre_alumno">Nombre</label>
+                                <select class="form-control" name="nombre_alumno" id="nombre_alumno" class="form-control mb-3">
                                     {% for alumno in nombres_apellidos %}
                                         <option value="{{ alumno }}">{{ alumno }}</option>
                                     {% endfor %}
                                 </select>
+                                
                             </div>
-                            <div class="col-md-3">
-                                <label>Fecha de pago <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Fecha de pago <span class="campo-obligatorio">*</span></label>
                                 <input type="date" class="form-control mb-3" name="fecha_pago" required value="{{ form_data.fecha_pago if form_data else '' }}">
                             </div>
-                            <div class="col-md-3">
-                                <label>Monto <span class="campo-obligatorio">*</span></label>
+                            <div class="col-md-3 col-sm-12">
+                                <labe class="label-form">Monto <span class="campo-obligatorio">*</span></label>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">$</span>
-                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                    <input type="text" class="form-control " name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
                                 </div>
                             </div>
                             <script>
@@ -63,8 +61,8 @@
                                 montoInput.setSelectionRange(newPos, newPos);
                             });
                             </script>                                                                                         
-                            <div class="col-md-3">
-                                <label class="label-with-arrow">
+                            <div class="col-md-3 col-sm-12">
+                                <label class=" label-form label-with-arrow">
                                     Medios de pago <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
                                         <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
@@ -78,7 +76,7 @@
                                     </div>
                                 </label>
                             </div>
-                            <div class="col-md-3 text-center">
+                            <div class=" text-center">
                                 <div class="btn-container">
                                     <button type="submit" class="btn-guardar">Guardar</button>
                                 </div>
@@ -94,33 +92,36 @@
                             {% endwith %}
                             </div>
                         </div>
-                    </form>            
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label>Buscar Ingreso:</label>
-                            <input type="text" class="form-control" id="busquedaInput" placeholder="Escriba el nombre del alumno, apellido, fecha, etc">
-                        </div>
+                    </form>           
+                </div>
+                <div class="row mb-3">
+                    <div class="form-inline">
+                        <input type="text" class="form-control" id="busquedaInput" placeholder="Buscar alumno">
                     </div>
                 </div>
-                <div class="table-container">
-                    <table class="table table-bordered m-1 mb-5" style="background-color: white;">
+                <div class="table-responsive">
+                    <table class="table table-bordered m-1 mb-5 " style="background-color: white;">
                         <thead>
-                            <th class="title" scope="col">Nombre</th>
-                            <th class="title" scope="col">Fecha de pago</th>
-                            <th class="title" scope="col">Monto</th>
-                            <th class="title" scope="col">Medio de pago</th>
-                            <th class="title" scope="col" colspan="3">Acciones</th>
+                            <th class="col-tabla" scope="col">Nombre</th>
+                            <th class="col-tabla" scope="col">Fecha de pago</th>
+                            <th class="col-tabla" scope="col">Monto</th>
+                            <th class="col-tabla" scope="col">Medio de pago</th>
+                            <th class="col-tabla" scope="col" colspan="3">Acciones</th>
                         </thead>
                     </div>
                     <tbody>
                         {% for d in data %}
                         <tr>
-                            <td>{{ d.nombre_alumno.title() }}</td>
-                            <td>{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
-                            <td>${{ '{:,.2f}'.format(d.monto) }}</td>
-                            <td>{{ d.medios_de_pago }}</td>
-                            <td class="text-center "> <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i></td>
-                            <td class="text-center"> <a href="{{ url_for('eliminar_ingresos', id_ingresos=d.id_ingresos) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="btn-operacion bi bi-trash"></i></a></td>
+                            <td class="td-table">{{ d.nombre_alumno.title() }}</td>
+                            <td class="td-table">{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
+                            <td class="td-table">${{ '{:,.2f}'.format(d.monto) }}</td>
+                            <td class="td-table">{{ d.medios_de_pago }}</td>
+                            <td class="text-center "> 
+                                <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i>
+                            </td>
+                            <td class="text-center"> 
+                                <a href="{{ url_for('eliminar_ingresos', id_ingresos=d.id_ingresos) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="btn-operacion bi bi-trash"></i></a>
+                            </td>
                             <td class="text-center">
                                 <a href="{{ url_for('descargar_pdf', id_ingresos=d.id_ingresos) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar">
                                     <i class="btn-operacion bi bi-file-earmark-pdf"></i>
@@ -137,21 +138,23 @@
                                     </div>
                                     <div class="modal-body">
                                         <form action="{{ url_for('editaringresos', id_ingresos=d.id_ingresos) }}" method="POST">
+                                            <div class="row">    
+                                                    <!-- En el formulario de "Ingresos", muestra el nombre del alumno y agrega un campo oculto para almacenar su valor -->
+                                                    <div class="col-md-6">
+                                                        <label for="nombre_alumno">Nombre del Alumno:</label>
+                                                        <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}" readonly>
+                                                        <!-- Agregar un campo oculto para almacenar el valor del nombre del alumno -->
+                                                        <input type="hidden" name="nombre_alumno_original" value="{{ d.nombre_alumno }}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label>Fecha de pago <span class="campo-obligatorio">*</span></label>                                        
+                                                        <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required>
+                                                    </div>                                             
+                                            </div>
                                             <div class="row">
-                                                <input type="hidden" name="id" value="{{ d.id }}">
-                                                <!-- En el formulario de "Ingresos", muestra el nombre del alumno y agrega un campo oculto para almacenar su valor -->
-                                                <div class="col-md-3">
-                                                    <label for="nombre_alumno">Nombre del Alumno:</label>
-                                                    <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}" readonly>
-                                                    <!-- Agregar un campo oculto para almacenar el valor del nombre del alumno -->
-                                                    <input type="hidden" name="nombre_alumno_original" value="{{ d.nombre_alumno }}">
-                                                </div>
-                                                    <label>Fecha de pago <span class="campo-obligatorio">*</span></label>                                        
-                                                    <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required>
-                                                </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-6">
                                                     <label>Monto <span class="campo-obligatorio">*</span></label>
-                                                    <div class="input-group mb-3">
+                                                    <div class="input-group">
                                                         <span class="input-group-text">$</span>
                                                         <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
                                                     </div>
@@ -185,7 +188,7 @@
                                                     montoInput.setSelectionRange(newPos, newPos);
                                                 });
                                                 </script> 
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-6">
                                                             <label class="label-with-arrow">
                                                                 Medios de pago <span class="campo-obligatorio">*</span>
                                                                 <div class="select-container">
@@ -201,11 +204,12 @@
                                                             </label>
                                                         </div>                                                 
                                                     </div>
-                                                    <div class="col-md-3 text-center">
+                                                    <div class="text-center">
                                                         <div class="btn-container">
                                                             <button type="submit" class="btn-guardar">Guardar</button>
                                                         <div>
                                                     </div>
+                                                </div>
                                                 </div>
                                             </div>
                                         </form>
@@ -248,6 +252,5 @@
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
 </body>
