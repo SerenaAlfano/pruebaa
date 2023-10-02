@@ -8,7 +8,7 @@
     {% block content %} 
         <div class="col-md-12 container">
             <h3 class="text-left subtitulo mt-3">Ingresos</h3>
-            <div class="card-contenedor mb-5">  
+            <div class="card-contenedor mb-3">  
                 <div class="card-body">
                     <form action="{{ url_for('ingresos')}}" method="POST">
                         <div class="row mb-3">
@@ -219,33 +219,43 @@
                         </div>
                         {% endfor %}
                         <script>
-                        // Obtener el campo de búsqueda y la tabla
-                        var busquedaInput = document.getElementById('busquedaInput');
-                        var tablaIngresos = document.querySelector('.table');
-                        
-                        // Agregar un evento de escucha para la entrada del usuario
-                        busquedaInput.addEventListener('input', function() {
-                            var consulta = busquedaInput.value.toLowerCase();
-                        
-                            // Obtener todas las filas de la tabla
-                            var filas = tablaIngresos.querySelectorAll('tbody tr');
-                        
-                            // Iterar a través de las filas y ocultar/mostrar según la consulta
-                            for (var i = 0; i < filas.length; i++) {
-                                var fila = filas[i];
-                                var nombreAlumno = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                                var apellidoAlumno = fila.querySelector('td:nth-child(3)').textContent.toLowerCase();
-                                var fechaPago = fila.querySelector('td:nth-child(4)').textContent.toLowerCase();
-                                var monto = fila.querySelector('td:nth-child(5)').textContent.toLowerCase();
-                                var medioPago = fila.querySelector('td:nth-child(6)').textContent.toLowerCase();
-                        
-                                if (nombreAlumno.includes(consulta) || apellidoAlumno.includes(consulta) || fechaPago.includes(consulta) || monto.includes(consulta) || medioPago.includes(consulta)) {
-                                    fila.style.display = ''; // Mostrar la fila
-                                } else {
-                                    fila.style.display = 'none'; // Ocultar la fila
-                                }
-                            }
-                        });
+                               // Obtener el campo de búsqueda y la tabla
+            var busquedaInput = document.getElementById('busquedaInput');
+            var tablaAlumnos = document.querySelector('.table');
+            
+            // Agregar un evento de escucha para la entrada del usuario
+            busquedaInput.addEventListener('input', function() {
+                var consulta = busquedaInput.value.toLowerCase();
+            
+                // Obtener todas las filas de la tabla
+                var filas = tablaAlumnos.querySelectorAll('tbody tr');
+            
+                // Iterar a través de las filas y celdas y ocultar/mostrar según la consulta
+                for (var i = 0; i < filas.length; i++) {
+                    var fila = filas[i];
+                    var mostrarFila = false;
+            
+                    // Obtener todas las celdas de la fila
+                    var celdas = fila.querySelectorAll('td');
+            
+                    // Iterar a través de las celdas y verificar si alguna contiene la consulta
+                    for (var j = 0; j < celdas.length; j++) {
+                        var celda = celdas[j];
+                        var contenidoCelda = celda.textContent.toLowerCase();
+            
+                        if (contenidoCelda.includes(consulta)) {
+                            mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
+                            break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                        }
+                    }
+            
+                    if (mostrarFila) {
+                        fila.style.display = ''; // Mostrar la fila
+                    } else {
+                        fila.style.display = 'none'; // Ocultar la fila si no hay coincidencias
+                    }
+                }
+            });
                         </script>                        
                     </tbody>
                 </table>
