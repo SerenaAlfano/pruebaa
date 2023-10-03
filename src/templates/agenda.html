@@ -1,8 +1,15 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    {% block title %}Agenda{% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda</title>
 </head>
 <body>
+    {% extends "base.html" %}
+    
+    {% block title %}Agenda{% endblock %}
+    
     {% block content %}
     <div class="calendar">
         <div class="calendar-header">
@@ -25,6 +32,9 @@
             <tbody id="calendar-body"></tbody>
         </table>
     </div>
-    <script src="templates/js/script.js"></script>
+    
+    <script src="../templates/js/script.js"></script>
+    
     {% endblock %}
 </body>
+</html>
