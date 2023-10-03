@@ -51,20 +51,3 @@ nextMonth.addEventListener("click", () => {
     }
     updateCalendar();
 });
-
-
-//
-
-document.addEventListener('DOMContentLoaded', function () {
-    
-    const monthYearElement = document.getElementById('month-year');
-    const calendarElement = document.querySelector('.calendar');
-
-    monthYearElement.addEventListener('click', function () {
-        if (calendarElement.style.display === 'none' || calendarElement.style.display === '') {
-            calendarElement.style.display = 'block';
-        } else {
-            calendarElement.style.display = 'none';
-        }
-    });
-});
