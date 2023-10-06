@@ -51,20 +51,20 @@ document.addEventListener('DOMContentLoaded', function () {
             // Llena la tabla de horarios con contenido dinámico (en este ejemplo, horarios ficticios)
             horariosTable.innerHTML = `
                 <tr>
-                    <th>Hora</th>
-                    <th>Actividad</th>
+                    <th>Horario</th>
+                    <th>Alumno</th>
                 </tr>
                 <tr>
-                    <td>08:00 AM</td>
-                    <td>Reunión</td>
+                    <td>08:30 AM</td>
+                    <td>Ezequiel lucero lucero</td>
                 </tr>
                 <tr>
-                    <td>10:00 AM</td>
-                    <td>Tarea importante</td>
+                    <td>09:30 AM</td>
+                    <td>Serena Alfano</td>
                 </tr>
                 <tr>
-                    <td>02:00 PM</td>
-                    <td>Proyecto</td>
+                    <td>10:30</td>
+                    <td>Rocio Robledo</td>
                 </tr>
             `;
 
