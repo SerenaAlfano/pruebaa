@@ -42,16 +42,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (clickedCell.tagName === "TD" && !isNaN(clickedCell.textContent)) {
             const dayNumber = parseInt(clickedCell.textContent, 10);
-            
-            const modal = document.getElementById("myModal");
-            const closeModal = document.getElementsByClassName("close")[0];
 
-            const modalContent = document.querySelector(".modal-content");
+            const modal = document.getElementById("myModal");
+            const closeModal = document.getElementById("modal-close-button"); // Icono de cierre
+            const customCloseButton = document.getElementById("custom-close-button"); // Botón personalizado de cierre
+
+            const modalContent = document.querySelector("#modal-content");
             modalContent.innerHTML = `<p>Detalles para el día ${dayNumber}</p>`;
 
             modal.style.display = "block";
 
+            // Agregar un evento de clic al icono de cierre para cerrar el modal
             closeModal.addEventListener("click", () => {
+                modal.style.display = "none";
+            });
+
+            // Agregar un evento de clic al botón personalizado de cierre para cerrar el modal
+            customCloseButton.addEventListener("click", () => {
                 modal.style.display = "none";
             });
         }
