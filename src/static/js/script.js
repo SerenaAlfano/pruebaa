@@ -37,6 +37,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     updateCalendar();
 
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+    });
+
+
     calendarBody.addEventListener("click", (event) => {
         const clickedCell = event.target;
 
