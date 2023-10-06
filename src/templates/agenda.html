@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendario con Modal</title>
-    <!-- Enlaces a tus archivos CSS si los tienes -->
+    {% block title %}Agenda{% endblock %}
 </head>
 <body>
-    {% extends "base.html" %}
-
-    {% block title %}Agenda{% endblock %}
-
     {% block content %}
     <div class="calendar">
         <div class="calendar-header">
@@ -46,4 +38,4 @@
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     {% endblock %}
 </body>
-</html>
+
