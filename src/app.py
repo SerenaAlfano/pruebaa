@@ -779,7 +779,21 @@ def editaregresos(id):
 #Resumen
 @app.route('/resumen', methods=['GET', 'POST'])
 def resumen():
-    return render_template('resumen.html')
+    cursor = db.database.cursor()
+
+    # Consulta para obtener el total de ingresos
+    cursor.execute("SELECT SUM(monto) FROM ingresos")
+    total_ingresos = cursor.fetchone()[0]
+
+    # Consulta para obtener el total de egresos
+    cursor.execute("SELECT SUM(monto) FROM egresos")
+    total_egresos = cursor.fetchone()[0]
+    
+    # Calcular el saldo restando los totales de egresos de los totales de ingresos
+    saldo = total_ingresos - total_egresos
+
+
+    return render_template('resumen.html',total_ingresos=total_ingresos, total_egresos=total_egresos, saldo=saldo)
 
 #Agenda
 @app.route('/agenda')
