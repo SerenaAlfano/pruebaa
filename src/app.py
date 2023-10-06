@@ -776,9 +776,9 @@ def editaregresos(id):
             data=db.database
     return redirect(url_for('egresos'))
 
-#Resumen
-@app.route('/resumen', methods=['GET', 'POST'])
-def resumen():
+#caja
+@app.route('/caja', methods=['GET', 'POST'])
+def caja():
     cursor = db.database.cursor()
 
     # Consulta para obtener el total de ingresos
@@ -793,7 +793,7 @@ def resumen():
     saldo = total_ingresos - total_egresos
 
 
-    return render_template('resumen.html',total_ingresos=total_ingresos, total_egresos=total_egresos, saldo=saldo)
+    return render_template('caja.html',total_ingresos=total_ingresos, total_egresos=total_egresos, saldo=saldo)
 
 #Agenda
 @app.route('/agenda')
