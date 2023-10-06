@@ -4,12 +4,11 @@
 </head>
 <body>
     {% block content %}
-    <div class="card-contenedor">  
-        <h1>Caja</h1>
-        <table class="table table-bordered">
+    <div class="table-responsive d-flex justify-content-center align-items-center mt-4" style="min-height: 100vh;">
+        <table class="table table-bordered m-1 mb-5" style="background-color: white;">
             <thead>
-                <th scope="col">Tipo</th>
-                <th scope="col">Monto</th>
+                <th class="col-tabla" scope="col">Tipo</th>
+                <th class="col-tabla" scope="col">Monto</th>
             </thead>
             <tbody>
                 <tr>
@@ -24,9 +23,13 @@
                     <td>Saldo</td>
                     <td>{{ saldo }}</td>
                 </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>{{ total_ingresos - total_egresos }}</td>
+                </tr>
             </tbody>
         </table>
-        <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
     </div>
+    
     {% endblock %}
 </body>
