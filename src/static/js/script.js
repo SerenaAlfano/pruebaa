@@ -51,3 +51,28 @@ nextMonth.addEventListener("click", () => {
     }
     updateCalendar();
 });
+// Agregar un evento de clic a los números del calendario
+calendarBody.addEventListener("click", (event) => {
+    const clickedCell = event.target;
+    
+    // Verificar si se hizo clic en un número (td con contenido numérico)
+    if (clickedCell.tagName === "TD" && !isNaN(clickedCell.textContent)) {
+        const dayNumber = parseInt(clickedCell.textContent, 10);
+        
+        // Obtener el modal y el botón de cierre
+        const modal = document.getElementById("myModalagenda");
+        const closeModal = document.getElementsByClassName("close")[0];
+        
+        // Establecer el contenido del modal (personalízalo según tus necesidades)
+        const modalContent = document.querySelector(".modal-content");
+        modalContent.innerHTML = `<p>Detalles para el día ${dayNumber}</p>`;
+        
+        // Mostrar el modal
+        modal.style.display = "block";
+        
+        // Agregar un evento de clic al botón de cierre para cerrar el modal
+        closeModal.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+    }
+});
