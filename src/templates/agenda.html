@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda</title>
+    <title>Calendario con Modal</title>
+    <!-- Enlaces a tus archivos CSS si los tienes -->
 </head>
 <body>
     {% extends "base.html" %}
-    
+
     {% block title %}Agenda{% endblock %}
-    
+
     {% block content %}
     <div class="calendar">
         <div class="calendar-header">
             <span id="prev-month">&#9665;</span>
-            <h1 id="month-year">ooctubre 2023</h1>
+            <h1 id="month-year">Octubre 2023</h1>
             <span id="next-month">&#9655;</span>
         </div>
         <table class="calendar-table">
@@ -32,17 +33,17 @@
             <tbody id="calendar-body"></tbody>
         </table>
     </div>
-    
-    <script src="/static/js/script.js"></script>
-    
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Incluye tu archivo JavaScript al final del body para asegurar que se cargue después del contenido HTML -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     {% endblock %}
 </body>
-<div id="myModalagenda" class="modalagenda">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <p>Contenido del modal aquí...</p>
-    </div>
-</div>
-
-
 </html>
