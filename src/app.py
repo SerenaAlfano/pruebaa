@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, jsonify
 from datetime import datetime
 import mysql.connector
 import os #Permite acceder a los directorios
@@ -799,6 +799,18 @@ def caja():
 @app.route('/agenda')
 def agenda():
     return render_template('agenda.html')
+
+def obtener_horarios_desde_mysql():
+    cursor = db.database.cursor(dictionary=True)
+    cursor.execute("SELECT nombre, apellido, dia, horario, materia from alumnos;")  
+    horarios = cursor.fetchall()
+    cursor.close()
+    return horarios
+
+@app.route('/obtener_horarios_mysql', methods=['GET'])
+def obtener_horarios_mysql():
+    horarios = obtener_horarios_desde_mysql()
+    return jsonify(horarios)
 
 #Agenda
 @app.route('/control')
