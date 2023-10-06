@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
-from datetime import datetime
+from datetime import datetime, timedelta
 import mysql.connector
 import os #Permite acceder a los directorios
 import database as db
@@ -31,35 +31,23 @@ def load_user(id):
 
 
 #Validaciones
+import re
+
 def validar_nombre(nombre):
-    if re.match("^[A-Za-z]+$", nombre):
-        return True
-    else:
-        return False
-    
+    # Utiliza una expresión regular para verificar que el nombre contiene solo letras y espacios
+    return bool(re.match(r'^[a-zA-Z\s]+$', nombre))
+
 def validar_apellido(apellido):
-    if re.match("^[A-Za-z]+$", apellido):
-        return True
-    else:
-        return False
+    return bool(re.match(r'^[a-zA-Z\s]+$', apellido))
 
 def validar_nombre_titular(nombre_titular):
-    if re.match("^[A-Za-z]+$", nombre_titular):
-        return True
-    else:
-        return False
-    
+    return bool(re.match(r'^[a-zA-Z\s]+$', nombre_titular))
+
 def validar_nombre_alumno(nombre_alumno):
-    if re.match("^[A-Za-z]+$", nombre_alumno):
-        return True
-    else:
-        return False
-    
+    return bool(re.match(r'^[a-zA-Z\s]+$', nombre_alumno))
+
 def validar_apellido_alumno(apellido_alumno):
-    if re.match("^[A-Za-z]+$", apellido_alumno):
-        return True
-    else:
-        return False
+    return bool(re.match(r'^[a-zA-Z\s]+$', apellido_alumno))
 
 def validar_telefono(telefono):
     # Expresión regular para validar un número de teléfono que contiene solo números y ciertos caracteres especiales como +, -, (, y )
@@ -127,9 +115,11 @@ def agregarAlumno():
     nivel_educativo = request.form["nivel_educativo"]
     nombre_titular = request.form["nombre_titular"]
     telefono_titular = request.form["telefono_titular"]
-    dia = request.form["dia"]
+    dia = request.form.getlist("dia[]")
     horario = request.form["horario"]
-    materia = request.form["materia"]
+    materia = request.form.getlist("materia[]")
+    dia_str = ', '.join(dia)
+    materia_str = ', '.join(materia)
 
     if not validar_nombre(nombre):
         flash("El nombre no es válido. Debe contener solo letras.", "error")
@@ -257,11 +247,35 @@ def agregarAlumno():
             'materia': materia
         }
         return redirect(url_for('alta'))
+    
+    # Calcular la fecha mínima permitida para la fecha de nacimiento (6 años atrás)
+    fecha_minima = fecha_actual - timedelta(days=365 * 6)
 
+    # Compara la fecha de nacimiento con la fecha mínima
+    if fecha_nacimiento > fecha_minima:
+        flash("El alumno debe tener al menos 6 años de edad.", "error")
+        session['form_data'] = {
+            'nombre': nombre,
+            'apellido': apellido,
+            'email': email,
+            'telefono': telefono,
+            'fecha_nacimiento': fecha_nacimiento_str,
+            'fecha_inicio': fecha_inicio,
+            'colegio': colegio,
+            'curso': curso,
+            'nivel_educativo': nivel_educativo,
+            'nombre_titular': nombre_titular,
+            'telefono_titular': telefono_titular,
+            'dia': dia,
+            'horario': horario,
+            'materia': materia
+        }
+        return redirect(url_for('alta'))
+    
     # Resto del código para agregar el alumno a la base de datos
     cursor = db.database.cursor()
     sql = "INSERT INTO alumnos (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) 
+    data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str) 
     try:
         cursor.execute(sql, data)
         db.database.commit()  # Realiza el commit después de la inserción
@@ -269,7 +283,6 @@ def agregarAlumno():
         # Maneja los errores de SQL aquí
         print(f"Error de MySQL: {err}")
     return redirect(url_for('alta'))
-   
 
 #Eliminar
 @app.route("/eliminar/<string:id>")
@@ -295,9 +308,11 @@ def editar(id):
     nivel_educativo = request.form["nivel_educativo"]
     nombre_titular = request.form["nombre_titular"]
     telefono_titular = request.form["telefono_titular"]
-    dia = request.form["dia"]
+    dia = request.form.getlist("dia[]")
     horario = request.form["horario"]
-    materia = request.form["materia"]
+    materia = request.form.getlist("materia[]")
+    dia_str = ', '.join(dia)
+    materia_str = ', '.join(materia)
 
     if not validar_nombre_titular(nombre_titular):
         flash("El nombre del tutor no es válido. Debe contener solo letras.", "error")
@@ -462,7 +477,7 @@ def editar(id):
     if nombre and apellido and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and dia and horario and materia:
         cursor = db.database.cursor()
         sql = "UPDATE alumnos SET nombre = %s, apellido  = %s, email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s WHERE id = %s"
-        data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia, id)
+        data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str, id)
         cursor.execute(sql, data)
         db.database.commit()
     return redirect(url_for('alta'))
