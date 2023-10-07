@@ -16,28 +16,32 @@
                         <div class="row mb-3">
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
-                                <input type="text" class="form-control mb-3" name="nombre" required value="{{ form_data.nombre if form_data else '' }}">
-                                <div id="nombre-error" class="text-danger"></div> 
+                                <input type="text" class="form-control mb-3" name="nombre" id="nombre" required value="{{ form_data.nombre if form_data else '' }}">
+                                <div id="nombre-error" class="error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Apellido <span class="campo-obligatorio">*</span></label>
-                                <input type="text" class="form-control mb-3" name="apellido" required value="{{ form_data.apellido if form_data else '' }}">
+                                <input type="text" class="form-control mb-3" name="apellido" id="apellido" required value="{{ form_data.apellido if form_data else '' }}">
+                                <div id="apellido-error" class="text-danger error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
-                                <input type="text" class="form-control mb-3" name="email" required value="{{ form_data.email if form_data else '' }}">
+                                <input type="text" class="form-control mb-3" name="email" id="email" required value="{{ form_data.email if form_data else '' }}">                            
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
-                                <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" required value="{{ form_data.telefono if form_data else '' }}">
+                                <input type="tel" class="form-control mb-3" name="telefono" id="telefono" pattern="[0-9]+"  required value="{{ form_data.telefono if form_data else '' }}">
+                                <div id="telefono-error" class="text-danger error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
-                                <input type="date" class="form-control mb-3" name="fecha_nacimiento" required value="{{ form_data.fecha_nacimiento if form_data else '' }}">
+                                <input type="date" class="form-control mb-3" name="fecha_nacimiento" id="fecha_nacimiento" required value="{{ form_data.fecha_nacimiento if form_data else '' }}">
+                                <div id="fecha-nacimiento-error" class="text-danger error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Fecha de inicio <span class="campo-obligatorio">*</span></label>
-                                <input type="date" class="form-control mb-3" name="fecha_inicio" required value="{{ form_data.fecha_inicio if form_data else '' }}">
+                                <input type="date" class="form-control mb-3" name="fecha_inicio" id="fecha_inicio" required value="{{ form_data.fecha_inicio if form_data else '' }}">
+                                <div id="fecha-inicio-error" class="text-danger error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Colegio <span class="campo-obligatorio">*</span></label>
@@ -75,46 +79,82 @@
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Nombre tutor <span class="campo-obligatorio">*</span></label>
-                                <input type="text" class="form-control mb-3" name="nombre_titular" required value="{{ form_data.nombre_titular if form_data else '' }}">
+                                <input type="text" class="form-control mb-3" name="nombre_titular" id="nombre_titular" required value="{{ form_data.nombre_titular if form_data else '' }}">
+                                <div id="nombre-titular-error" class="text-danger error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label  class="label-form">Telefono tutor <span class="campo-obligatorio">*</span></label>
-                                <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" required value="{{ form_data.telefono_titular if form_data else '' }}">
+                                <input type="tel" class="form-control mb-3" name="telefono_titular"   id="telefono_titular" maxlength="10" required value="{{ form_data.telefono_titular if form_data else '' }}">
+                                <div id="telefono-titular-error" class="text-danger error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
-                                <label class="label-form label-with-arrow">
-                                    Dia <span class="campo-obligatorio">*</span>
+                                    Día <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
-                                        <select class="form-control mb-3" name="dia" required value="{{ form_data.dia if form_data else '' }}">
-                                            {% for option in ['Lunes', 'Martes', 'Miercoles','Jueves','Viernes'] %}
-                                            <option value="{{ option }}" {% if data.dia == option %}selected{% endif %}>{{ option }}</option>
+                                        <select class="form-control mb-3" name="dia[]" style="display: none;">
+                                            {% for option in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'] %}
+                                            <option value="{{ option }}" {% if option in data.dia %}selected{% endif %}>{{ option }}</option>
                                             {% endfor %}
                                         </select>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                        </svg>
                                     </div>
-                                </label>
+                                    <div class="checkbox-container">
+                                        <label>
+                                            <input type="checkbox" name="dia[]" value="Lunes" {% if 'Lunes' in data.dia %}checked{% endif %}> Lunes
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" name="dia[]" value="Martes" {% if 'Martes' in data.dia %}checked{% endif %}> Martes
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" name="dia[]" value="Miércoles" {% if 'Miércoles' in data.dia %}checked{% endif %}> Miércoles
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" name="dia[]" value="Jueves" {% if 'Jueves' in data.dia %}checked{% endif %}> Jueves
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" name="dia[]" value="Viernes" {% if 'Viernes' in data.dia %}checked{% endif %}> Viernes
+                                        </label>
+                                    </div>
                             </div>
+                            
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Horario <span class="campo-obligatorio">*</span></label>
                                 <input class="form-control mb-3" type="time" id="horario" name="horario" required value="{{ form_data.horario if form_data else '' }}">
                             </div>
                             <div class="col-md-3 col-sm-12">
-                                <label class="label-form label-with-arrow">
-                                    Materia <span class="campo-obligatorio">*</span>
-                                    <div class="select-container">
-                                        <select class="form-control mb-3" name="materia" required value="{{ form_data.materia if form_data else '' }}">
-                                            {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
-                                            <option value="{{ option }}" {% if data.materia == option %}selected{% endif %}>{{ option }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                        </svg>
-                                    </div>
-                                </label>
-                            </div>
+                                Materia <span class="campo-obligatorio">*</span>
+                                <div class="select-container">
+                                    <select class="form-control mb-3" name="materia[]" style="display: none;">
+                                        {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
+                                        <option value="{{ option }}" {% if option in data.dia %}selected{% endif %}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="checkbox-container">
+                                    <label>
+                                        <input type="checkbox" name="materia[]" value="Inglés" {% if 'Inglés' in data.dia %}checked{% endif %}> Inlges
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in data.dia %}checked{% endif %}> Matemática
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="materia[]" value="Practicas_del_lenguaje" {% if 'Prácticas_del_lenguaje' in data.dia %}checked{% endif %}> Practicas del lenguaje
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="materia[]" value="Historia" {% if 'Historia' in data.dia %}checked{% endif %}> Historia
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="materia[]" value="Geografia" {% if 'Geografia' in data.dia %}checked{% endif %}> Geografia
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="materia[]" value="Biologia" {% if 'Biologia' in data.dia %}checked{% endif %}> Biologia
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="materia[]" value="Contabilidad" {% if 'Contabilidad' in data.dia %}checked{% endif %}> Contabilidad
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in data.dia %}checked{% endif %}> Literatura
+                                    </label>
+                                </div>
+                        </div>
                             <div class="col-md-3 col-sm-12">
                                 <div class="btn-container">
                                     <button type="submit" class="btn-guardar">Guardar alumno</button>
@@ -133,10 +173,10 @@
                         </form>
                     </div>
                 </div>
-
                 <div class="row mb-3">    
                     <div class="form-inline">
-                        <input type="text" class="form-control" id="busquedaInput" placeholder="Buscar alumno">
+                        <input type="text" class="form-control mr-2" id="busquedaInput" placeholder="Buscar alumno">
+                        <a href="{{ url_for('descargar_lista_alumnos_pdf') }}" target="_blank" class="btn btn-primary">Descargar Lista de Alumnos</a>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -285,42 +325,85 @@
                                                             <label class="label-form">Telefono tutor <span class="campo-obligatorio">*</span></label>
                                                             <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" value="{{ d.telefono_titular }}" required>
                                                         </div>
-                                                        <div class="col-md-3">
-                                                            <label class="label-form label-with-arrow">
-                                                                Dia <span class="campo-obligatorio">*</span>
-                                                                <div class="select-container">
-                                                                    <select class="form-control mb-3" name="dia" required value="{{ form_data.dia if form_data else '' }}">
-                                                                        {% for option in ['Lunes', 'Martes', 'Miercoles','Jueves','Viernes'] %}
-                                                                        <option value="{{ option }}" {% if data.dia == option %}selected{% endif %}>{{ option }}</option>
-                                                                        {% endfor %}
-                                                                    </select>
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                                    </svg>
-                                                                </div>
-                                                            </label>
-                                                        </div>
+                                                        <div class="col-md-3 col-sm-12">
+                                                            Día <span class="campo-obligatorio">*</span>
+                                                            <div class="select-container">
+                                                                <select class="form-control mb-3" name="dia[]" style="display: none;">
+                                                                    {% for option in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'] %}
+                                                                    <option value="{{ option }}" {% if option in data.dia %}selected{% endif %}>{{ option }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="dia[]" value="Lunes" {% if 'Lunes' in data.dia %}checked{% endif %}> Lunes
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="dia[]" value="Martes" {% if 'Martes' in data.dia %}checked{% endif %}> Martes
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="dia[]" value="Miércoles" {% if 'Miércoles' in data.dia %}checked{% endif %}> Miércoles
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="dia[]" value="Jueves" {% if 'Jueves' in data.dia %}checked{% endif %}> Jueves
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="dia[]" value="Viernes" {% if 'Viernes' in data.dia %}checked{% endif %}> Viernes
+                                                                </label>
+                                                            </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <label class="label-form">Horario <span class="campo-obligatorio">*</span></label>
                                                             <input class="form-control mb-3" type="time" id="horario" name="horario" value="{{ d.horario }}" required>
                                                         </div>
-                                                        <div class="col-md-3">
-                                                            <label class="label-with-arrow">
-                                                                Materia <span class="campo-obligatorio">*</span>
-                                                                <div class="select-container">
-                                                                    <select class="form-control mb-3" name="materia" required value="{{ form_data.materia if form_data else '' }}">
-                                                                        {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
-                                                                        <option value="{{ option }}" {% if data.materia == option %}selected{% endif %}>{{ option }}</option>
-                                                                        {% endfor %}
-                                                                    </select>
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                                    </svg>
-                                                                </div>
-                                                            </label>
-                                                        </div>
+                                                        <div class="col-md-3 col-sm-12">
+                                                            Materia <span class="campo-obligatorio">*</span>
+                                                            <div class="select-container">
+                                                                <select class="form-control mb-3" name="materia[]" style="display: none;">
+                                                                    {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
+                                                                    <option value="{{ option }}" {% if option in data.dia %}selected{% endif %}>{{ option }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Inglés" {% if 'Inglés' in data.materia %}checked{% endif %}> Inlges
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in data.materia %}checked{% endif %}> Matemática
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Practicas_del_lenguaje" {% if 'Prácticas_del_lenguaje' in data.materia %}checked{% endif %}> Practicas del lenguaje
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Historia" {% if 'Historia' in data.materia %}checked{% endif %}> Historia
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Geografia" {% if 'Geografia' in data.materia %}checked{% endif %}> Geografia
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Biologia" {% if 'Biologia' in data.materia %}checked{% endif %}> Biologia
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Contabilidad" {% if 'Contabilidad' in data.materia %}checked{% endif %}> Contabilidad
+                                                                </label>
+                                                                <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in data.materia %}checked{% endif %}> Literatura
+                                                                </label>
+                                                            </div>
+                                                    </div>
                                                         <div class="col-md-3">
                                                             <button type="submit" class="btn-guardar">Guardar cambios</button>
                                                         </div>
@@ -338,6 +421,105 @@
                 </div>
             </div>
         </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    function validarCampo(inputId, errorId, mensajeError, regex) {
+        var input = document.getElementById(inputId);
+        var error = document.getElementById(errorId);
+
+        input.addEventListener('input', function() {
+            var valor = input.value.trim();
+
+            if (!regex.test(valor)) {
+                error.style.display = 'block';
+                error.textContent = mensajeError;
+            } else {
+                error.style.display = 'none';
+            }
+        });
+    }
+
+    // Expresión regular para validar que el campo de teléfono contiene solo números
+    var numerosRegex = /^[0-9]+$/;
+
+    // Expresión regular para validar que los campos de nombre y apellido contienen solo letras y espacios
+    var letrasRegex = /^[a-zA-Z\s]*$/;
+
+    // Llama a la función de validación para el campo de nombre
+    validarCampo('nombre', 'nombre-error', 'El nombre solo debe contener letras y espacios.', letrasRegex);
+
+    // Llama a la función de validación para el campo de apellido
+    validarCampo('apellido', 'apellido-error', 'El apellido solo debe contener letras y espacios.', letrasRegex);
+
+    // Llama a la función de validación para el campo de teléfono
+    validarCampo('telefono', 'telefono-error', 'Por favor, ingresa solo números en el teléfono.', numerosRegex);
+    // Llama a la función de validación para el campo de nombre del tutor
+    validarCampo('nombre_titular', 'nombre-titular-error', 'El nombre del tutor solo debe contener letras y espacios.', letrasRegex);
+
+    // Llama a la función de validación para el campo de teléfono del tutor
+    validarCampo('telefono_titular', 'telefono-titular-error', 'Por favor, ingresa solo números en el teléfono del tutor.', numerosRegex);
+    
+
+    var fechaNacimientoInput = document.getElementById('fecha_nacimiento');
+    var fechaNacimientoError = document.getElementById('fecha-nacimiento-error');
+    var fechaInicioInput = document.getElementById('fecha_inicio');
+    var fechaInicioError = document.getElementById('fecha-inicio-error');
+
+    // Expresión regular para validar que el campo de fecha de nacimiento tiene el formato correcto (YYYY-MM-DD)
+    var fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+    validarCampo('fecha_nacimiento', 'fecha-nacimiento-error', 'Por favor, ingresa una fecha válida (YYYY-MM-DD).', fechaRegex);
+
+    fechaNacimientoInput.addEventListener('input', function() {
+        var fechaNacimiento = new Date(fechaNacimientoInput.value);
+        var fechaActual = new Date();
+        var fechaHace6Anios = new Date();
+        fechaHace6Anios.setFullYear(fechaActual.getFullYear() - 6);
+
+        if (isNaN(fechaNacimiento.getTime())) {
+            fechaNacimientoError.textContent = 'Por favor, ingresa una fecha válida.';
+            fechaNacimientoError.style.display = 'block';
+        } else {
+            fechaNacimientoError.style.display = 'none';
+
+            if (fechaNacimiento >= fechaActual) {
+                fechaNacimientoError.textContent = 'La fecha de nacimiento no puede ser la fecha actual.';
+                fechaNacimientoError.style.display = 'block';
+            } else if (fechaNacimiento >= fechaHace6Anios) {
+                fechaNacimientoError.textContent = 'La fecha de nacimiento debe ser anterior a los últimos 6 años.';
+                fechaNacimientoError.style.display = 'block';
+            } else {
+                fechaNacimientoError.style.display = 'none';
+
+                // Validación en comparación con la fecha de inicio
+                var fechaInicio = new Date(fechaInicioInput.value);
+                if (fechaInicio <= fechaNacimiento) {
+                    fechaInicioError.textContent = 'La fecha de inicio debe ser posterior a la fecha de nacimiento.';
+                    fechaInicioError.style.display = 'block';
+                } else {
+                    fechaInicioError.style.display = 'none';
+                }
+            }
+        }
+    });
+
+    fechaInicioInput.addEventListener('input', function() {
+        // Validación en comparación con la fecha de nacimiento
+        var fechaNacimiento = new Date(fechaNacimientoInput.value);
+        var fechaInicio = new Date(fechaInicioInput.value);
+
+        if (fechaInicio <= fechaNacimiento) {
+            fechaInicioError.textContent = 'La fecha de inicio debe ser posterior a la fecha de nacimiento.';
+            fechaInicioError.style.display = 'block';
+        } else {
+            fechaInicioError.style.display = 'none';
+        }
+    });
+
+});
+
+        </script>
+            
         <script>
             // Obtener el campo de búsqueda y la tabla
             var busquedaInput = document.getElementById('busquedaInput');

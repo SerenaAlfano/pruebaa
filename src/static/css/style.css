@@ -64,7 +64,11 @@ body {
   align-items: center !important;
   text-align: center !important;
 }
-
+.alert{
+  background-color: #8b8b8b;
+  color: #f0f0f0;
+  margin-top: 10rem;
+}
 /*Home*/
 
 .navbar {
