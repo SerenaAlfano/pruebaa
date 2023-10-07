@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from datetime import datetime
 from flask_mysqldb import MySQL
+from datetime import timedelta
+
 import mysql.connector
 import os #Permite acceder a los directorios
 from flask_login import LoginManager,logout_user, login_user, login_required
