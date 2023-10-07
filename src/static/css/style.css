@@ -64,7 +64,11 @@ body {
   align-items: center !important;
   text-align: center !important;
 }
-
+.alert{
+  background-color: #8b8b8b;
+  color: #f0f0f0;
+  margin-top: 10rem;
+}
 /*Home*/
 
 .navbar {
@@ -201,6 +205,8 @@ body {
 .form-control{
   width: 11em !important;
   height: 1.8em;
+  padding: 0 !important;
+  padding-left: 0.5rem !important;
 }
 .btn-eliminar{
   background-color: #FBD374;
@@ -230,13 +236,66 @@ body {
   font-size: 1.5em;
   font-weight: 400;
 }
+.calendar {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
 
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#prev-month, #next-month {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calendar-table th {
+  background-color: #f0f0f0;
+  padding: 8px;
+}
+
+.calendar-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+#month-year {
+  font-size: 24px;
+  font-weight: bold;
+}
 @media (max-width: 768px) {
   /* Estilos CSS para pantallas más pequeñas */
   .label-form {
       font-size: 16px;
   }
 }
+
+
+  /* Mensaje de error */
+
+  .error-message {
+    display: none;
+    position: absolute;
+    background-color: #ffcccc;
+    color: #ff0000;
+    padding: 5px;
+    border: 1px solid #ff0000;
+    border-radius: 4px;
+    margin-top: -5.2rem; 
+    margin-left: 0; 
+    font-size: 14px;
+}
+
+
 
 
 

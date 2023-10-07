@@ -1,32 +1,37 @@
 {% extends "base.html" %}
 <head>
-    {% block title %}Caja{% endblock %}
+  {% block title %}Caja{% endblock %}
 </head>
 <body>
-    {% block content %}
-    <div class="card-contenedor">  
-        <h1>Caja</h1>
-        <table class="table table-bordered">
-            <thead>
-                <th scope="col">Tipo</th>
-                <th scope="col">Monto</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Ingresos</td>
-                    <td>{{ total_ingresos }}</td>
-                </tr>
-                <tr>
-                    <td>Egresos</td>
-                    <td>{{ total_egresos }}</td>
-                </tr>
-                <tr>
-                    <td>Saldo</td>
-                    <td>{{ saldo }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <a href="/inicio" class="btn, text-center mb-4 mt-4 p-2" style="border: none;">Inicio</a>
-    </div>
-    {% endblock %}
+  {% block content %}
+  <div class="card-contenedor">
+    <h1>Caja</h1>
+    <table class="table table-bordered">
+      <thead>
+        <th scope="col">Tipo</th>
+        <th scope="col">Monto</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ingresos</td>
+          <td>{{ total_ingresos }}</td>
+        </tr>
+        <tr>
+          <td>Egresos</td>
+          <td>{{ total_egresos }}</td>
+        </tr>
+        <tr>
+          <td>Saldo</td>
+          <td>{{ saldo }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <a
+      href="/inicio"
+      class="btn, text-center mb-4 mt-4 p-2"
+      style="border: none"
+      >Inicio</a
+    >
+  </div>
+  {% endblock %}
 </body>
