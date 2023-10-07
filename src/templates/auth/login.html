@@ -15,6 +15,18 @@
             <div class="contenedor-login">
                 <div class="top-bar">
                     <img class="mb-4 mt-4 p-1" src="{{ url_for('static', filename='img/logo.png') }}" alt="" width="75em" height="60em">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <br />
+                {% for message in messages %}
+                <div class="alert" role="alert">
+                    <strong> {{message}} </strong>
+                    <button  type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                {% endwith %}
                 </div>
                 <h1 class="txt-login mt-4 mb-3 text-center">Iniciar Sesión</h1>
                 <div class="perfil-container">

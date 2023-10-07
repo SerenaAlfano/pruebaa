@@ -23,7 +23,8 @@
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Fecha de pago <span class="campo-obligatorio">*</span></label>
-                                <input type="date" class="form-control mb-3" name="fecha_pago" required value="{{ form_data.fecha_pago if form_data else '' }}">
+                                <input type="date" class="form-control mb-3" name="fecha_pago" id="fecha_pago" required value="{{ form_data.fecha_pago if form_data else '' }}">
+                                <div id="fecha-pago-error" class="error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <labe class="label-form">Monto <span class="campo-obligatorio">*</span></label>
@@ -33,34 +34,40 @@
                                 </div>
                             </div>
                             <script>
-                            // Obtener el campo de entrada por su ID
-                            var montoInput = document.getElementById('montoInput');
-                            
-                            // Agregar un manejador de eventos para el evento 'input'
-                            montoInput.addEventListener('input', function() {
-                                // Obtener la posición actual del cursor
-                                var cursorPosition = montoInput.selectionStart;
-                              
-                                // Obtener el valor actual del campo
-                                var valor = montoInput.value;
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    var fechaPagoInput = document.getElementById('fecha_pago');
+                                    var fechaPagoError = document.getElementById('fecha-pago-error');
+                                    var montoInput = document.getElementById('montoInput');
+                                    
+                                    fechaPagoInput.addEventListener('input', function() {
+                                        var fechaPago = new Date(fechaPagoInput.value);
+                                        var fechaActual = new Date();
                                 
-                                // Quitar cualquier carácter que no sea un número o punto
-                                valor = valor.replace(/[^0-9.]/g, '');
+                                        if (fechaPago > fechaActual) {
+                                            fechaPagoError.style.display = 'block'; // Muestra el mensaje de error
+                                            fechaPagoError.textContent = 'La fecha de pago no puede ser posterior a la fecha actual.';
+                                            fechaPagoInput.value = ''; // Limpia el campo si la fecha es inválida
+                                        } else {
+                                            fechaPagoError.style.display = 'none'; // Oculta el mensaje de error si no hay error
+                                        }
+                                    });
                                 
-                                // Formatear el valor con dos decimales
-                                valor = parseFloat(valor).toFixed(2);
-                                
-                                // Agregar separadores de miles y el signo de dólar
-                                valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
-                                
-                                // Asignar el valor formateado de nuevo al campo
-                                montoInput.value = valor;
-                                
-                                // Restaurar la posición del cursor después del formato
-                                var newPos = cursorPosition + (valor.length - montoInput.value.length);
-                                montoInput.setSelectionRange(newPos, newPos);
-                            });
-                            </script>                                                                                         
+                                    montoInput.addEventListener('input', function() {
+                                        var cursorPosition = montoInput.selectionStart;
+                                        var valor = montoInput.value;
+                                        
+                                        valor = valor.replace(/[^0-9.]/g, '');
+                                        valor = parseFloat(valor).toFixed(2);
+                                        valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                        
+                                        montoInput.value = valor;
+                                        
+                                        var newPos = cursorPosition + (valor.length - montoInput.value.length);
+                                        montoInput.setSelectionRange(newPos, newPos);
+                                    });
+                                });
+                                </script>
+                                                                                                                   
                             <div class="col-md-3 col-sm-12">
                                 <label class=" label-form label-with-arrow">
                                     Medios de pago <span class="campo-obligatorio">*</span>
@@ -256,7 +263,31 @@
                     }
                 }
             });
-                        </script>                        
+                        </script>  
+                            <script>
+                                // Obtener el campo de entrada por su ID
+                                var montoInput = document.getElementById('montoInput');
+                                var montoError = document.getElementById('montoError');
+                            
+                                // Agregar un manejador de eventos para el evento 'input'
+                                montoInput.addEventListener('input', function() {
+                                    // Obtener el valor ingresado
+                                    var valor = montoInput.value;
+                            
+                                    // Verificar si el valor no es un número válido
+                                    if (!isValidNumber(valor)) {
+                                        montoError.textContent = 'El monto ingresado no es válido.';
+                                    } else {
+                                        montoError.textContent = ''; // Borrar el mensaje de error si es válido
+                                    }
+                                });
+                            
+                                // Función para verificar si el valor es un número válido
+                                function isValidNumber(value) {
+                                    // Usar una expresión regular para verificar si el valor contiene solo números y un punto decimal
+                                    return /^\d+(\.\d{1,2})?$/.test(value);
+                                }
+                            </script>                  
                     </tbody>
                 </table>
             </div>
