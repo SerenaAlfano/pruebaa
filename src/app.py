@@ -831,7 +831,7 @@ def editaregresos(id):
 #caja
 @app.route('/caja', methods=['GET', 'POST'])
 def caja():
-    cursor = db.database.cursor()
+    cursor = db_connection.cursor()
 
     # Consulta para obtener el total de ingresos
     cursor.execute("SELECT SUM(monto) FROM ingresos")
