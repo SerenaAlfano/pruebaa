@@ -1,14 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from datetime import datetime
+from flask_mysqldb import MySQL
+from datetime import timedelta
+
 import mysql.connector
 import os #Permite acceder a los directorios
-import database as db
-from flask_login import LoginManager,logout_user
+from flask_login import LoginManager,logout_user, login_user, login_required
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.lib import colors 
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from flask import make_response
-from flask_paginate import Pagination, get_page_parameter
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Spacer
+from config import config
 
 import re
 
@@ -18,6 +24,19 @@ template_dir = os.path.join(template_dir,"src", "templates")
 
 
 app = Flask(__name__, template_folder = template_dir)
+
+db = MySQL(app)
+# Obtén la configuración de desarrollo desde config.py
+db_config = config["development"]
+
+# Crear una conexión a la base de datos utilizando la configuración
+db_connection = mysql.connector.connect(
+    host=db_config.MYSQL_HOST,
+    user=db_config.MYSQL_USER,
+    password=db_config.MYSQL_PASSWORD,
+    database=db_config.MYSQL_DB
+)
+
 # Models:
 from models.ModelUser import ModelUser
 
@@ -29,37 +48,24 @@ login_manager_app = LoginManager(app)
 def load_user(id):
     return ModelUser.get_by_id(db, id)
 
-
 #Validaciones
+import re
+
 def validar_nombre(nombre):
-    if re.match("^[A-Za-z]+$", nombre):
-        return True
-    else:
-        return False
-    
+    # Utiliza una expresión regular para verificar que el nombre contiene solo letras y espacios
+    return bool(re.match(r'^[a-zA-Z\s]+$', nombre))
+
 def validar_apellido(apellido):
-    if re.match("^[A-Za-z]+$", apellido):
-        return True
-    else:
-        return False
+    return bool(re.match(r'^[a-zA-Z\s]+$', apellido))
 
 def validar_nombre_titular(nombre_titular):
-    if re.match("^[A-Za-z]+$", nombre_titular):
-        return True
-    else:
-        return False
-    
+    return bool(re.match(r'^[a-zA-Z\s]+$', nombre_titular))
+
 def validar_nombre_alumno(nombre_alumno):
-    if re.match("^[A-Za-z]+$", nombre_alumno):
-        return True
-    else:
-        return False
-    
+    return bool(re.match(r'^[a-zA-Z\s]+$', nombre_alumno))
+
 def validar_apellido_alumno(apellido_alumno):
-    if re.match("^[A-Za-z]+$", apellido_alumno):
-        return True
-    else:
-        return False
+    return bool(re.match(r'^[a-zA-Z\s]+$', apellido_alumno))
 
 def validar_telefono(telefono):
     # Expresión regular para validar un número de teléfono que contiene solo números y ciertos caracteres especiales como +, -, (, y )
@@ -80,30 +86,45 @@ def validar_telefono_titular(telefono_titular):
         return False 
 #Rutas
 
-#login
-@app.route('/')
-def pagina_inicio():
-    return render_template('login.html')
 
-@app.route('/login', methods=['POST'])
+@app.route('/')
+def index():
+    return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-        return redirect(url_for('inicio'))
+    if request.method == 'POST':
+        #print(request.form['username'])
+        #print(request.form['password'])
+        user = User(0, request.form['username'], request.form['password'])
+        logged_user = ModelUser.login(db, user)
+        if logged_user != None:
+            if logged_user.password:
+                login_user(logged_user)
+                return redirect(url_for('inicio'))
+            else:
+                flash("Contraseña inválida")
+                return render_template('auth/login.html')
+        else:
+            flash("Usuario incorrecto")
+            return render_template('auth/login.html')
+    else:
+        return render_template('auth/login.html')
 
 @app.route('/logout')
 def logout():
     logout_user()
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 #Home
 @app.route('/inicio')
 def inicio():
-    
     return render_template('inicio.html')
 
 @app.route("/index")
 def alta():
     form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
-    cursor = db.database.cursor()
+    cursor = db_connection.cursor()
     cursor.execute("SELECT * FROM alumnos")
     myresult = cursor.fetchall()
     # Convertir los datos a diccionario
@@ -127,9 +148,11 @@ def agregarAlumno():
     nivel_educativo = request.form["nivel_educativo"]
     nombre_titular = request.form["nombre_titular"]
     telefono_titular = request.form["telefono_titular"]
-    dia = request.form["dia"]
+    dia = request.form.getlist("dia[]")
     horario = request.form["horario"]
-    materia = request.form["materia"]
+    materia = request.form.getlist("materia[]")
+    dia_str = ', '.join(dia)
+    materia_str = ', '.join(materia)
 
     if not validar_nombre(nombre):
         flash("El nombre no es válido. Debe contener solo letras.", "error")
@@ -257,28 +280,51 @@ def agregarAlumno():
             'materia': materia
         }
         return redirect(url_for('alta'))
+    
+    # Calcular la fecha mínima permitida para la fecha de nacimiento (6 años atrás)
+    fecha_minima = fecha_actual - timedelta(days=365 * 6)
 
+    # Compara la fecha de nacimiento con la fecha mínima
+    if fecha_nacimiento > fecha_minima:
+        flash("El alumno debe tener al menos 6 años de edad.", "error")
+        session['form_data'] = {
+            'nombre': nombre,
+            'apellido': apellido,
+            'email': email,
+            'telefono': telefono,
+            'fecha_nacimiento': fecha_nacimiento_str,
+            'fecha_inicio': fecha_inicio,
+            'colegio': colegio,
+            'curso': curso,
+            'nivel_educativo': nivel_educativo,
+            'nombre_titular': nombre_titular,
+            'telefono_titular': telefono_titular,
+            'dia': dia,
+            'horario': horario,
+            'materia': materia
+        }
+        return redirect(url_for('alta'))
+    
     # Resto del código para agregar el alumno a la base de datos
-    cursor = db.database.cursor()
+    cursor = db_connection.cursor()
     sql = "INSERT INTO alumnos (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) 
+    data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str) 
     try:
         cursor.execute(sql, data)
-        db.database.commit()  # Realiza el commit después de la inserción
+        db_connection.commit()  # Realiza el commit después de la inserción
     except mysql.connector.Error as err:
         # Maneja los errores de SQL aquí
         print(f"Error de MySQL: {err}")
     return redirect(url_for('alta'))
-   
 
 #Eliminar
 @app.route("/eliminar/<string:id>")
 def eliminar(id):
-    cursor = db.database.cursor()
+    cursor = db_connection.cursor()
     sql =  "DELETE FROM alumnos WHERE id = %s"
     data = (id,)
     cursor.execute(sql,data)
-    db.database.commit()
+    db_connection.commit()
     return redirect(url_for('alta'))
 
 # Actualizar
@@ -295,9 +341,11 @@ def editar(id):
     nivel_educativo = request.form["nivel_educativo"]
     nombre_titular = request.form["nombre_titular"]
     telefono_titular = request.form["telefono_titular"]
-    dia = request.form["dia"]
+    dia = request.form.getlist("dia[]")
     horario = request.form["horario"]
-    materia = request.form["materia"]
+    materia = request.form.getlist("materia[]")
+    dia_str = ', '.join(dia)
+    materia_str = ', '.join(materia)
 
     if not validar_nombre_titular(nombre_titular):
         flash("El nombre del tutor no es válido. Debe contener solo letras.", "error")
@@ -460,11 +508,11 @@ def editar(id):
         return redirect(url_for('alta'))
 
     if nombre and apellido and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and dia and horario and materia:
-        cursor = db.database.cursor()
+        cursor = db_connection.cursor()
         sql = "UPDATE alumnos SET nombre = %s, apellido  = %s, email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s WHERE id = %s"
-        data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia, id)
+        data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str, id)
         cursor.execute(sql, data)
-        db.database.commit()
+        db_connection.commit()
     return redirect(url_for('alta'))
 
 
@@ -490,7 +538,7 @@ def ingresos():
         nombre_alumno = request.form["nombre_alumno"]
 
         # Verifica si ya existe un pago para el mismo alumno en el mismo mes y año
-        cursor = db.database.cursor()
+        cursor = db_connection.cursor()
         cursor.execute("SELECT COUNT(*) FROM ingresos WHERE nombre_alumno = %s AND MONTH(fecha_pago) = %s AND YEAR(fecha_pago) = %s", (nombre_alumno, fecha_pago.month, fecha_pago.year))
         pago_existente = cursor.fetchone()[0]
         cursor.close()
@@ -533,17 +581,17 @@ def ingresos():
             monto = monto.replace('$', '').replace(',', '')  # Elimina "$" y comas
             monto = float(monto) 
         # Remove the existing SQL statement
-            cursor = db.database.cursor()
+            cursor = db_connection.cursor()
             sql = "INSERT INTO ingresos (nombre_alumno, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s)"
             data = (nombre_alumno, fecha_pago, monto, medios_de_pago)
             cursor.execute(sql, data)
-            db.database.commit()
+            db_connection.commit()
             cursor.close()
             return redirect(url_for('ingresos'))
     
     
     # Tu lógica para mostrar la página de ingresos con la lista de datos aquí
-    cursor = db.database.cursor()
+    cursor = db_connection.cursor()
     cursor.execute("SELECT id_ingresos, nombre_alumno,  fecha_pago, monto, medios_de_pago FROM ingresos")
     myresult = cursor.fetchall()
     
@@ -557,7 +605,7 @@ def ingresos():
     cursor.close()
     # Obtener la lista de nombres y apellidos de los alumnos
     # Tu lógica para mostrar la página de ingresos con la lista de datos aquí
-    cursor = db.database.cursor()
+    cursor = db_connection.cursor()
     cursor.execute("SELECT id_ingresos, nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos")
     myresult = cursor.fetchall()
 
@@ -578,11 +626,11 @@ def ingresos():
 #Eliminar
 @app.route("/eliminar_ingresos/<string:id_ingresos>")
 def eliminar_ingresos(id_ingresos):
-    cursor = db.database.cursor()
+    cursor = db_connection.cursor()
     sql =  "DELETE FROM ingresos WHERE id_ingresos = %s"
     data = (id_ingresos,)
     cursor.execute(sql,data)
-    db.database.commit()
+    db_connection.commit()
     return redirect(url_for('ingresos'))
 
 
@@ -630,12 +678,16 @@ def editaringresos(id_ingresos):
             return redirect(url_for('editaringresos', id_ingresos=id_ingresos))
 
         if nombre_alumno and fecha_pago and monto and medios_de_pago:
-            cursor = db.database.cursor()
+            cursor = db_connection.cursor()
             sql = "UPDATE ingresos SET nombre_alumno = %s,  fecha_pago = %s, monto = %s, medios_de_pago = %s WHERE id_ingresos = %s"
             data = (nombre_alumno, fecha_pago, monto, medios_de_pago, id_ingresos)
             cursor.execute(sql, data)
-            db.database.commit()
-            data = db.database
+            db_connection.commit()
+            # Realiza una consulta para obtener los datos actualizados
+            cursor.execute("SELECT * FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
+            updated_data = cursor.fetchone()  # Obtén la fila actualizada
+            
+            cursor.close()  # Cierra el cursor
         return redirect(url_for('ingresos'))
 
 
@@ -660,7 +712,7 @@ def egresos():
         gastos_fijos_mensuales = ["luz", "agua", "gas", "internet"]
         if servicios.lower() in gastos_fijos_mensuales:
              # Verificar si el servicio ya se ha registrado este mes
-             cursor = db.database.cursor()
+             cursor = db_connection.cursor()
              cursor.execute("SELECT COUNT(*) FROM egresos WHERE servicios = %s AND MONTH(fecha_pago) = MONTH(CURRENT_DATE())", (servicios,))
              count = cursor.fetchone()[0]
              cursor.close()
@@ -695,15 +747,15 @@ def egresos():
     if servicios and fecha_pago and monto and medios_de_pago:
         monto = monto.replace('$', '').replace(',', '')  # Elimina "$" y comas
         monto = float(monto)  
-        cursor = db.database.cursor()
+        cursor = db_connection.cursor()
         sql = "INSERT INTO egresos (servicios, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s)"
         data = (servicios, fecha_pago, monto, medios_de_pago)
         cursor.execute(sql, data)
-        db.database.commit()
+        db_connection.commit()
         return redirect(url_for('egresos'))  # Redirige a la misma vista después de agregar datos
 
 # Tu lógica para mostrar la página de egresos con la lista de datos aquí
-    cursor = db.database.cursor()
+    cursor = db_connection.cursor()
     cursor.execute("SELECT id, servicios, fecha_pago, monto, medios_de_pago FROM egresos")
     myresult = cursor.fetchall()
     # Convertirmos los datos a diccionario
@@ -712,7 +764,7 @@ def egresos():
     for record in myresult:
         insertObject.append(dict(zip(columnNames, record)))
     cursor.close()
-    data=db.database
+   
     return render_template("egresos.html", data=insertObject,form_data=form_data)
 
 
@@ -720,11 +772,11 @@ def egresos():
 #Eliminar
 @app.route("/eliminar_egresos/<string:id>")
 def eliminar_egresos(id):
-    cursor = db.database.cursor()
+    cursor = db_connection.cursor()
     sql =  "DELETE FROM egresos WHERE id = %s"
     data = (id,)
     cursor.execute(sql,data)
-    db.database.commit()
+    db_connection.commit()
     return redirect(url_for('egresos'))
 
 
@@ -734,7 +786,7 @@ def editaregresos(id):
     registro_editar = None  # Define registro_editar inicialmente como None
 
     if request.method == "GET":
-        cursor = db.database.cursor()
+        cursor = db_connection.cursor()
         cursor.execute("SELECT servicios, fecha_pago, monto, medios_de_pago FROM egresos WHERE id = %s", (id,))
         registro_editar = cursor.fetchone()
         cursor.close()
@@ -768,12 +820,12 @@ def editaregresos(id):
         }
         return redirect(url_for('egresos'))
     if servicios and fecha_pago and monto and medios_de_pago:
-            cursor = db.database.cursor()
+            cursor = db_connection.cursor()
             sql = "UPDATE egresos SET servicios = %s, fecha_pago = %s, monto = %s, medios_de_pago = %s WHERE id = %s"
             data = (servicios, fecha_pago, monto, medios_de_pago, id)
             cursor.execute(sql, data)
-            db.database.commit()
-            data=db.database
+            db_connection.commit()
+
     return redirect(url_for('egresos'))
 
 #caja
@@ -813,7 +865,7 @@ def control():
 @app.route('/descargar_pdf/<int:id_ingresos>')
 def descargar_pdf(id_ingresos):
     # Obtén los datos del alumno con el ID proporcionado 
-    cursor = db.database.cursor()
+    cursor = db_connection.cursor()
     cursor.execute("SELECT nombre_alumno,fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
     alumno = cursor.fetchone()
     cursor.close()
@@ -842,7 +894,6 @@ def descargar_pdf(id_ingresos):
     
     c.drawString(230, 130, "Firma del receptor: __________________________")
 
-
     c.save()
 
     pdf_buffer.seek(0)
@@ -853,9 +904,78 @@ def descargar_pdf(id_ingresos):
     
     return response
 
+#PDF para descargar el listado de alumnos
+
+@app.route('/descargar_lista_alumnos_pdf')
+def descargar_lista_alumnos_pdf():
+    # Obtén los datos de todos los alumnos en tu base de datos
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT nombre, apellido, curso, nivel_educativo, dia, horario, materia FROM alumnos")
+    alumnos = cursor.fetchall()
+    cursor.close()
+
+    # Configura el búfer de bytes para el PDF
+    pdf_buffer = BytesIO()
+
+    # Crea un objeto SimpleDocTemplate para el PDF
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+
+    # Crea una lista para almacenar los elementos del PDF
+    elements = []
+
+    # Agrega un título centrado al PDF
+    styles = getSampleStyleSheet()
+    title_style = styles['Title']
+    title = Paragraph('<center><b>Listado de Alumnos</b></center>', title_style)
+    elements.append(title)
+
+    # Agrega un espacio en blanco como separación entre el título y la tabla
+    elements.append(Spacer(1, 20))
+
+    # Crea una lista para almacenar los datos de los alumnos
+    data = [['Nombre', 'Apellido', 'Curso', 'Nivel Educativo', 'Día', 'Horario', 'Materia']]
+
+    for alumno in alumnos:
+        data.append([
+            alumno[0],  # Nombre
+            alumno[1],  # Apellido
+            alumno[2],  # Curso
+            alumno[3],  # Nivel Educativo
+            alumno[4],  # Día
+            alumno[5],  # Horario
+            alumno[6]   # Materia
+        ])
+
+    # Crea una tabla para mostrar los datos de los alumnos
+    table = Table(data)
+
+    # Establece el estilo de la tabla
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ])
+
+    table.setStyle(style)
+
+    # Agrega la tabla a la lista de elementos
+    elements.append(table)
+
+    # Construye el PDF
+    doc.build(elements)
+
+    # Configura las cabeceras adecuadas para la descarga
+    response = make_response(pdf_buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=lista_alumnos.pdf'
+
+    return response
 
 
-
-app.secret_key = 'veronica'
 if __name__ == "__main__":
+    app.config.from_object(config['development'])
     app.run(debug =  True, port = 4000)
