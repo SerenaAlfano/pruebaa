@@ -11,15 +11,31 @@
       <span id="next-month">&#9655;</span>
     </div>
 
-    <!-- Modal -->
+    <table class="calendar-table">
+        <thead>
+            <tr>
+                <th>Domingo</th>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miércoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+                <th>Sábado</th>
+            </tr>
+        </thead>
+        <tbody id="calendar-body"></tbody>
+    </table>
+</div>
+
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="modal-content"></div>
+            <span class="close" id="modal-close-button">&times;</span>
+            <table id="horarios-table">
+                <!-- Contenido de la tabla se generará dinámicamente aquí -->
+            </table>
         </div>
     </div>
 
-    <!-- Incluye tu archivo JavaScript al final del body para asegurar que se cargue después del contenido HTML -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     {% endblock %}
 </body>
