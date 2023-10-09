@@ -330,29 +330,25 @@
                                                             <div class="select-container">
                                                                 <select class="form-control mb-3" name="dia[]" style="display: none;">
                                                                     {% for option in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'] %}
-                                                                    <option value="{{ option }}" {% if option in data.dia %}selected{% endif %}>{{ option }}</option>
+                                                                    <option value="{{ option }}" {% if option in d.dia %}selected{% endif %}>{{ option }}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </div>
                                                             <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="dia[]" value="Lunes" {% if 'Lunes' in data.dia %}checked{% endif %}> Lunes
+                                                                    <input type="checkbox" name="dia[]" value="Lunes" {% if 'Lunes' in d.dia %}checked{% endif %}> Lunes
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="dia[]" value="Martes" {% if 'Martes' in data.dia %}checked{% endif %}> Martes
+                                                                    <input type="checkbox" name="dia[]" value="Martes" {% if 'Martes' in d.dia %}checked{% endif %}> Martes
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="dia[]" value="Miércoles" {% if 'Miércoles' in data.dia %}checked{% endif %}> Miércoles
+                                                                    <input type="checkbox" name="dia[]" value="Miércoles" {% if 'Miércoles' in d.dia %}checked{% endif %}> Miércoles
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="dia[]" value="Jueves" {% if 'Jueves' in data.dia %}checked{% endif %}> Jueves
+                                                                    <input type="checkbox" name="dia[]" value="Jueves" {% if 'Jueves' in d.dia %}checked{% endif %}> Jueves
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="dia[]" value="Viernes" {% if 'Viernes' in data.dia %}checked{% endif %}> Viernes
+                                                                    <input type="checkbox" name="dia[]" value="Viernes" {% if 'Viernes' in d.dia %}checked{% endif %}> Viernes
                                                                 </label>
                                                             </div>
                                                     </div>
@@ -366,41 +362,34 @@
                                                             <div class="select-container">
                                                                 <select class="form-control mb-3" name="materia[]" style="display: none;">
                                                                     {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
-                                                                    <option value="{{ option }}" {% if option in data.dia %}selected{% endif %}>{{ option }}</option>
+                                                                    <option value="{{ option }}" {% if option in d.dia %}selected{% endif %}>{{ option }}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </div>
                                                             <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="materia[]" value="Inglés" {% if 'Inglés' in data.materia %}checked{% endif %}> Inlges
+                                                                    <input type="checkbox" name="materia[]" value="Inglés" {% if 'Inglés' in d.materia %}checked{% endif %}> Inlges
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in data.materia %}checked{% endif %}> Matemática
+                                                                    <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in d.materia %}checked{% endif %}> Matemática
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="materia[]" value="Practicas_del_lenguaje" {% if 'Prácticas_del_lenguaje' in data.materia %}checked{% endif %}> Practicas del lenguaje
+                                                                    <input type="checkbox" name="materia[]" value="Practicas_del_lenguaje" {% if 'Prácticas_del_lenguaje' in d.materia %}checked{% endif %}> Practicas del lenguaje
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="materia[]" value="Historia" {% if 'Historia' in data.materia %}checked{% endif %}> Historia
+                                                                    <input type="checkbox" name="materia[]" value="Historia" {% if 'Historia' in d.materia %}checked{% endif %}> Historia
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="materia[]" value="Geografia" {% if 'Geografia' in data.materia %}checked{% endif %}> Geografia
+                                                                    <input type="checkbox" name="materia[]" value="Geografia" {% if 'Geografia' in d.materia %}checked{% endif %}> Geografia
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="materia[]" value="Biologia" {% if 'Biologia' in data.materia %}checked{% endif %}> Biologia
+                                                                    <input type="checkbox" name="materia[]" value="Biologia" {% if 'Biologia' in d.materia %}checked{% endif %}> Biologia
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="materia[]" value="Contabilidad" {% if 'Contabilidad' in data.materia %}checked{% endif %}> Contabilidad
+                                                                    <input type="checkbox" name="materia[]" value="Contabilidad" {% if 'Contabilidad' in d.materia %}checked{% endif %}> Contabilidad
                                                                 </label>
-                                                                <div class="checkbox-container">
                                                                 <label>
-                                                                    <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in data.materia %}checked{% endif %}> Literatura
+                                                                    <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in d.materia %}checked{% endif %}> Literatura
                                                                 </label>
                                                             </div>
                                                     </div>

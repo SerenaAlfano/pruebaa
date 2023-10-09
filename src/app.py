@@ -151,6 +151,8 @@ def agregarAlumno():
     dia = request.form.getlist("dia[]")
     horario = request.form["horario"]
     materia = request.form.getlist("materia[]")
+    dia = list(set(dia))  # Eliminar duplicados de la tabla
+    materia = list(set(materia))
     dia_str = ', '.join(dia)
     materia_str = ', '.join(materia)
 
@@ -660,17 +662,13 @@ def editaringresos(id_ingresos):
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
 
-       
-
         # Obtiene la fecha actual
         fecha_actual = datetime.now().date()
-
         # Compara la fecha de pago con la fecha actual
         if fecha_pago is not None and fecha_actual is not None and fecha_pago > fecha_actual:
             flash("La fecha de pago debe ser actual o anterior.", "error")
             session['form_data'] = {
                 'nombre_alumno': nombre_alumno,
-           
                 'fecha_pago': fecha_pago_str,
                 'monto': monto,
                 'medios_de_pago': medios_de_pago
@@ -686,11 +684,8 @@ def editaringresos(id_ingresos):
             # Realiza una consulta para obtener los datos actualizados
             cursor.execute("SELECT * FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
             updated_data = cursor.fetchone()  # Obtén la fila actualizada
-            
             cursor.close()  # Cierra el cursor
         return redirect(url_for('ingresos'))
-
-
 
 #egresos
 @app.route("/egresos", methods=["GET", "POST"])
