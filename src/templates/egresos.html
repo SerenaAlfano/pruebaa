@@ -35,10 +35,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label  class="label-form">Monto <span class="campo-obligatorio">*</span></label>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">$</span>
                                     <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
-                                </div>
                             </div>
                             <script>
                             // Obtener el campo de entrada por su ID
@@ -85,7 +82,25 @@
                                 </label>
                             </div>
                             <div class="btn-container">
-                                <button type="submit" class="btn-guardar">Guardar</button>
+                                <button type="submit" class="btn-guardar" data-bs-toggle="modal" data-bs-target="#confirmarGuardarEgresos">Guardar</button>
+                                <!-- Modal de confirmación para guardar un alumno -->
+                                <div class="modal fade" id="confirmarGuardarEgresos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Confirmar Guardar</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Estás seguro de guardar este alumno?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn-guardar" style="background-color: #92BD89; color: #ffff;" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn-guardar">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>  
                         </div>
                     </form>
@@ -173,10 +188,7 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <label>Monto <span class="campo-obligatorio">*</span></label>
-                                                        <div class="input-group mb-3">
-                                                            <span class="input-group-text">$</span>
-                                                            <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
-                                                        </div>
+                                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
                                                 </div> 
                                                 <div class="col-6">
                                                     <label class="label-with-arrow">
