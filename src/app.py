@@ -154,6 +154,7 @@ def agregarAlumno():
     dia_str = ', '.join(dia)
     materia_str = ', '.join(materia)
 
+
     if not validar_nombre(nombre):
         flash("El nombre no es válido. Debe contener solo letras.", "error")
         session['form_data'] = {
@@ -941,35 +942,37 @@ def descargar_lista_alumnos_pdf():
     title = Paragraph('<center><b>Listado de Alumnos</b></center>', title_style)
     elements.append(title)
 
-    # Agrega un espacio en blanco como separación entre el título y la tabla
-    elements.append(Spacer(1, 20))
-
     # Crea una lista para almacenar los datos de los alumnos
-    data = [['Nombre', 'Apellido', 'Curso', 'Nivel Educativo', 'Día', 'Horario', 'Materia']]
+    data = [['Nombre', 'Apellido', 'Curso', 'Nivel Educativo', 'Día', 'Horario', 'Materias']]
 
     for alumno in alumnos:
+        # Dividir las materias por comas y luego unir las materias con <br/>
+        materias = "<br/>".join(alumno[6].split(", "))
+        # Dividir los días por comas y luego unir los días con <br/>
+        dias = "<br/>".join(alumno[4].split(", "))
         data.append([
-            alumno[0],  # Nombre
-            alumno[1],  # Apellido
-            alumno[2],  # Curso
-            alumno[3],  # Nivel Educativo
-            alumno[4],  # Día
-            alumno[5],  # Horario
-            alumno[6]   # Materia
+            Paragraph(alumno[0], styles['Normal']),  # Nombre
+            Paragraph(alumno[1], styles['Normal']),  # Apellido
+            Paragraph(alumno[2], styles['Normal']),  # Curso
+            Paragraph(alumno[3], styles['Normal']),  # Nivel Educativo
+            Paragraph(dias, styles['Normal']),       # Días con saltos de línea
+            Paragraph(alumno[5], styles['Normal']),  # Horario
+            Paragraph(materias, styles['Normal'])    # Materias con saltos de línea
         ])
 
     # Crea una tabla para mostrar los datos de los alumnos
     table = Table(data)
 
-    # Establece el estilo de la tabla
+    # Establece el estilo de la tabla para centrar el contenido
     style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Centrar verticalmente
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey)
     ])
 
     table.setStyle(style)
