@@ -129,6 +129,30 @@ body {
 }
 
 /*Alta de alumnos*/
+.error-message {
+  display: none;
+  position: relative; 
+  background-color: #ffcccc;
+  color: #ff0000;
+  padding: 5px;
+  border: 1px solid #ff0000;
+  border-radius: 4px;
+  top: -7rem; /* Coloca el mensaje encima del campo de entrada */ 
+  margin-left: 0; 
+  font-size: 14px;
+}
+
+/* Añade un pequeño triángulo apuntando hacia abajo para indicar el error */
+.error-message::after { /* Cambia ::before a ::after */
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #ffcccc transparent transparent transparent; /* Cambia el orden de los colores */
+}
 
 .form-label-alta{
   justify-content: left !important;
@@ -167,6 +191,8 @@ body {
   font-weight: 600;
   border-radius: 1em;
   cursor: pointer;
+  border: none;
+  background-color: #ffff;
 }
 .col-tabla{
   width: 6%;
@@ -180,7 +206,7 @@ body {
 .btn-guardar {
   background-color: #FBD374;
   color: white;
-  border: none;
+  border: none !important;
   border-radius: 1em;
   padding: 0.5em;
   font-weight: 400;

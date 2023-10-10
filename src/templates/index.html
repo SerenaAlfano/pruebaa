@@ -130,7 +130,7 @@
                                 </div>
                                 <div class="checkbox-container">
                                     <label>
-                                        <input type="checkbox" name="materia[]" value="Inglés" {% if 'Inglés' in data.dia %}checked{% endif %}> Inlges
+                                        <input type="checkbox" name="materia[]" value="Inglés" {% if 'Inglés' in data.dia %}checked{% endif %}> Inglés
                                     </label>
                                     <label>
                                         <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in data.dia %}checked{% endif %}> Matemática
@@ -157,7 +157,25 @@
                         </div>
                             <div class="col-md-3 col-sm-12">
                                 <div class="btn-container">
-                                    <button type="submit" class="btn-guardar">Guardar alumno</button>
+                                    <button type="button" class="btn-guardar" data-bs-toggle="modal" data-bs-target="#confirmarGuardar">Guardar alumno</button>
+                                </div>
+                                <!-- Modal de confirmación para guardar un alumno -->
+                                <div class="modal fade" id="confirmarGuardar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Confirmar Guardar</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Estás seguro de guardar este alumno?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn-guardar" style="background-color: #92BD89; color: #ffff;" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn-guardar">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -174,11 +192,12 @@
                     </div>
                 </div>
                 <div class="row mb-3">    
-                    <div class="form-inline">
+                    <div class="d-flex justify-content-between">
                         <input type="text" class="form-control mr-2" id="busquedaInput" placeholder="Buscar alumno">
-                        <a href="{{ url_for('descargar_lista_alumnos_pdf') }}" target="_blank" class="btn btn-primary">Descargar Lista de Alumnos</a>
+                        <a href="{{ url_for('descargar_lista_alumnos_pdf') }}" target="_blank" class="btn-guardar" style="background-color:#92BD89;">Descargar Lista de Alumnos</a>
                     </div>
                 </div>
+                
                 <div class="table-responsive">
                     <table class="table table-bordered m-1 mb-5 scrollspy-example" style="background-color: white;">
                         <thead>
@@ -244,7 +263,7 @@
                             </div>
                             <!-- MODAL -->
                             <div class="modal fade" id="modal{{ d.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
+                                <div class="modal-dialog modal-xl">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel">{{ d.nombre }}</h5>
@@ -252,40 +271,39 @@
                                         </div>
                                         <div class="modal-body">
                                             <form action="/editar/{{ d.id }}" method="POST">
-                                                <div class="p-2">
+                                                
                                                     <div class="row">
-                                                        <div class="col-md-3 col-sm-6">
+                                                        <div class="col">
                                                             <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="nombre" required value="{{ d.nombre }}">
                                                         </div>
-                                                            <div class="col-md-3">
-                                                                <label>Apellido <span class="campo-obligatorio">*</span></label>
-                                                                <input type="text" class="form-control mb-3" name="apellido" value="{{ d.apellido }}" required>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
-                                                                <input type="text" class="form-control mb-3" name="email" value="{{ d.email }}" required>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
-                                                                <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" value="{{ d.telefono }}" required>
-                                                            </div>
+                                                        <div class="col">
+                                                            <label>Apellido <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control mb-3" name="apellido" value="{{ d.apellido }}" required>
                                                         </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col">
+                                                            <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control mb-3" name="email" value="{{ d.email }}" required>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
+                                                            <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" value="{{ d.telefono }}" required>
+                                                        </div>            
+                                                        <div class="col">
                                                             <label class="label-form">Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
                                                             <input type="date" class="form-control mb-3" name="fecha_nacimiento" value="{{ d.fecha_nacimiento }}" required>
-                                                        </div>
-                                                        <div class="col-md-3">
+                                                        </div>                                    
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
                                                             <label class="label-form">Fecha de inicio <span class="campo-obligatorio">*</span></label>
                                                             <input type="date" class="form-control mb-3" name="fecha_inicio" value="{{ d.fecha_inicio }}" required>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col">
                                                             <label class="label-form">Colegio <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="colegio" value="{{ d.colegio }}" required>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col">
                                                             <label class="label-form label-with-arrow">
                                                                 Curso <span class="campo-obligatorio">*</span>
                                                                 <div class="select-container">
@@ -299,10 +317,8 @@
                                                                     </svg>
                                                                 </div>
                                                             </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        </div>         
+                                                        <div class="col">
                                                             <label class="label-form label-with-arrow">
                                                                 Nivel educativo <span class="campo-obligatorio">*</span>
                                                                 <div class="select-container">
@@ -317,12 +333,14 @@
                                                                 </div>
                                                             </label>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col">
                                                             <label class="label-form"> Nombre tutor <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="nombre_titular" value="{{ d.nombre_titular }}" required>
                                                         </div>
-                                                        <div class="col-md-3">
-                                                            <label class="label-form">Telefono tutor <span class="campo-obligatorio">*</span></label>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <label class="label-form">Teléfono tutor <span class="campo-obligatorio">*</span></label>
                                                             <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" value="{{ d.telefono_titular }}" required>
                                                         </div>
                                                         <div class="col-md-3 col-sm-12">
@@ -351,9 +369,8 @@
                                                                     <input type="checkbox" name="dia[]" value="Viernes" {% if 'Viernes' in d.dia %}checked{% endif %}> Viernes
                                                                 </label>
                                                             </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
+                                                        </div>
+                                                        <div class="col">
                                                             <label class="label-form">Horario <span class="campo-obligatorio">*</span></label>
                                                             <input class="form-control mb-3" type="time" id="horario" name="horario" value="{{ d.horario }}" required>
                                                         </div>
@@ -392,12 +409,14 @@
                                                                     <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in d.materia %}checked{% endif %}> Literatura
                                                                 </label>
                                                             </div>
-                                                    </div>
-                                                        <div class="col-md-3">
-                                                            <button type="submit" class="btn-guardar">Guardar cambios</button>
+                                                            <!-- Agrega más casillas de verificación para otras materias -->
                                                         </div>
                                                     </div>
-                                                </div>
+                                                    
+                                                    <div class="col-md-3">
+                                                        <button type="submit" class="btn-guardar">Guardar cambios</button>
+                                                    </div>
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>

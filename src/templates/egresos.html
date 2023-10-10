@@ -84,11 +84,9 @@
                                     </div>
                                 </label>
                             </div>
-                     
-                                <div class="btn-container">
-                                    <button type="submit" class="btn-guardar">Guardar</button>
-                                </div>
-                          
+                            <div class="btn-container">
+                                <button type="submit" class="btn-guardar">Guardar</button>
+                            </div>  
                         </div>
                     </form>
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -115,7 +113,7 @@
                         <th class="col-tabla" scope="col">Fecha de pago</th>
                         <th class="col-tabla" scope="col">Monto</th>
                         <th class="col-tabla" scope="col">Medio de pago</th>
-                        <th class="col-tabla" scope="col" colspan="2">Acciones</th>
+                        <th class="col-tabla" scope="col" colspan="2"></th>
                     </thead>
                 </div>
                     <tbody>
@@ -127,8 +125,30 @@
                             <td class="td-table">${{ '{:,.2f}'.format(d.monto) }}</td>
                             <td class="td-table">{{ d.medios_de_pago }}</td>
                             <td class="text-center "> <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}"></i></td>
-                            <td class="text-center"> <a href="{{ url_for('eliminar_egresos', id=d.id) }}" ><i class="btn-operacion bi bi-trash"></i></a></td>
+                            <td class="text-center"> 
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#confirmarEliminar{{d.id}}">
+                                    <i class="btn-operacion bi bi-trash"></i>
+                                </a>
+                            </td>
                         </tr>
+                        <!-- Modal de confirmación de eliminación para cada registro de egresos -->
+                        <div class="modal fade" id="confirmarEliminar{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Confirmar eliminación</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Estás seguro de eliminar este registro?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn-guardar" style="background-color: #92BD89; color: #ffff;" data-bs-dismiss="modal">Cancelar</button>
+                                        <a href="{{ url_for('eliminar_egresos', id=d.id) }}" class="btn-guardar">Eliminar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- MODAL -->
                         <div class="modal fade" id="modal{{ d.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -140,54 +160,26 @@
                                     <div class="modal-body">
                                         <form action="{{ url_for('editaregresos', id=d.id) }}" method="POST">
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div class="col-6">
                                                     <input type="hidden" name="id" value="{{ d.id }}">
                                                     <label>Nombre del servicio <span class="campo-obligatorio">*</span></label>
                                                     <input type="text" class="form-control mb-3" name="servicios" value="{{ d.servicios }}" required value="{{ form_data.servicios if form_data else '' }}">
                                                 </div>
-                                                <div class="col-md-6">
-                                                <label>Fecha de pago <span class="campo-obligatorio">*</span></label>
-                                                <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required value="{{ form_data.fecha_pago if form_data else '' }}">
-                                            </div>
-                                            </div>
-                                                <div class="col-md-3">
-                                                <label>Monto <span class="campo-obligatorio">*</span></label>
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                                <div class="col-6">
+                                                    <label>Fecha de pago <span class="campo-obligatorio">*</span></label>
+                                                    <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required value="{{ form_data.fecha_pago if form_data else '' }}">
                                                 </div>
                                             </div>
-                                            <script>
-                                            // Obtener el campo de entrada por su ID
-                                            var montoInput = document.getElementById('montoInput');
-                                            
-                                            // Agregar un manejador de eventos para el evento 'input'
-                                            montoInput.addEventListener('input', function() {
-                                                // Obtener la posición actual del cursor
-                                                var cursorPosition = montoInput.selectionStart;
-                                              
-                                                // Obtener el valor actual del campo
-                                                var valor = montoInput.value;
-                                                
-                                                // Quitar cualquier carácter que no sea un número o punto
-                                                valor = valor.replace(/[^0-9.]/g, '');
-                                                
-                                                // Formatear el valor con dos decimales
-                                                valor = parseFloat(valor).toFixed(2);
-                                                
-                                                // Agregar separadores de miles y el signo de dólar
-                                                valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
-                                                
-                                                // Asignar el valor formateado de nuevo al campo
-                                                montoInput.value = valor;
-                                                
-                                                // Restaurar la posición del cursor después del formato
-                                                var newPos = cursorPosition + (valor.length - montoInput.value.length);
-                                                montoInput.setSelectionRange(newPos, newPos);
-                                            });
-                                            </script> 
-                                            <div class="col-md-3">
-                                                <label class="label-with-arrow">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <label>Monto <span class="campo-obligatorio">*</span></label>
+                                                        <div class="input-group mb-3">
+                                                            <span class="input-group-text">$</span>
+                                                            <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                                        </div>
+                                                </div> 
+                                                <div class="col-6">
+                                                    <label class="label-with-arrow">
                                                     Medios de pago <span class="campo-obligatorio">*</span>
                                                     <div class="select-container">
                                                         <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
@@ -199,9 +191,10 @@
                                                             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                                                         </svg>
                                                     </div>
-                                                </label>
+                                                    </label>
+                                                </div>
                                             </div>
-                                            <div class="col-md-3 text-center">
+                                            <div class="text-center">
                                                 <div class="btn-container">
                                                     <button type="submit" class="btn-guardar">Guardar</button>
                                                 <div>
@@ -212,6 +205,35 @@
                             </div>
                         </div>
                         {% endfor %}
+                        <script>
+                            // Obtener el campo de entrada por su ID
+                            var montoInput = document.getElementById('montoInput');
+                            
+                            // Agregar un manejador de eventos para el evento 'input'
+                            montoInput.addEventListener('input', function() {
+                                // Obtener la posición actual del cursor
+                                var cursorPosition = montoInput.selectionStart;
+                              
+                                // Obtener el valor actual del campo
+                                var valor = montoInput.value;
+                                
+                                // Quitar cualquier carácter que no sea un número o punto
+                                valor = valor.replace(/[^0-9.]/g, '');
+                                
+                                // Formatear el valor con dos decimales
+                                valor = parseFloat(valor).toFixed(2);
+                                
+                                // Agregar separadores de miles y el signo de dólar
+                                valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                
+                                // Asignar el valor formateado de nuevo al campo
+                                montoInput.value = valor;
+                                
+                                // Restaurar la posición del cursor después del formato
+                                var newPos = cursorPosition + (valor.length - montoInput.value.length);
+                                montoInput.setSelectionRange(newPos, newPos);
+                            });
+                            </script> 
                         <script>
                                // Obtener el campo de búsqueda y la tabla
             var busquedaInput = document.getElementById('busquedaInput');
