@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const modal = document.getElementById("myModal");
             const horariosTable = document.getElementById("horarios-table");
 
-            // Realiza una solicitud AJAX para obtener los datos del alumno
+            // Realiza una solicitud AJAX para obtener los datos del alumno desde el servidor
             fetch(`/obtener_alumno?fecha=${formattedDate}`) // Ajusta la ruta según tu configuración
                 .then(response => response.json())
                 .then(data => {
