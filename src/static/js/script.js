@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentMonth = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
 
+    // Supongamos que disponibilidad contiene las fechas disponibles obtenidas de la base de datos
+    const disponibilidad = new Set(['2023-10-01', '2023-10-05', '2023-10-15']); // Formato ISO 8601
+
     function updateCalendar() {
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
         const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
@@ -19,15 +22,18 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let i = 0; i < 6; i++) {
             const row = document.createElement("tr");
             for (let j = 0; j < 7; j++) {
-                if ((i === 0 && j < firstDayOfMonth) || day > daysInMonth) {
-                    const cell = document.createElement("td");
-                    row.appendChild(cell);
-                } else {
-                    const cell = document.createElement("td");
+                const cell = document.createElement("td");
+                if (day <= daysInMonth) {
                     cell.textContent = day;
-                    row.appendChild(cell);
+                    const date = new Date(currentYear, currentMonth, day);
+                    const formattedDate = date.toISOString().split('T')[0]; // Formato ISO 8601
+                    if (disponibilidad.has(formattedDate)) {
+                        // Aplica un estilo especial a los días disponibles
+                        cell.classList.add('dia-disponible');
+                    }
                     day++;
                 }
+                row.appendChild(cell);
             }
             calendarBody.appendChild(row);
         }
@@ -56,15 +62,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const horariosTable = document.getElementById("horarios-table");
 
             // Realiza una solicitud AJAX para obtener los datos del alumno desde el servidor
-            fetch(`/obtener_horarios_mysql?fecha=${formattedDate}`) // Ajusta la ruta según tu configuración
+            fetch(`/obtener_alumno?fecha=${formattedDate}`) // Ajusta la ruta según tu configuración
                 .then(response => response.json())
                 .then(data => {
                     // Llena la tabla de horarios con los datos obtenidos
                     horariosTable.innerHTML = `<tr><th>Nombre</th><th>Apellido</th><th>Día</th><th>Horario</th><th>Materia</th></tr>
                         <tr><td>${data.nombre}</td><td>${data.apellido}</td><td>${data.dia}</td><td>${data.horario}</td><td>${data.materia}</td></tr>`;
+                    
+                    // Abre el modal
+                    modal.style.display = "block";
                 });
-
-            modal.style.display = "block";
         }
     });
 

@@ -859,10 +859,6 @@ def obtener_horarios_desde_mysql():
     cursor.close()
     return horarios
 
-@app.route('/obtener_horarios_mysql', methods=['GET'])
-def obtener_horarios_mysql():
-    horarios = obtener_horarios_desde_mysql()
-    return jsonify(horarios)
 
 #Agenda
 @app.route('/control')
