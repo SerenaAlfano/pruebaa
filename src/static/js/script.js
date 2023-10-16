@@ -56,16 +56,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const horariosTable = document.getElementById("horarios-table");
 
             // Realiza una solicitud AJAX para obtener los datos del alumno desde el servidor
-            fetch(`/obtener_alumno?fecha=${formattedDate}`) // Ajusta la ruta según tu configuración
+            fetch(`/obtener_horarios_mysql?fecha=${formattedDate}`) // Ajusta la ruta según tu configuración
                 .then(response => response.json())
                 .then(data => {
                     // Llena la tabla de horarios con los datos obtenidos
                     horariosTable.innerHTML = `<tr><th>Nombre</th><th>Apellido</th><th>Día</th><th>Horario</th><th>Materia</th></tr>
                         <tr><td>${data.nombre}</td><td>${data.apellido}</td><td>${data.dia}</td><td>${data.horario}</td><td>${data.materia}</td></tr>`;
-                    
-                    // Abre el modal
-                    modal.style.display = "block";
                 });
+
+            modal.style.display = "block";
         }
     });
 
