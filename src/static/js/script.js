@@ -50,13 +50,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedDate = new Date(currentYear, currentMonth, dayNumber);
 
             // Formatea la fecha seleccionada en el formato deseado (por ejemplo, ISO 8601)
-            const formattedDate = selectedDate.toISOString();
+            const formattedDate = selectedDate.toISOString().split("T")[0];
 
             const modal = document.getElementById("myModal");
             const horariosTable = document.getElementById("horarios-table");
 
             // Realiza una solicitud AJAX para obtener los datos del alumno desde el servidor
-            fetch(`/obtener_horarios_desde_mysql?fecha=${formattedDate}`) // Ajusta la ruta según tu configuración
+            fetch(`/obtener_horarios?fecha=${formattedDate}`) // Ajusta la ruta según tu configuración
                 .then(response => response.json())
                 .then(data => {
                     // Llena la tabla de horarios con los datos obtenidos
@@ -86,3 +86,4 @@ document.addEventListener('DOMContentLoaded', function () {
         updateCalendar();
     });
 });
+

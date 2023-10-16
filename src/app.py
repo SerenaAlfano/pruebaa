@@ -866,13 +866,13 @@ def caja():
 def agenda():
     return render_template('agenda.html')
 
+@app.route('/obtener_horarios', methods=['GET'])
 def obtener_horarios_desde_mysql():
     cursor = db.database.cursor(dictionary=True)
-    cursor.execute("SELECT nombre, apellido, dia, horario, materia from alumnos;")  
+    cursor.execute("SELECT id, nombre, apellido, dia, horario, materia from alumnos_horarios")
     horarios = cursor.fetchall()
     cursor.close()
-    return horarios
-
+    return jsonify(horarios)
 
 #Agenda
 @app.route('/control')
