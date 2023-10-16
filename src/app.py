@@ -319,8 +319,8 @@ def agregarAlumno():
         id_inserted = cursor.lastrowid
 
         # Defina la instrucción INSERT para la tabla 'alumnos_horarios'
-        sql_alumnos_horarios = "INSERT INTO alumnos_horarios (nombre, apellido, dia, horario, materia) VALUES (%s, %s, %s, %s)"
-        data_alumnos_horarios = (nombre, apellido, dia_str, horario, materia_str)
+        sql_alumnos_horarios = "INSERT INTO alumnos_horarios (id, nombre, dia, horario, materia) VALUES (%s, %s, %s, %s)"
+        data_alumnos_horarios = (id, dia_str, horario, materia_str)
     
         cursor.execute(sql_alumnos_horarios, data_alumnos_horarios)
         db_connection.commit()  # Realiza el commit después de la inserción en 'alumnos_horarios'
