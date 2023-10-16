@@ -15,6 +15,7 @@ from flask import make_response
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Spacer
 from config import config
+from flask_sqlalchemy import SQLAlchemy
 
 import re
 
@@ -309,12 +310,25 @@ def agregarAlumno():
     cursor = db_connection.cursor()
     sql = "INSERT INTO alumnos (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str) 
+    
     try:
         cursor.execute(sql, data)
         db_connection.commit()  # Realiza el commit después de la inserción
+
+        # Después de insertar en 'alumnos', obtenga el ID insertado
+        id_inserted = cursor.lastrowid
+
+        # Defina la instrucción INSERT para la tabla 'alumnos_horarios'
+        sql_alumnos_horarios = "INSERT INTO alumnos_horarios (id, nombre, apellido, dia, horario, materia) VALUES (%s, %s, %s, %s)"
+        data_alumnos_horarios = (id_inserted, dia_str, horario, materia_str)
+    
+        cursor.execute(sql_alumnos_horarios, data_alumnos_horarios)
+        db_connection.commit()  # Realiza el commit después de la inserción en 'alumnos_horarios'
+
     except mysql.connector.Error as err:
-        # Maneja los errores de SQL aquí
+    # Maneja los errores de SQL aquí
         print(f"Error de MySQL: {err}")
+    
     return redirect(url_for('alta'))
 
 #Eliminar
