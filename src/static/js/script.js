@@ -8,8 +8,11 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentMonth = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
 
-    // Supongamos que disponibilidad contiene las fechas disponibles obtenidas de la base de datos
-    const disponibilidad = new Set(['2023-10-01', '2023-10-05', '2023-10-15']); // Formato ISO 8601
+    // Función para obtener la disponibilidad desde la base de datos
+    function obtenerDisponibilidad() {
+        return fetch(`/obtener_disponibilidad`) // Ajusta la ruta según tu configuración
+            .then(response => response.json());
+    }
 
     function updateCalendar() {
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -18,25 +21,27 @@ document.addEventListener('DOMContentLoaded', function () {
         calendarBody.innerHTML = "";
         monthYear.textContent = new Date(currentYear, currentMonth).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
 
-        let day = 1;
-        for (let i = 0; i < 6; i++) {
-            const row = document.createElement("tr");
-            for (let j = 0; j < 7; j++) {
-                const cell = document.createElement("td");
-                if (day <= daysInMonth) {
-                    cell.textContent = day;
-                    const date = new Date(currentYear, currentMonth, day);
-                    const formattedDate = date.toISOString().split('T')[0]; // Formato ISO 8601
-                    if (disponibilidad.has(formattedDate)) {
-                        // Aplica un estilo especial a los días disponibles
-                        cell.classList.add('dia-disponible');
+        obtenerDisponibilidad().then(disponibilidad => {
+            let day = 1;
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement("tr");
+                for (let j = 0; j < 7; j++) {
+                    const cell = document.createElement("td");
+                    if (day <= daysInMonth) {
+                        cell.textContent = day;
+                        const date = new Date(currentYear, currentMonth, day);
+                        const formattedDate = date.toISOString().split('T')[0]; // Formato ISO 8601
+                        if (disponibilidad.includes(formattedDate)) {
+                            // Aplica un estilo especial a los días disponibles
+                            cell.classList.add('dia-disponible');
+                        }
+                        day++;
                     }
-                    day++;
+                    row.appendChild(cell);
                 }
-                row.appendChild(cell);
+                calendarBody.appendChild(row);
             }
-            calendarBody.appendChild(row);
-        }
+        });
     }
 
     updateCalendar();
@@ -93,3 +98,4 @@ document.addEventListener('DOMContentLoaded', function () {
         updateCalendar();
     });
 });
+
