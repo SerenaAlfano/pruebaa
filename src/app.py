@@ -869,7 +869,7 @@ def agenda():
 @app.route('/obtener_horarios', methods=['GET'])
 def obtener_horarios_desde_mysql():
     cursor = db.database.cursor(dictionary=True)
-    cursor.execute("SELECT id, nombre, apellido, dia, horario, materia from alumnos_horarios")
+    cursor.execute("SELECT nombre, apellido, dia, horario, materia from alumnos_horarios")
     horarios = cursor.fetchall()
     cursor.close()
     return jsonify(horarios)
