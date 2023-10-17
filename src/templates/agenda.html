@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% block title %}Agenda{% endblock %}
+{% block content %}
 <head>
-  {% block title %}Agenda{% endblock %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-  {% block content %}
   <div class="calendar">
     <div class="calendar-header">
       <span id="prev-month">&#9665;</span>
@@ -25,18 +26,23 @@
         </thead>
         <tbody id="calendar-body"></tbody>
     </table>
-</div>
+  </div>
 
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="modal-close-button">&times;</span>
-            <table id="horarios-table">
-                <!-- Contenido de la tabla se generará dinámicamente aquí -->
-            </table>
-        </div>
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="modal-close-button">&times;</span>
+        <table id="horarios-table">
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Día</th>
+                <th>Horario</th>
+                <th>Materia</th>
+            </tr>
+        </table>
     </div>
+  </div>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    {% endblock %}
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
-
+{% endblock %}

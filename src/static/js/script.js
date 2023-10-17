@@ -1,5 +1,3 @@
-// script.js
-
 document.addEventListener('DOMContentLoaded', function () {
     const calendarBody = document.getElementById("calendar-body");
     const monthYear = document.getElementById("month-year");
@@ -44,36 +42,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-
     calendarBody.addEventListener("click", (event) => {
         const clickedCell = event.target;
 
         if (clickedCell.tagName === "TD" && !isNaN(clickedCell.textContent)) {
             const dayNumber = parseInt(clickedCell.textContent, 10);
+            const selectedDate = new Date(currentYear, currentMonth, dayNumber);
+
+            // Formatea la fecha seleccionada en el formato deseado (por ejemplo, ISO 8601)
+            const formattedDate = selectedDate.toISOString().split("T")[0];
 
             const modal = document.getElementById("myModal");
-            const closeModal = document.getElementById("modal-close-button");
-            const customCloseButton = document.getElementById("custom-close-button");
             const horariosTable = document.getElementById("horarios-table");
 
-            // Hacer una solicitud AJAX para obtener datos de horarios desde el servidor
-            fetch('/obtener_horarios_mysql') // Asegúrate de que esta URL coincida con la ruta en tu aplicación Flask
+            // Realiza una solicitud AJAX para obtener los datos del alumno desde el servidor
+            fetch(`/obtener_horarios?fecha=${formattedDate}`) // Ajusta la ruta según tu configuración
                 .then(response => response.json())
                 .then(data => {
                     // Llena la tabla de horarios con los datos obtenidos
-                    const tablaHTML = data.map(item => `<tr><td>${item.nombre}</td><td>${item.apellido}</td><td>${item.dia}</td><td>${item.horario}</td><td>${item.materia}</td></tr>`).join('');
-                    horariosTable.innerHTML = `<tr><th>Nombre</th><th>apellido</th><th>dia</th><th>horario</th><th>materia</th></tr>${tablaHTML}`;
+                    horariosTable.innerHTML = `<tr><th>Nombre</th><th>Apellido</th><th>Día</th><th>Horario</th><th>Materia</th></tr>
+                        <tr><td>${data.nombre}</td><td>${data.apellido}</td><td>${data.dia}</td><td>${data.horario}</td><td>${data.materia}</td></tr>`;
                 });
 
             modal.style.display = "block";
-
-            closeModal.addEventListener("click", () => {
-                modal.style.display = "none";
-            });
-
-            customCloseButton.addEventListener("click", () => {
-                modal.style.display = "none";
-            });
         }
     });
 
@@ -95,3 +86,4 @@ document.addEventListener('DOMContentLoaded', function () {
         updateCalendar();
     });
 });
+
