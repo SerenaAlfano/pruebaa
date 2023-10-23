@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+<head>
+    {% block title %}Mis alumnos{% endblock %}
+</head>
+
+<body>
+
+    {% block content %}
+
+        <div class="col-md-12 p-3">
+            <h3 class="text-left subtitulo ">Mis alumnos</h3>
+            <div class="">
+                <div class="row mb-3">    
+                    <div class="d-flex justify-content-between p-3">
+                        <input type="text" class="form-control " id="busquedaInput" placeholder="Buscar alumno">
+                        <a href="{{ url_for('descargar_lista_alumnos_pdf') }}" target="_blank" class="btn-guardar" style="background-color:#92BD89;">Descargar Lista de Alumnos</a>
+                    </div>
+                </div>
+                
+                <div class="table-responsive ">
+                    <table class="table table-bordered m-1 mb-5 scrollspy-example" style="background-color: white;">
+                        
+                        <thead>
+                            <tr>
+                                <th scope="col" class="col-tabla">Nombre</th>
+                                <th scope="col" class="col-tabla">Apellido</th>
+                                <th scope="col" class="col-tabla" >Email</th>
+                                <th scope="col" class="col-tabla">Telefono</th>
+                                <th scope="col" class="col-tabla">Nacimiento</th>
+                                <th scope="col" class="col-tabla">Inicio</th>
+                                <th scope="col" class="col-tabla">Colegio</th>
+                                <th scope="col" class="col-tabla">Curso</th>
+                                <th scope="col" class="col-tabla">Nivel</th>
+                                <th scope="col" class="col-tabla">Nombre tutor</th>
+                                <th scope="col" class="col-tabla">Telefono tutor</th>
+                                <th scope="col" class="col-tabla">Día</th>
+                                <th scope="col" class="col-tabla">Horario</th>
+                                <th scope="col" class="col-tabla">Materia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for d in data %}
+                            <tr>      
+                                <td class="td-table">{{ d.nombre.title() }}</td>
+                                <td class="td-table">{{ d.apellido.title() }}</td>
+                                <td class="td-table">{{ d.email.title() }}</td>
+                                <td class="td-table">{{ d.telefono }}</td>
+                                <td class="td-table">{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
+                                <td class="td-table">{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>
+                                <td class="td-table">{{ d.colegio.title() }}</td>
+                                <td class="td-table">{{ d.curso }}</td>
+                                <td class="td-table">{{ d.nivel_educativo }}</td>
+                                <td class="td-table">{{ d.nombre_titular.title() }}</td>
+                                <td class="td-table">{{ d.telefono_titular }}</td>
+                                <td class="td-table">{{ d.dia }}</td>
+                                <td class="td-table">{{ d.horario }}</td>
+                                <td class="td-table">{{ d.materia }}</td>
+                                <td class="text-center"> 
+                                    <i class="btn-operacion bi bi-pencil-square text-center" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i>
+                                </td>
+                                <td class="text-center">
+                                     <i class="btn-operacion bi bi bi-trash "id="confirmarEliminar{{d.id}}" data-bs-toggle="modal" data-bs-target="#confirmarEliminar{{d.id}}"data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"></i></td>                         
+                                </td>
+
+                            </tr>
+                            <!-- Modal de confirmación de eliminación para cada alumno -->
+                            <div class="modal fade" id="confirmarEliminar{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Confirmar eliminación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Estás seguro de eliminar al alumno {{ d.nombre }} {{ d.apellido }}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn-guardar" style="background-color: #92BD89; color: #ffff;" data-bs-dismiss="modal">Cancelar</button>
+                                            <a href="{{ url_for('eliminar', id=d.id) }}" class="btn-guardar">Eliminar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- MODAL -->
+                            <div class="modal fade" id="modal{{ d.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">{{ d.nombre }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/editar/{{ d.id }}" method="POST">
+                                                
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control mb-3" name="nombre" required value="{{ d.nombre }}">
+                                                        </div>
+                                                        <div class="col">
+                                                            <label>Apellido <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control mb-3" name="apellido" value="{{ d.apellido }}" required>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control mb-3" name="email" value="{{ d.email }}" required>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
+                                                            <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" value="{{ d.telefono }}" required>
+                                                        </div>            
+                                                        <div class="col">
+                                                            <label class="label-form">Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
+                                                            <input type="date" class="form-control mb-3" name="fecha_nacimiento" value="{{ d.fecha_nacimiento }}" required>
+                                                        </div>                                    
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <label class="label-form">Fecha de inicio <span class="campo-obligatorio">*</span></label>
+                                                            <input type="date" class="form-control mb-3" name="fecha_inicio" value="{{ d.fecha_inicio }}" required>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="label-form">Colegio <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control mb-3" name="colegio" value="{{ d.colegio }}" required>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="label-form label-with-arrow">
+                                                                Curso <span class="campo-obligatorio">*</span>
+                                                                <div class="select-container">
+                                                                    <select class="form-control mb-3" name="curso" required value="{{ form_data.curso if form_data else '' }}">
+                                                                        {% for option in ['Primero', 'Segundo', 'Tercero','Cuarto','Quinto','Sexto'] %}
+                                                                        <option value="{{ option }}" {% if data.curso == option %}selected{% endif %}>{{ option }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </label>
+                                                        </div>         
+                                                        <div class="col">
+                                                            <label class="label-form label-with-arrow">
+                                                                Nivel educativo <span class="campo-obligatorio">*</span>
+                                                                <div class="select-container">
+                                                                    <select class="form-control mb-3" name="nivel_educativo" required value="{{ form_data.nivel_educativo if form_data else '' }}">
+                                                                        {% for option in ['Primario', 'Secundario', 'Terciario'] %}
+                                                                        <option value="{{ option }}" {% if data.nivel_educativo == option %}selected{% endif %}>{{ option }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="label-form"> Nombre tutor <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control mb-3" name="nombre_titular" value="{{ d.nombre_titular }}" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <label class="label-form">Teléfono tutor <span class="campo-obligatorio">*</span></label>
+                                                            <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" value="{{ d.telefono_titular }}" required>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-12">
+                                                            Día <span class="campo-obligatorio">*</span>
+                                                            <div class="select-container">
+                                                                <select class="form-control mb-3" name="dia[]" style="display: none;">
+                                                                    {% for option in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'] %}
+                                                                    <option value="{{ option }}" {% if option in d.dia %}selected{% endif %}>{{ option }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="dia[]" value="Lunes" {% if 'Lunes' in d.dia %}checked{% endif %}> Lunes
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="dia[]" value="Martes" {% if 'Martes' in d.dia %}checked{% endif %}> Martes
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="dia[]" value="Miércoles" {% if 'Miércoles' in d.dia %}checked{% endif %}> Miércoles
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="dia[]" value="Jueves" {% if 'Jueves' in d.dia %}checked{% endif %}> Jueves
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="dia[]" value="Viernes" {% if 'Viernes' in d.dia %}checked{% endif %}> Viernes
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="label-form">Horario <span class="campo-obligatorio">*</span></label>
+                                                            <input class="form-control mb-3" type="time" id="horario" name="horario" value="{{ d.horario }}" required>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-12">
+                                                            Materia <span class="campo-obligatorio">*</span>
+                                                            <div class="select-container">
+                                                                <select class="form-control mb-3" name="materia[]" style="display: none;">
+                                                                    {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
+                                                                    <option value="{{ option }}" {% if option in d.dia %}selected{% endif %}>{{ option }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="checkbox-container">
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Inglés" {% if 'Inglés' in d.materia %}checked{% endif %}> Inlges
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in d.materia %}checked{% endif %}> Matemática
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Practicas_del_lenguaje" {% if 'Prácticas_del_lenguaje' in d.materia %}checked{% endif %}> Practicas del lenguaje
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Historia" {% if 'Historia' in d.materia %}checked{% endif %}> Historia
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Geografia" {% if 'Geografia' in d.materia %}checked{% endif %}> Geografia
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Biologia" {% if 'Biologia' in d.materia %}checked{% endif %}> Biologia
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Contabilidad" {% if 'Contabilidad' in d.materia %}checked{% endif %}> Contabilidad
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in d.materia %}checked{% endif %}> Literatura
+                                                                </label>
+                                                            </div>
+                                                            <!-- Agrega más casillas de verificación para otras materias -->
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-3">
+                                                        <button type="submit" class="btn-guardar">Guardar cambios</button>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    function validarCampo(inputId, errorId, mensajeError, regex) {
+        var input = document.getElementById(inputId);
+        var error = document.getElementById(errorId);
+
+        input.addEventListener('input', function() {
+            var valor = input.value.trim();
+
+            if (!regex.test(valor)) {
+                error.style.display = 'block';
+                error.textContent = mensajeError;
+            } else {
+                error.style.display = 'none';
+            }
+        });
+    }
+
+    // Expresión regular para validar que el campo de teléfono contiene solo números
+    var numerosRegex = /^[0-9]+$/;
+
+    // Expresión regular para validar que los campos de nombre y apellido contienen solo letras y espacios
+    var letrasRegex = /^[a-zA-Z\s]*$/;
+
+    // Llama a la función de validación para el campo de nombre
+    validarCampo('nombre', 'nombre-error', 'El nombre solo debe contener letras y espacios.', letrasRegex);
+
+    // Llama a la función de validación para el campo de apellido
+    validarCampo('apellido', 'apellido-error', 'El apellido solo debe contener letras y espacios.', letrasRegex);
+
+    // Llama a la función de validación para el campo de teléfono
+    validarCampo('telefono', 'telefono-error', 'Por favor, ingresa solo números en el teléfono.', numerosRegex);
+    // Llama a la función de validación para el campo de nombre del tutor
+    validarCampo('nombre_titular', 'nombre-titular-error', 'El nombre del tutor solo debe contener letras y espacios.', letrasRegex);
+
+    // Llama a la función de validación para el campo de teléfono del tutor
+    validarCampo('telefono_titular', 'telefono-titular-error', 'Por favor, ingresa solo números en el teléfono del tutor.', numerosRegex);
+    
+
+    var fechaNacimientoInput = document.getElementById('fecha_nacimiento');
+    var fechaNacimientoError = document.getElementById('fecha-nacimiento-error');
+    var fechaInicioInput = document.getElementById('fecha_inicio');
+    var fechaInicioError = document.getElementById('fecha-inicio-error');
+
+    // Expresión regular para validar que el campo de fecha de nacimiento tiene el formato correcto (YYYY-MM-DD)
+    var fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+    validarCampo('fecha_nacimiento', 'fecha-nacimiento-error', 'Por favor, ingresa una fecha válida (YYYY-MM-DD).', fechaRegex);
+
+    fechaNacimientoInput.addEventListener('input', function() {
+        var fechaNacimiento = new Date(fechaNacimientoInput.value);
+        var fechaActual = new Date();
+        var fechaHace6Anios = new Date();
+        fechaHace6Anios.setFullYear(fechaActual.getFullYear() - 6);
+
+        if (isNaN(fechaNacimiento.getTime())) {
+            fechaNacimientoError.textContent = 'Por favor, ingresa una fecha válida.';
+            fechaNacimientoError.style.display = 'block';
+        } else {
+            fechaNacimientoError.style.display = 'none';
+
+            if (fechaNacimiento >= fechaActual) {
+                fechaNacimientoError.textContent = 'La fecha de nacimiento no puede ser la fecha actual.';
+                fechaNacimientoError.style.display = 'block';
+            } else if (fechaNacimiento >= fechaHace6Anios) {
+                fechaNacimientoError.textContent = 'La fecha de nacimiento debe ser anterior a los últimos 6 años.';
+                fechaNacimientoError.style.display = 'block';
+            } else {
+                fechaNacimientoError.style.display = 'none';
+
+                // Validación en comparación con la fecha de inicio
+                var fechaInicio = new Date(fechaInicioInput.value);
+                if (fechaInicio <= fechaNacimiento) {
+                    fechaInicioError.textContent = 'La fecha de inicio debe ser posterior a la fecha de nacimiento.';
+                    fechaInicioError.style.display = 'block';
+                } else {
+                    fechaInicioError.style.display = 'none';
+                }
+            }
+        }
+    });
+
+    fechaInicioInput.addEventListener('input', function() {
+        // Validación en comparación con la fecha de nacimiento
+        var fechaNacimiento = new Date(fechaNacimientoInput.value);
+        var fechaInicio = new Date(fechaInicioInput.value);
+
+        if (fechaInicio <= fechaNacimiento) {
+            fechaInicioError.textContent = 'La fecha de inicio debe ser posterior a la fecha de nacimiento.';
+            fechaInicioError.style.display = 'block';
+        } else {
+            fechaInicioError.style.display = 'none';
+        }
+    });
+
+});
+
+        </script>
+            
+        <script>
+            // Obtener el campo de búsqueda y la tabla
+            var busquedaInput = document.getElementById('busquedaInput');
+            var tablaAlumnos = document.querySelector('.table');
+            
+            // Agregar un evento de escucha para la entrada del usuario
+            busquedaInput.addEventListener('input', function() {
+                var consulta = busquedaInput.value.toLowerCase();
+            
+                // Obtener todas las filas de la tabla
+                var filas = tablaAlumnos.querySelectorAll('tbody tr');
+            
+                // Iterar a través de las filas y celdas y ocultar/mostrar según la consulta
+                for (var i = 0; i < filas.length; i++) {
+                    var fila = filas[i];
+                    var mostrarFila = false;
+            
+                    // Obtener todas las celdas de la fila
+                    var celdas = fila.querySelectorAll('td');
+            
+                    // Iterar a través de las celdas y verificar si alguna contiene la consulta
+                    for (var j = 0; j < celdas.length; j++) {
+                        var celda = celdas[j];
+                        var contenidoCelda = celda.textContent.toLowerCase();
+            
+                        if (contenidoCelda.includes(consulta)) {
+                            mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
+                            break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                        }
+                    }
+            
+                    if (mostrarFila) {
+                        fila.style.display = ''; // Mostrar la fila
+                    } else {
+                        fila.style.display = 'none'; // Ocultar la fila si no hay coincidencias
+                    }
+                }
+            });
+            </script>                     
+
+    {% endblock %}
+</body>

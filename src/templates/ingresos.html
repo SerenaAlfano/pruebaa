@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <form action="{{ url_for('ingresos')}}" method="POST">
                         <div class="row mb-3">
-                            <div class="col-md-3 col-sm-12">
+                            <div class="col-md-2 col-sm-12">
                                 <label class="label-form label-with-arrow">
                                     Nombre <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
@@ -27,15 +27,16 @@
                                     </div>
                                 </label>
                             </div>                            
-                            <div class="col-md-3 col-sm-12">
+                            <div class="col-md-2 col-sm-12">
                                 <label class="label-form">Fecha de pago <span class="campo-obligatorio">*</span></label>
                                 <input type="date" class="form-control mb-3" name="fecha_pago" id="fecha_pago" required value="{{ form_data.fecha_pago if form_data else '' }}">
                                 <div id="fecha-pago-error" class="error-message"></div> 
                             </div>
-                            <div class="col-md-3 col-sm-12">
+                            <div class="col-md-2 col-sm-12">
                                 <label class="label-form">Monto <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control " name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
                             </div>
+                          
                             <script>
                                 document.addEventListener('DOMContentLoaded', function() {
                                     var fechaPagoInput = document.getElementById('fecha_pago');
@@ -71,7 +72,7 @@
                                 });
                                 </script>
                                                                                                                    
-                            <div class="col-md-3 col-sm-12">
+                            <div class="col-md-2 col-sm-12">
                                 <label class=" label-form label-with-arrow">
                                     Medios de pago <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
@@ -79,6 +80,20 @@
                                             <option value="Efectivo" {% if data.medios_de_pago == 'Efectivo' %}selected{% endif %}>Efectivo</option>
                                             <option value="Mercado pago" {% if data.medios_de_pago == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
                                             <option value="Cuenta DNI" {% if data.medios_de_pago == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
+                                        </select>         
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                        </svg>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="col-md-2 col-sm-12">
+                                <label class=" label-form label-with-arrow">
+                                    Tipo de pago <span class="campo-obligatorio">*</span>
+                                    <div class="select-container">
+                                        <select class="form-control mb-3" name="tipo_pago" required value="{{ form_data.tipo_pago if form_data else '' }}">
+                                            <option value="Mensual" {% if data.tipo_pago == 'Mensual' %}selected{% endif %}>Mensual</option>
+                                            <option value="Diario" {% if data.tipo_pago == 'Diario' %}selected{% endif %}>Diario</option>       
                                         </select>         
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -134,6 +149,7 @@
                             <th class="col-tabla" scope="col">Fecha de pago</th>
                             <th class="col-tabla" scope="col">Monto</th>
                             <th class="col-tabla" scope="col">Medio de pago</th>
+                            <th class="col-tabla" scope="col">Tipo de pago</th>
                             <th class="col-tabla" scope="col" colspan="3"></th>
                         </thead>
                     </div>
@@ -144,6 +160,7 @@
                             <td class="td-table">{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
                             <td class="td-table">${{ '{:,.2f}'.format(d.monto) }}</td>
                             <td class="td-table">{{ d.medios_de_pago }}</td>
+                            <td class="td-table">{{ d.tipo_pago }}</td>
                             <td class="text-center "> 
                                 <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i>
                             </td>
@@ -232,7 +249,21 @@
                                                                     </svg>
                                                                 </div>
                                                             </label>
-                                                        </div>                                                 
+                                                        </div> 
+                                                        <div class="col-md-6">
+                                                            <label class=" label-form label-with-arrow">
+                                                                Tipo de pago <span class="campo-obligatorio">*</span>
+                                                                <div class="select-container">
+                                                                    <select class="form-control mb-3" name="tipo_pago" required value="{{ form_data.tipo_pago if form_data else '' }}">
+                                                                        <option value="Mensual" {% if data.tipo_pago == 'Mensual' %}selected{% endif %}>Mensual</option>
+                                                                        <option value="Diario" {% if data.tipo_pago == 'Diario' %}selected{% endif %}>Diario</option>       
+                                                                    </select>         
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </label>
+                                                        </div>                                                
                                                     </div>
                                                     <div class="text-center">
                                                         <div class="btn-container">

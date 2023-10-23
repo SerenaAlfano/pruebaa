@@ -28,6 +28,11 @@
                 </a> 
               </li>
               <li class="nav-item">
+                <a class="nav-link" href="{{url_for('listado')}}">
+                    Mis alumnos
+                </a> 
+              </li>
+              <li class="nav-item">
                 <a class="nav-link " href="{{url_for('ingresos')}}">
                     Ingresos
                 </a> 
@@ -47,15 +52,17 @@
                     Agenda
                 </a> 
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{url_for('caja')}}">
-                    Pagos
-                </a> 
-              </li>
+              
             </ul>
-            <div class="text-center ">
-              <i class="bi bi-bell"></i>
-            </div>
+            <div class="text-center">
+              {% if alerta %}
+                        <li class="nav-item">
+                            <a class="nav-link" style="color: red;">
+                                {{ alerta }}
+                            </a>
+                        </li>
+                    {% endif %}
+          </div>
             <div class="text-center ">
                 <a class="nav-link" href="{{ url_for('logout') }}">Cerrar Sesión</a>  
               </div>
@@ -69,4 +76,26 @@
         {% endblock %}
     </main>
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<script>
+  // Función para mostrar notificaciones
+  function showNotification(message) {
+    // Inserta un nuevo elemento en el área de notificaciones
+    var notification = '<div class="alert alert-warning alert-dismissible" role="alert">' +
+      message +
+      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+      '<span aria-hidden="true">&times;</span>' +
+      '</button>' +
+      '</div>';
+    $("#notification-area").append(notification);
+  }
+
+  // Mostrar el modal con la lista de alumnos adeudados
+  $("#open-modal-button").click(function () {
+    // Aquí debes agregar código para mostrar el modal y cargar la lista de alumnos adeudados
+    // Puedes usar JavaScript o jQuery para hacerlo
+  });
+</script>
 </html>

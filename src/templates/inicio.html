@@ -26,8 +26,16 @@
             <div class="col-md-4 justify-content-center align-content-center">
                 <div class="card p-4 mb-2 mx-auto d-flex flex-column justify-content-center" >
                     <a class="link-home" href="{{ url_for('alta') }}">
-                        <h5 class="card-title " >Alumnos</h5>
+                        <h5 class="card-title " >Nuevo alumno</h5>
                         <img src="static/img/nuevo-alumno.svg" class="card-img-top" alt="..."> 
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 justify-content-center align-content-center">
+                <div class="card p-4 mb-2 mx-auto d-flex flex-column justify-content-center">
+                    <a class="link-home" href="{{ url_for('listado') }}">
+                        <h5 class="card-title">Mis alumnos</h5>
+                        <img src="static/img/alumnos.svg" class="card-img-top" alt="...">     
                     </a>
                 </div>
             </div>
@@ -64,14 +72,7 @@
                     </a>
                 </div>
             </div>
-            <div class="col-md-4 justify-content-center align-content-center">
-                <div class="card p-4 mb-2 mx-auto d-flex flex-column justify-content-center">
-                    <a class="link-home" href="{{ url_for('control') }}">
-                        <h5 class="card-title">Pagos</h5>
-                        <img src="static/img/control-pagos.svg" class="card-img-top" alt="...">     
-                    </a>
-                </div>
-            </div>
+           
         </div>     
 
     </div>

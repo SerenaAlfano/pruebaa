@@ -12,7 +12,7 @@
             <h3 class="text-left subtitulo mt-3">Nuevo alumno</h3>
             <div class="card-contenedor mb-3">
                 <div class="card-body">
-                    <form action="/alumnos" method="POST">
+                    <form action="/agregarAlumno" method="POST">
                         <div class="row mb-3">
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
@@ -191,241 +191,12 @@
                         </form>
                     </div>
                 </div>
-                <div class="row mb-3">    
-                    <div class="d-flex justify-content-between">
-                        <input type="text" class="form-control mr-2" id="busquedaInput" placeholder="Buscar alumno">
-                        <a href="{{ url_for('descargar_lista_alumnos_pdf') }}" target="_blank" class="btn-guardar" style="background-color:#92BD89;">Descargar Lista de Alumnos</a>
-                    </div>
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="table table-bordered m-1 mb-5 scrollspy-example" style="background-color: white;">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="col-tabla">Nombre</th>
-                                <th scope="col" class="col-tabla">Apellido</th>
-                                <th scope="col" class="col-tabla">Email</th>
-                                <th scope="col" class="col-tabla">Telefono</th>
-                                <th scope="col" class="col-tabla">Nacimiento</th>
-                                <th scope="col" class="col-tabla">Inicio</th>
-                                <th scope="col" class="col-tabla">Colegio</th>
-                                <th scope="col" class="col-tabla">Curso</th>
-                                <th scope="col" class="col-tabla">Nivel</th>
-                                <th scope="col" class="col-tabla">Nombre tutor</th>
-                                <th scope="col" class="col-tabla">Telefono tutor</th>
-                                <th scope="col" class="col-tabla">Día</th>
-                                <th scope="col" class="col-tabla">Horario</th>
-                                <th scope="col" class="col-tabla">Materia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for d in data %}
-                            <tr>      
-                                <td class="td-table">{{ d.nombre.title() }}</td>
-                                <td class="td-table">{{ d.apellido.title() }}</td>
-                                <td class="td-table">{{ d.email.title() }}</td>
-                                <td class="td-table">{{ d.telefono }}</td>
-                                <td class="td-table">{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
-                                <td class="td-table">{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>
-                                <td class="td-table">{{ d.colegio.title() }}</td>
-                                <td class="td-table">{{ d.curso }}</td>
-                                <td class="td-table">{{ d.nivel_educativo }}</td>
-                                <td class="td-table">{{ d.nombre_titular.title() }}</td>
-                                <td class="td-table">{{ d.telefono_titular }}</td>
-                                <td class="td-table">{{ d.dia }}</td>
-                                <td class="td-table">{{ d.horario }}</td>
-                                <td class="td-table">{{ d.materia }}</td>
-                                <td class="text-center"> 
-                                    <i class="btn-operacion bi bi-pencil-square text-center" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i>
-                                </td>
-                                <td class="text-center">
-                                     <i class="btn-operacion bi bi bi-trash "id="confirmarEliminar{{d.id}}" data-bs-toggle="modal" data-bs-target="#confirmarEliminar{{d.id}}"data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"></i></td>                         
-                                </td>
+                <a href="/listado">Ver Listado</a>
 
-                            </tr>
-                            <!-- Modal de confirmación de eliminación para cada alumno -->
-                            <div class="modal fade" id="confirmarEliminar{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Confirmar eliminación</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            ¿Estás seguro de eliminar al alumno {{ d.nombre }} {{ d.apellido }}?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn-guardar" style="background-color: #92BD89; color: #ffff;" data-bs-dismiss="modal">Cancelar</button>
-                                            <a href="{{ url_for('eliminar', id=d.id) }}" class="btn-guardar">Eliminar</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- MODAL -->
-                            <div class="modal fade" id="modal{{ d.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-xl">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">{{ d.nombre }}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="/editar/{{ d.id }}" method="POST">
-                                                
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
-                                                            <input type="text" class="form-control mb-3" name="nombre" required value="{{ d.nombre }}">
-                                                        </div>
-                                                        <div class="col">
-                                                            <label>Apellido <span class="campo-obligatorio">*</span></label>
-                                                            <input type="text" class="form-control mb-3" name="apellido" value="{{ d.apellido }}" required>
-                                                        </div>
-                                                        <div class="col">
-                                                            <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
-                                                            <input type="text" class="form-control mb-3" name="email" value="{{ d.email }}" required>
-                                                        </div>
-                                                        <div class="col">
-                                                            <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
-                                                            <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" value="{{ d.telefono }}" required>
-                                                        </div>            
-                                                        <div class="col">
-                                                            <label class="label-form">Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
-                                                            <input type="date" class="form-control mb-3" name="fecha_nacimiento" value="{{ d.fecha_nacimiento }}" required>
-                                                        </div>                                    
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <label class="label-form">Fecha de inicio <span class="campo-obligatorio">*</span></label>
-                                                            <input type="date" class="form-control mb-3" name="fecha_inicio" value="{{ d.fecha_inicio }}" required>
-                                                        </div>
-                                                        <div class="col">
-                                                            <label class="label-form">Colegio <span class="campo-obligatorio">*</span></label>
-                                                            <input type="text" class="form-control mb-3" name="colegio" value="{{ d.colegio }}" required>
-                                                        </div>
-                                                        <div class="col">
-                                                            <label class="label-form label-with-arrow">
-                                                                Curso <span class="campo-obligatorio">*</span>
-                                                                <div class="select-container">
-                                                                    <select class="form-control mb-3" name="curso" required value="{{ form_data.curso if form_data else '' }}">
-                                                                        {% for option in ['Primero', 'Segundo', 'Tercero','Cuarto','Quinto','Sexto'] %}
-                                                                        <option value="{{ option }}" {% if data.curso == option %}selected{% endif %}>{{ option }}</option>
-                                                                        {% endfor %}
-                                                                    </select>
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                                    </svg>
-                                                                </div>
-                                                            </label>
-                                                        </div>         
-                                                        <div class="col">
-                                                            <label class="label-form label-with-arrow">
-                                                                Nivel educativo <span class="campo-obligatorio">*</span>
-                                                                <div class="select-container">
-                                                                    <select class="form-control mb-3" name="nivel_educativo" required value="{{ form_data.nivel_educativo if form_data else '' }}">
-                                                                        {% for option in ['Primario', 'Secundario', 'Terciario'] %}
-                                                                        <option value="{{ option }}" {% if data.nivel_educativo == option %}selected{% endif %}>{{ option }}</option>
-                                                                        {% endfor %}
-                                                                    </select>
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                                    </svg>
-                                                                </div>
-                                                            </label>
-                                                        </div>
-                                                        <div class="col">
-                                                            <label class="label-form"> Nombre tutor <span class="campo-obligatorio">*</span></label>
-                                                            <input type="text" class="form-control mb-3" name="nombre_titular" value="{{ d.nombre_titular }}" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <label class="label-form">Teléfono tutor <span class="campo-obligatorio">*</span></label>
-                                                            <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" value="{{ d.telefono_titular }}" required>
-                                                        </div>
-                                                        <div class="col-md-3 col-sm-12">
-                                                            Día <span class="campo-obligatorio">*</span>
-                                                            <div class="select-container">
-                                                                <select class="form-control mb-3" name="dia[]" style="display: none;">
-                                                                    {% for option in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'] %}
-                                                                    <option value="{{ option }}" {% if option in d.dia %}selected{% endif %}>{{ option }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                            </div>
-                                                            <div class="checkbox-container">
-                                                                <label>
-                                                                    <input type="checkbox" name="dia[]" value="Lunes" {% if 'Lunes' in d.dia %}checked{% endif %}> Lunes
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="dia[]" value="Martes" {% if 'Martes' in d.dia %}checked{% endif %}> Martes
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="dia[]" value="Miércoles" {% if 'Miércoles' in d.dia %}checked{% endif %}> Miércoles
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="dia[]" value="Jueves" {% if 'Jueves' in d.dia %}checked{% endif %}> Jueves
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="dia[]" value="Viernes" {% if 'Viernes' in d.dia %}checked{% endif %}> Viernes
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col">
-                                                            <label class="label-form">Horario <span class="campo-obligatorio">*</span></label>
-                                                            <input class="form-control mb-3" type="time" id="horario" name="horario" value="{{ d.horario }}" required>
-                                                        </div>
-                                                        <div class="col-md-3 col-sm-12">
-                                                            Materia <span class="campo-obligatorio">*</span>
-                                                            <div class="select-container">
-                                                                <select class="form-control mb-3" name="materia[]" style="display: none;">
-                                                                    {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
-                                                                    <option value="{{ option }}" {% if option in d.dia %}selected{% endif %}>{{ option }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                            </div>
-                                                            <div class="checkbox-container">
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Inglés" {% if 'Inglés' in d.materia %}checked{% endif %}> Inlges
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in d.materia %}checked{% endif %}> Matemática
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Practicas_del_lenguaje" {% if 'Prácticas_del_lenguaje' in d.materia %}checked{% endif %}> Practicas del lenguaje
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Historia" {% if 'Historia' in d.materia %}checked{% endif %}> Historia
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Geografia" {% if 'Geografia' in d.materia %}checked{% endif %}> Geografia
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Biologia" {% if 'Biologia' in d.materia %}checked{% endif %}> Biologia
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Contabilidad" {% if 'Contabilidad' in d.materia %}checked{% endif %}> Contabilidad
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in d.materia %}checked{% endif %}> Literatura
-                                                                </label>
-                                                            </div>
-                                                            <!-- Agrega más casillas de verificación para otras materias -->
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-3">
-                                                        <button type="submit" class="btn-guardar">Guardar cambios</button>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                
+            
+                            
+                       
                 </div>
             </div>
         </div>
@@ -569,4 +340,47 @@
             </script>                     
 
     {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Espera a que se cargue el documento
+    document.addEventListener("DOMContentLoaded", function() {
+        // Obtiene el formulario
+        var form = document.querySelector("form");
+
+        // Agrega un event listener para el envío del formulario
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Evita el envío del formulario
+
+            // Aquí puedes hacer una solicitud AJAX para enviar el formulario al servidor
+            // y luego mostrar el SweetAlert en la respuesta exitosa.
+
+            // Ejemplo de una solicitud AJAX (usando Fetch API):
+            fetch("/agregarAlumno", {
+                method: "POST",
+                body: new FormData(form)
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    // El formulario se envió con éxito, muestra el SweetAlert
+                    Swal.fire({
+                        title: "Alumno ingresado correctamente",
+                        icon: "success"
+                    });
+                } else {
+                    // Mostrar SweetAlert con un mensaje de error si es necesario
+                    Swal.fire({
+                        title: "Hubo un error al ingresar al alumno",
+                        text: "Por favor, inténtalo de nuevo.",
+                        icon: "error"
+                    });
+                }
+            })
+            .catch(function(error) {
+                console.error("Error en la solicitud: " + error);
+            });
+        });
+    });
+</script>
+
 </body>

@@ -136,7 +136,7 @@ def alta():
     cursor.close()
     return render_template("index.html", data=insertObject, form_data=form_data)
 
-@app.route("/alumnos", methods=["POST"])
+@app.route("/agregarAlumno", methods=["POST"])
 def agregarAlumno():
     nombre = request.form["nombre"]
     apellido = request.form["apellido"]
@@ -315,6 +315,7 @@ def agregarAlumno():
     data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str) 
     
     try:
+        
         cursor.execute(sql, data)
         db_connection.commit()  # Realiza el commit después de la inserción
 
@@ -332,7 +333,22 @@ def agregarAlumno():
     # Maneja los errores de SQL aquí
         print(f"Error de MySQL: {err}")
     
-    return redirect(url_for('alta'))
+    return redirect(url_for('listado'))
+
+#Listado de alumnos
+@app.route("/listado")
+def listado():
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT * FROM alumnos")
+    myresult = cursor.fetchall()
+    # Convertir los datos a un diccionario como lo hiciste antes
+    insertObject = []
+    columnNames = [column[0] for column in cursor.description]
+    for record in myresult:
+        insertObject.append(dict(zip(columnNames, record)))
+    cursor.close()
+    return render_template("listado.html", data=insertObject)
+
 
 #Eliminar
 @app.route("/eliminar/<string:id>")
@@ -342,7 +358,7 @@ def eliminar(id):
     data = (id,)
     cursor.execute(sql,data)
     db_connection.commit()
-    return redirect(url_for('alta'))
+    return redirect(url_for('listado'))
 
 # Actualizar
 @app.route("/editar/<string:id>", methods=["POST"])
@@ -530,7 +546,7 @@ def editar(id):
         data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str, id)
         cursor.execute(sql, data)
         db_connection.commit()
-    return redirect(url_for('alta'))
+    return redirect(url_for('listado'))
 
 
 # Ingresos
@@ -545,6 +561,7 @@ def ingresos():
     nombre_alumno = None
     monto = None
     medios_de_pago = None
+    tipo_pago = None
     
     if request.method == "POST":
         # Obtén la fecha de pago del formulario
@@ -566,7 +583,8 @@ def ingresos():
                 'nombre_alumno': nombre_alumno,
                 'fecha_pago': fecha_pago_str,
                 'monto': monto,
-                'medios_de_pago': medios_de_pago
+                'medios_de_pago': medios_de_pago,
+                'tipo_pago': tipo_pago
             }
             return redirect(url_for('ingresos'))
 
@@ -574,6 +592,7 @@ def ingresos():
         # Tu lógica para agregar datos aquí
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
+        tipo_pago = request.form["tipo_pago"] 
         
        
         
@@ -590,7 +609,8 @@ def ingresos():
                 'nombre_alumno': nombre_alumno,
                 'fecha_pago': fecha_pago_str,
                 'monto': monto,
-                'medios_de_pago': medios_de_pago
+                'medios_de_pago': medios_de_pago,
+                'tipo_pago': tipo_pago
             }
             return redirect(url_for('ingresos'))
         
@@ -599,8 +619,8 @@ def ingresos():
             monto = float(monto) 
         # Remove the existing SQL statement
             cursor = db_connection.cursor()
-            sql = "INSERT INTO ingresos (nombre_alumno, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s)"
-            data = (nombre_alumno, fecha_pago, monto, medios_de_pago)
+            sql = "INSERT INTO ingresos (nombre_alumno, fecha_pago, monto, medios_de_pago,tipo_pago) VALUES (%s, %s, %s, %s, %s)"
+            data = (nombre_alumno, fecha_pago, monto, medios_de_pago,tipo_pago)
             cursor.execute(sql, data)
             db_connection.commit()
             cursor.close()
@@ -609,7 +629,7 @@ def ingresos():
     
     # Tu lógica para mostrar la página de ingresos con la lista de datos aquí
     cursor = db_connection.cursor()
-    cursor.execute("SELECT id_ingresos, nombre_alumno,  fecha_pago, monto, medios_de_pago FROM ingresos")
+    cursor.execute("SELECT id_ingresos, nombre_alumno,  fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos")
     myresult = cursor.fetchall()
     
     # Convertir los datos a un diccionario
@@ -623,7 +643,7 @@ def ingresos():
     # Obtener la lista de nombres y apellidos de los alumnos
     # Tu lógica para mostrar la página de ingresos con la lista de datos aquí
     cursor = db_connection.cursor()
-    cursor.execute("SELECT id_ingresos, nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago FROM ingresos")
+    cursor.execute("SELECT id_ingresos, nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos")
     myresult = cursor.fetchall()
 
     # Obtener la lista de nombres y apellidos de los alumnos
@@ -658,7 +678,7 @@ def editaringresos(id_ingresos):
 
     if request.method == "GET":
         cursor = db.database.cursor()
-        cursor.execute("SELECT nombre_alumno,fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
+        cursor.execute("SELECT nombre_alumno,fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
         registro_editar = cursor.fetchone()
         cursor.close()
         data = db.database
@@ -676,6 +696,8 @@ def editaringresos(id_ingresos):
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
+        tipo_pago = request.form["tipo_pago"]
+
 
         # Obtiene la fecha actual
         fecha_actual = datetime.now().date()
@@ -686,14 +708,15 @@ def editaringresos(id_ingresos):
                 'nombre_alumno': nombre_alumno,
                 'fecha_pago': fecha_pago_str,
                 'monto': monto,
-                'medios_de_pago': medios_de_pago
+                ' tipo_pago':  tipo_pago
+
             }
             return redirect(url_for('editaringresos', id_ingresos=id_ingresos))
 
         if nombre_alumno and fecha_pago and monto and medios_de_pago:
             cursor = db_connection.cursor()
-            sql = "UPDATE ingresos SET nombre_alumno = %s,  fecha_pago = %s, monto = %s, medios_de_pago = %s WHERE id_ingresos = %s"
-            data = (nombre_alumno, fecha_pago, monto, medios_de_pago, id_ingresos)
+            sql = "UPDATE ingresos SET nombre_alumno = %s,  fecha_pago = %s, monto = %s, medios_de_pago = %s ,  tipo_pago = %s WHERE id_ingresos = %s"
+            data = (nombre_alumno, fecha_pago, monto, medios_de_pago, tipo_pago, id_ingresos)
             cursor.execute(sql, data)
             db_connection.commit()
             # Realiza una consulta para obtener los datos actualizados
@@ -870,10 +893,7 @@ def obtener_horarios_desde_mysql():
     cursor.close()
     return jsonify(horarios)
 
-#Agenda
-@app.route('/control')
-def control():
-    return render_template('control.html')
+
 
 #Notificar deudas
 
