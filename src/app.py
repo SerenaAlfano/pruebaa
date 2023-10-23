@@ -137,6 +137,7 @@ def alta():
 
 @app.route("/alumnos", methods=["POST"])
 def agregarAlumno():
+    cursor = db_connection.cursor()
     nombre = request.form["nombre"]
     apellido = request.form["apellido"]
     email = request.form["email"]
@@ -307,17 +308,32 @@ def agregarAlumno():
             'materia': materia
         }
         return redirect(url_for('alta'))
-    
-    # Resto del código para agregar el alumno a la base de datos
-    cursor = db_connection.cursor()
-    sql = "INSERT INTO alumnos (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str) 
+        
+    # Consulta SQL para contar el número de alumnos en el mismo horario
+    count_query = "SELECT COUNT(*) FROM alumnos WHERE horario = %s"
+    count_data = (horario,)
+
     try:
-        cursor.execute(sql, data)
+        cursor.execute(count_query, count_data)
+        result = cursor.fetchone()
+        if result[0] >= 4:
+            flash("Ya hay 4 alumnos registrados en este horario.", "error")
+            return redirect(url_for('alta'))
+    except mysql.connector.Error as err:
+        # Maneja los errores de SQL aquí
+        print(f"Error de MySQL: {err}")
+
+    # Si el conteo es menor a 4, procedemos a insertar el nuevo alumno
+    insert_query = "INSERT INTO alumnos (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str)
+
+    try:
+        cursor.execute(insert_query, data)
         db_connection.commit()  # Realiza el commit después de la inserción
     except mysql.connector.Error as err:
         # Maneja los errores de SQL aquí
         print(f"Error de MySQL: {err}")
+
     return redirect(url_for('alta'))
 
 #Eliminar
@@ -392,6 +408,12 @@ def editar(id):
     
     if not validar_telefono_titular(telefono_titular):
         flash("El número de teléfono del tutor no es válido. Debe contener solo dígitos.", "error")
+        session['form_data'] = {
+    }
+        return redirect(url_for('alta'))
+
+    if not validar_telefono(telefono):
+        flash("El número de teléfono no es válido. Debe contener solo dígitos.", "error")
         session['form_data'] = {
         'nombre': nombre,
         'apellido': apellido,
@@ -483,6 +505,7 @@ def editar(id):
     fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, "%Y-%m-%d").date()
 
     # Obtén la fecha de inicio del formulario
+        # Obtén la fecha de inicio del formulario
     fecha_inicio_str = request.form["fecha_inicio"]
     fecha_inicio = datetime.strptime(fecha_inicio_str, "%Y-%m-%d").date()
 
@@ -520,7 +543,6 @@ def editar(id):
 
 
 # Ingresos
-
 @app.route("/ingresos", methods=["GET", "POST"])
 def ingresos():
     form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
@@ -621,10 +643,6 @@ def ingresos():
     nombres_apellidos = [f"{alumno[0]} {alumno[1]}" for alumno in alumnos]
 
     return render_template("ingresos.html", data=insertObject, form_data=form_data, nombres_apellidos=nombres_apellidos)
-
-
-
-
 
 #Eliminar
 @app.route("/eliminar_ingresos/<string:id_ingresos>")

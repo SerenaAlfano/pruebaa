@@ -180,44 +180,26 @@
                                                     <div class="col-md-6">
                                                         <label>Fecha de pago <span class="campo-obligatorio">*</span></label>                                        
                                                         <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required>
-                                                    </div>                                             
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <label>Monto <span class="campo-obligatorio">*</span></label>
-                                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ registro_editar.monto if registro_editar else '' }}" id="montoInput">
-                                                </div>
-                                                <script>
-                                                    document.addEventListener('DOMContentLoaded', function() {
-                                                        // Obtener el campo de entrada por su ID
-                                                        var montoInput = document.getElementById('montoInput');
-                                                
-                                                        // Agregar un manejador de eventos para el evento 'input'
-                                                        montoInput.addEventListener('input', function() {
-                                                            // Obtener la posición actual del cursor
-                                                            var cursorPosition = montoInput.selectionStart;
-                                                
-                                                            // Obtener el valor actual del campo
-                                                            var valor = montoInput.value;
-                                                
-                                                            // Quitar cualquier carácter que no sea un número o punto
-                                                            valor = valor.replace(/[^0-9.]/g, '');
-                                                
-                                                            // Formatear el valor con dos decimales
-                                                            valor = parseFloat(valor).toFixed(2);
-                                                
-                                                            // Agregar separadores de miles y el signo de dólar
-                                                            valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
-                                                
-                                                            // Asignar el valor formateado de nuevo al campo
-                                                            montoInput.value = valor;
-                                                
-                                                            // Restaurar la posición del cursor después del formato
-                                                            var newPos = cursorPosition + (valor.length - montoInput.value.length);
-                                                            montoInput.setSelectionRange(newPos, newPos);
-                                                        });
-                                                    });
-                                                </script>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label>Monto <span class="campo-obligatorio">*</span></label>
+                                                                <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                                            </div>
+                                                        </div>
+                                                        <script>
+                                                            var montoInput = document.getElementById("montoInput");
+                                                        
+                                                            montoInput.addEventListener('input', function() {
+                                                                var cursorPosition = montoInput.selectionStart;
+                                                                var valor = montoInput.value;
+                                                                valor = valor.replace(/[^0-9.]/g, '');
+                                                                valor = parseFloat(valor).toFixed(2);
+                                                                valor = '$' + valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                                                montoInput.value = valor;
+                                                                var newPos = cursorPosition + (valor.length - montoInput.value.length);
+                                                                montoInput.setSelectionRange(newPos, newPos);
+                                                            });
+                                                        </script>
                                                         <div class="col-md-6">
                                                             <label class="label-with-arrow">
                                                                 Medios de pago <span class="campo-obligatorio">*</span>
