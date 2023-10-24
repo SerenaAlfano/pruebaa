@@ -339,7 +339,7 @@ def agregarAlumno():
 @app.route("/listado")
 def listado():
     cursor = db_connection.cursor()
-    cursor.execute("SELECT * FROM alumnos")
+    cursor.execute("SELECT * FROM alumnos ORDER BY apellido ASC;")
     myresult = cursor.fetchall()
     # Convertir los datos a un diccionario como lo hiciste antes
     insertObject = []
