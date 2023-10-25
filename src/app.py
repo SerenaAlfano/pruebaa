@@ -157,7 +157,6 @@ def agregarAlumno():
     dia_str = ', '.join(dia)
     materia_str = ', '.join(materia)
 
-
     if not validar_nombre(nombre):
         flash("El nombre no es válido. Debe contener solo letras.", "error")
         session['form_data'] = {
@@ -349,6 +348,7 @@ def eliminar(id):
 # Actualizar
 @app.route("/editar/<string:id>", methods=["POST"])
 def editar(id):
+    cursor = db_connection.cursor()
     nombre = request.form["nombre"]
     apellido = request.form["apellido"]
     email = request.form["email"]
@@ -533,12 +533,44 @@ def editar(id):
         }
         return redirect(url_for('alta'))
 
+    # Consulta SQL para contar el número de alumnos en el mismo horario
+    count_query = "SELECT COUNT(*) FROM alumnos WHERE horario = %s"
+    count_data = (horario,)
+
+    try:
+        cursor.execute(count_query, count_data)
+        result = cursor.fetchone()
+        if result[0] >= 4:
+            flash("Ya hay 4 alumnos registrados en este horario.", "error")
+            session['form_data'] = {
+                'nombre': nombre,
+                'apellido': apellido,
+                'email': email,
+                'telefono': telefono,
+                'fecha_nacimiento': fecha_nacimiento_str,
+                'fecha_inicio': fecha_inicio_str,
+                'colegio': colegio,
+                'curso': curso,
+                'nivel_educativo': nivel_educativo,
+                'nombre_titular': nombre_titular,
+                'telefono_titular': telefono_titular,
+                'dia': dia,
+                'horario': horario,
+                'materia': materia
+            }
+            return redirect(url_for('alta'))
+    except mysql.connector.Error as err:
+        # Maneja los errores de SQL aquí
+        print(f"Error de MySQL: {err}")
+
+    # Continúa con la actualización de la base de datos
     if nombre and apellido and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and dia and horario and materia:
         cursor = db_connection.cursor()
         sql = "UPDATE alumnos SET nombre = %s, apellido  = %s, email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s WHERE id = %s"
         data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str, id)
         cursor.execute(sql, data)
         db_connection.commit()
+
     return redirect(url_for('alta'))
 
 
@@ -666,16 +698,17 @@ def editaringresos(id_ingresos):
         registro_editar = cursor.fetchone()
         cursor.close()
         data = db.database
-        if registro_editar:
-            return render_template("ingresos.html", registro=registro_editar, data=data)
-        else:
-            # Manejar el caso si no se encuentra el registro a editar
-            flash("Registro no encontrado.", "error")
-            return redirect(url_for('ingresos'))
+
+        # Obtener el valor del monto sin formato desde la base de datos
+        monto = registro_editar["monto"]
+
+        # Formatear el monto como una cadena con el signo de peso, comas y punto
+        monto_formateado = "${:,.2f}".format(monto)
+        # Puedes pasar el monto formateado al formulario
+        return render_template("editar_ingresos.html", monto_formateado=monto_formateado, registro=registro_editar, data=data)
 
     if request.method == "POST":
         nombre_alumno = request.form["nombre_alumno"]
-
         fecha_pago_str = request.form["fecha_pago"]
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
         monto = request.form["monto"]
@@ -693,7 +726,6 @@ def editaringresos(id_ingresos):
                 'medios_de_pago': medios_de_pago
             }
             return redirect(url_for('editaringresos', id_ingresos=id_ingresos))
-
         if nombre_alumno and fecha_pago and monto and medios_de_pago:
             cursor = db_connection.cursor()
             sql = "UPDATE ingresos SET nombre_alumno = %s,  fecha_pago = %s, monto = %s, medios_de_pago = %s WHERE id_ingresos = %s"

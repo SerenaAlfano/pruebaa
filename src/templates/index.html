@@ -226,7 +226,7 @@
                                 <td class="td-table">{{ d.email.title() }}</td>
                                 <td class="td-table">{{ d.telefono }}</td>
                                 <td class="td-table">{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
-                                <td class="td-table">{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>
+                                <td class="td-table">{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>                                                                                        
                                 <td class="td-table">{{ d.colegio.title() }}</td>
                                 <td class="td-table">{{ d.curso }}</td>
                                 <td class="td-table">{{ d.nivel_educativo }}</td>
@@ -391,7 +391,7 @@
                                                                     <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in d.materia %}checked{% endif %}> Matemática
                                                                 </label>
                                                                 <label>
-                                                                    <input type="checkbox" name="materia[]" value="Practicas_del_lenguaje" {% if 'Prácticas_del_lenguaje' in d.materia %}checked{% endif %}> Practicas del lenguaje
+                                                                    <input type="checkbox" name="materia[]" value="Practicas del lenguaje" {% if 'Prácticas_del_lenguaje' in d.materia %}checked{% endif %}> Practicas del lenguaje
                                                                 </label>
                                                                 <label>
                                                                     <input type="checkbox" name="materia[]" value="Historia" {% if 'Historia' in d.materia %}checked{% endif %}> Historia
@@ -527,45 +527,46 @@
 });
 
         </script>
-            
         <script>
-            // Obtener el campo de búsqueda y la tabla
-            var busquedaInput = document.getElementById('busquedaInput');
-            var tablaAlumnos = document.querySelector('.table');
-            
-            // Agregar un evento de escucha para la entrada del usuario
-            busquedaInput.addEventListener('input', function() {
-                var consulta = busquedaInput.value.toLowerCase();
-            
-                // Obtener todas las filas de la tabla
-                var filas = tablaAlumnos.querySelectorAll('tbody tr');
-            
-                // Iterar a través de las filas y celdas y ocultar/mostrar según la consulta
-                for (var i = 0; i < filas.length; i++) {
-                    var fila = filas[i];
-                    var mostrarFila = false;
-            
-                    // Obtener todas las celdas de la fila
-                    var celdas = fila.querySelectorAll('td');
-            
-                    // Iterar a través de las celdas y verificar si alguna contiene la consulta
-                    for (var j = 0; j < celdas.length; j++) {
-                        var celda = celdas[j];
-                        var contenidoCelda = celda.textContent.toLowerCase();
-            
-                        if (contenidoCelda.includes(consulta)) {
-                            mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
-                            break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
-                        }
-                    }
-            
-                    if (mostrarFila) {
-                        fila.style.display = ''; // Mostrar la fila
-                    } else {
-                        fila.style.display = 'none'; // Ocultar la fila si no hay coincidencias
-                    }
-                }
-            });
+        // Obtener el campo de búsqueda y la tabla
+var busquedaInput = document.getElementById('busquedaInput');
+var tablaAlumnos = document.querySelector('.table');
+
+// Agregar un evento de escucha para la entrada del usuario
+busquedaInput.addEventListener('input', function() {
+    var consulta = busquedaInput.value.trim().toLowerCase(); // Quitar espacios en blanco y convertir a minúsculas
+
+    // Obtener todas las filas de la tabla
+    var filas = tablaAlumnos.querySelectorAll('tbody tr');
+
+    // Iterar a través de las filas y celdas y ocultar/mostrar según la consulta
+    for (var i = 0; i < filas.length; i++) {
+        var fila = filas[i];
+        var mostrarFila = false;
+
+        // Obtener todas las celdas de la fila
+        var celdas = fila.querySelectorAll('td');
+
+        // Iterar a través de las celdas y verificar si alguna contiene la consulta
+        for (var j = 0; j < celdas.length; j++) {
+            var celda = celdas[j];
+            var contenidoCelda = celda.textContent.trim().toLowerCase(); // Quitar espacios y convertir a minúsculas
+
+            // Verificar si la celda contiene el número de mes o el nombre de mes
+            var mesData = celda.getAttribute('data-mes');
+            if (mesData && (mesData == consulta || mesesMapa[consulta] == mesData)) {
+                mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
+                break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+            }
+        }
+
+        if (mostrarFila) {
+            fila.style.display = ''; // Mostrar la fila
+        } else {
+            fila.style.display = 'none'; // Ocultar la fila si no hay coincidencias
+        }
+    }
+});
             </script>                     
 
     {% endblock %}

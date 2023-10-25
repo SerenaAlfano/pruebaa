@@ -180,24 +180,18 @@
                                                     <div class="col-md-6">
                                                         <label>Fecha de pago <span class="campo-obligatorio">*</span></label>                                        
                                                         <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <label>Monto <span class="campo-obligatorio">*</span></label>
-                                                                <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
-                                                            </div>
+                                                    <div>
+                                                        <div class="col-md-6">
+                                                            <label>Monto <span class="campo-obligatorio">*</span></label>
+                                                            <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ monto_formateado }}" id="montoInputEdit">
                                                         </div>
                                                         <script>
-                                                            var montoInput = document.getElementById("montoInput");
-                                                        
-                                                            montoInput.addEventListener('input', function() {
-                                                                var cursorPosition = montoInput.selectionStart;
-                                                                var valor = montoInput.value;
-                                                                valor = valor.replace(/[^0-9.]/g, '');
-                                                                valor = parseFloat(valor).toFixed(2);
-                                                                valor = '$' + valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                                                                montoInput.value = valor;
-                                                                var newPos = cursorPosition + (valor.length - montoInput.value.length);
-                                                                montoInput.setSelectionRange(newPos, newPos);
+                                                            // Agrega este script para establecer el valor formateado en el campo de entrada
+                                                            document.addEventListener("DOMContentLoaded", function() {
+                                                                var montoInputEdit = document.getElementById("montoInputEdit");
+                                                                if (montoInputEdit) {
+                                                                    montoInputEdit.value = "{{ monto_formateado }}";
+                                                                }
                                                             });
                                                         </script>
                                                         <div class="col-md-6">
