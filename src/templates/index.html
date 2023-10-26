@@ -12,7 +12,7 @@
             <h3 class="text-left subtitulo mt-3">Nuevo alumno</h3>
             <div class="card-contenedor mb-3">
                 <div class="card-body">
-                    <form action="/alumnos" method="POST">
+                    <form action="/alumnos" method="POST" onsubmit="return validarFormulario()">
                         <div class="row mb-3">
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
@@ -165,7 +165,7 @@
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Confirmar Guardar</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
+                                            </div>                               
                                             <div class="modal-body">
                                                 ¿Estás seguro de guardar este alumno?
                                             </div>
@@ -270,7 +270,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/editar/{{ d.id }}" method="POST">
+                                            <form action="/editar/{{ d.id }}" method="POST" onsubmit="return validarFormulario()">
                                                 
                                                     <div class="row">
                                                         <div class="col">
@@ -409,7 +409,6 @@
                                                                     <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in d.materia %}checked{% endif %}> Literatura
                                                                 </label>
                                                             </div>
-                                                            <!-- Agrega más casillas de verificación para otras materias -->
                                                         </div>
                                                     </div>
                                                     
@@ -527,47 +526,109 @@
 });
 
         </script>
-        <script>
+       <script>
         // Obtener el campo de búsqueda y la tabla
-var busquedaInput = document.getElementById('busquedaInput');
-var tablaAlumnos = document.querySelector('.table');
-
-// Agregar un evento de escucha para la entrada del usuario
-busquedaInput.addEventListener('input', function() {
-    var consulta = busquedaInput.value.trim().toLowerCase(); // Quitar espacios en blanco y convertir a minúsculas
-
-    // Obtener todas las filas de la tabla
-    var filas = tablaAlumnos.querySelectorAll('tbody tr');
-
-    // Iterar a través de las filas y celdas y ocultar/mostrar según la consulta
-    for (var i = 0; i < filas.length; i++) {
-        var fila = filas[i];
-        var mostrarFila = false;
-
-        // Obtener todas las celdas de la fila
-        var celdas = fila.querySelectorAll('td');
-
-        // Iterar a través de las celdas y verificar si alguna contiene la consulta
-        for (var j = 0; j < celdas.length; j++) {
-            var celda = celdas[j];
-            var contenidoCelda = celda.textContent.trim().toLowerCase(); // Quitar espacios y convertir a minúsculas
-
-            // Verificar si la celda contiene el número de mes o el nombre de mes
-            var mesData = celda.getAttribute('data-mes');
-            if (mesData && (mesData == consulta || mesesMapa[consulta] == mesData)) {
-                mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
-                break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+        var busquedaInput = document.getElementById('busquedaInput');
+        var tablaAlumnos = document.querySelector('.table');
+    
+        // Función para verificar si una cadena parece ser una fecha en formato "DD/MM/YYYY"
+        function esFechaValida(texto) {
+            var fechaRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            return fechaRegex.test(texto);
+        }
+    
+        // Función para mostrar u ocultar una fila en función de la coincidencia
+        function mostrarOcultarFila(fila, mostrar) {
+            fila.style.display = mostrar ? '' : 'none';
+        }
+    
+        // Agregar un evento de escucha para la entrada del usuario
+        busquedaInput.addEventListener('input', function() {
+            var consulta = busquedaInput.value.trim().toLowerCase(); // Quitar espacios en blanco y convertir a minúsculas
+    
+            // Obtener todas las filas de la tabla
+            var filas = tablaAlumnos.querySelectorAll('tbody tr');
+    
+            // Iterar a través de las filas y celdas y mostrar/ocultar según la consulta
+            for (var i = 0; i < filas.length; i++) {
+                var fila = filas[i];
+                var mostrarFila = false;
+    
+                // Obtener todas las celdas de la fila
+                var celdas = fila.querySelectorAll('td');
+    
+                // Iterar a través de las celdas y verificar si alguna contiene la consulta
+                for (var j = 0; j < celdas.length; j++) {
+                    var celda = celdas[j];
+                    var contenidoCelda = celda.textContent.trim().toLowerCase(); // Quitar espacios y convertir a minúsculas
+    
+                    // Verificar si la consulta está vacía o si la celda contiene la consulta
+                    if (consulta === "" || contenidoCelda.includes(consulta)) {
+                        mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
+                        break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                    }
+                    
+                    // Verificar si la celda contiene el número de mes o el nombre de mes
+                    var mesData = celda.getAttribute('data-mes');
+                    if (mesData && (mesData == consulta || mesesMapa[consulta] == mesData)) {
+                        mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
+                        break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                    }
+    
+                    // Verificar si la consulta parece ser una fecha en formato "DD/MM/YYYY"
+                    if (esFechaValida(consulta) && contenidoCelda.includes(consulta)) {
+                        mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia de fecha
+                        break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                    }
+    
+                    // Buscar por día, mes o año individualmente
+                    if (esFechaValida(contenidoCelda) && esFechaValida(consulta)) {
+                        var partesFecha = contenidoCelda.split('/');
+                        var partesConsulta = consulta.split('/');
+                        var fecha = new Date(contenidoCelda);
+                        
+                        if (partesConsulta.length === 3) {
+                            // Búsqueda por fecha completa "DD/MM/YYYY"
+                            if (contenidoCelda === consulta) {
+                                mostrarFila = true;
+                                break;
+                            }
+                        } else if (partesConsulta.length === 2) {
+                            // Búsqueda por mes y año "MM/YYYY"
+                            if (partesFecha[1] === partesConsulta[0] && partesFecha[2] === partesConsulta[1]) {
+                                mostrarFila = true;
+                                break;
+                            }
+                        } else if (partesConsulta.length === 1) {
+                            // Búsqueda por año "YYYY"
+                            if (partesFecha[2] === partesConsulta[0]) {
+                                mostrarFila = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+    
+                mostrarOcultarFila(fila, mostrarFila); // Mostrar u ocultar la fila según la coincidencia
             }
+        });
+    </script>     
+    <script>
+    function validarFormulario() {
+        var camposObligatorios = document.querySelectorAll('[required]');
+        var todosCompletos = true;
+        camposObligatorios.forEach(function(campo) {
+            if (campo.value.trim() === '') {
+                todosCompletos = false;
+                console.log('Campo vacío:', campo.name);
+            }
+        });
+        if (!todosCompletos) {
+            alert('Por favor, completa todos los campos obligatorios.');
+            return false;
         }
-
-        if (mostrarFila) {
-            fila.style.display = ''; // Mostrar la fila
-        } else {
-            fila.style.display = 'none'; // Ocultar la fila si no hay coincidencias
-        }
+        return true;
     }
-});
-            </script>                     
-
+    </script>           
     {% endblock %}
 </body>

@@ -307,6 +307,26 @@ def agregarAlumno():
             'materia': materia
         }
         return redirect(url_for('alta'))
+    email = request.form["email"]
+    if any(letra.isupper() for letra in email):
+        flash("El campo de correo electrónico no debe contener letras mayúsculas.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso': curso,
+        'nivel_educativo': nivel_educativo,
+        'nombre_titular': nombre_titular,
+        'telefono_titular': telefono_titular,
+        'dia': dia,
+        'horario': horario,
+        'materia': materia
+    }
+        return redirect(url_for('alta'))
         
     # Consulta SQL para contar el número de alumnos en el mismo horario
     count_query = "SELECT COUNT(*) FROM alumnos WHERE horario = %s"
@@ -471,7 +491,28 @@ def editar(id):
             'materia': materia
         }
         return redirect(url_for('alta'))
-
+    
+    email = request.form["email"]
+    if any(letra.isupper() for letra in email):
+        flash("El campo de correo electrónico no debe contener letras mayúsculas.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso': curso,
+        'nivel_educativo': nivel_educativo,
+        'nombre_titular': nombre_titular,
+        'telefono_titular': telefono_titular,
+        'dia': dia,
+        'horario': horario,
+        'materia': materia
+    }
+        return redirect(url_for('alta'))
+    
     # Obtén la fecha de nacimiento del formulario
     fecha_nacimiento_str = request.form["fecha_nacimiento"]
     fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, "%Y-%m-%d").date()
