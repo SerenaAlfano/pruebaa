@@ -1,10 +1,11 @@
+import mysql.connector
+import os #Permite acceder a los directorios
+import re
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, jsonify
 from datetime import datetime
 from flask_mysqldb import MySQL
 from datetime import timedelta
-
-import mysql.connector
-import os #Permite acceder a los directorios
 from flask_login import LoginManager,logout_user, login_user, login_required
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
@@ -17,17 +18,12 @@ from reportlab.platypus import Spacer
 from config import config
 from flask_sqlalchemy import SQLAlchemy
 
-import re
-
-
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
-
 
 app = Flask(__name__, template_folder = template_dir)
 
 db = MySQL(app)
-# Obtén la configuración de desarrollo desde config.py
 db_config = config["development"]
 
 # Crear una conexión a la base de datos utilizando la configuración
@@ -50,7 +46,6 @@ def load_user(id):
     return ModelUser.get_by_id(db, id)
 
 #Validaciones
-import re
 
 def validar_nombre(nombre):
     # Utiliza una expresión regular para verificar que el nombre contiene solo letras y espacios
@@ -71,7 +66,6 @@ def validar_apellido_alumno(apellido_alumno):
 def validar_telefono(telefono):
     # Expresión regular para validar un número de teléfono que contiene solo números y ciertos caracteres especiales como +, -, (, y )
     patron = r"^[0-9+\-() ]+$"
-    
     if re.match(patron, telefono):
         return True
     else:
@@ -85,8 +79,9 @@ def validar_telefono_titular(telefono_titular):
         return True
     else:
         return False 
-#Rutas
+    
 
+#Rutas
 
 @app.route('/')
 def index():
