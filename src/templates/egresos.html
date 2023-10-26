@@ -189,7 +189,37 @@
                                                 <div class="col-6">
                                                     <label>Monto <span class="campo-obligatorio">*</span></label>
                                                     <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
-                                                </div> 
+                                                </div>
+
+                                                <script>
+                                                    // Obtener el campo de entrada por su ID
+                                                    var montoInput = document.getElementById('montoInput');
+                                                    
+                                                    // Agregar un manejador de eventos para el evento 'input'
+                                                    montoInput.addEventListener('input', function() {
+                                                        // Obtener la posición actual del cursor
+                                                        var cursorPosition = montoInput.selectionStart;
+                                                      
+                                                        // Obtener el valor actual del campo
+                                                        var valor = montoInput.value;
+                                                        
+                                                        // Quitar cualquier carácter que no sea un número o punto
+                                                        valor = valor.replace(/[^0-9.]/g, '');
+                                                        
+                                                        // Formatear el valor con dos decimales
+                                                        valor = parseFloat(valor).toFixed(2);
+                                                        
+                                                        // Agregar separadores de miles y el signo de dólar
+                                                        valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                                        
+                                                        // Asignar el valor formateado de nuevo al campo
+                                                        montoInput.value = valor;
+                                                        
+                                                        // Restaurar la posición del cursor después del formato
+                                                        var newPos = cursorPosition + (valor.length - montoInput.value.length);
+                                                        montoInput.setSelectionRange(newPos, newPos);
+                                                    });
+                                                    </script>
                                                 <div class="col-6">
                                                     <label class="label-with-arrow">
                                                     Medios de pago <span class="campo-obligatorio">*</span>
@@ -217,35 +247,6 @@
                             </div>
                         </div>
                         {% endfor %}
-                        <script>
-                            // Obtener el campo de entrada por su ID
-                            var montoInput = document.getElementById('montoInput');
-                            
-                            // Agregar un manejador de eventos para el evento 'input'
-                            montoInput.addEventListener('input', function() {
-                                // Obtener la posición actual del cursor
-                                var cursorPosition = montoInput.selectionStart;
-                              
-                                // Obtener el valor actual del campo
-                                var valor = montoInput.value;
-                                
-                                // Quitar cualquier carácter que no sea un número o punto
-                                valor = valor.replace(/[^0-9.]/g, '');
-                                
-                                // Formatear el valor con dos decimales
-                                valor = parseFloat(valor).toFixed(2);
-                                
-                                // Agregar separadores de miles y el signo de dólar
-                                valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
-                                
-                                // Asignar el valor formateado de nuevo al campo
-                                montoInput.value = valor;
-                                
-                                // Restaurar la posición del cursor después del formato
-                                var newPos = cursorPosition + (valor.length - montoInput.value.length);
-                                montoInput.setSelectionRange(newPos, newPos);
-                            });
-                            </script> 
                         <script>
                                // Obtener el campo de búsqueda y la tabla
             var busquedaInput = document.getElementById('busquedaInput');
