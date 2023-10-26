@@ -180,7 +180,7 @@
                             </td>           
                         </tr>
                         <div class="modal fade" id="modal{{ d.id_ingresos }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-xl">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">{{ d.nombre_alumno }}</h5>
@@ -189,67 +189,66 @@
                                     <div class="modal-body">
                                         <form action="{{ url_for('editaringresos', id_ingresos=d.id_ingresos) }}" method="POST">
                                             <div class="row">    
-                                                    <!-- En el formulario de "Ingresos", muestra el nombre del alumno y agrega un campo oculto para almacenar su valor -->
-                                                    <div class="col-md-6">
+                                                <!-- En el formulario de "Ingresos", muestra el nombre del alumno y agrega un campo oculto para almacenar su valor -->
+                                                    <div class="col-6">
                                                         <label for="nombre_alumno">Nombre del Alumno:</label>
                                                         <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}" readonly>
                                                         <!-- Agregar un campo oculto para almacenar el valor del nombre del alumno -->
                                                         <input type="hidden" name="nombre_alumno_original" value="{{ d.nombre_alumno }}">
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-6">
                                                         <label>Fecha de pago <span class="campo-obligatorio">*</span></label>                                        
                                                         <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required>
                                                     <div>
-                                                        <div class="col-md-6">
-                                                            <label>Monto <span class="campo-obligatorio">*</span></label>
-                                                            <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ monto_formateado }}" id="montoInputEdit">
-                                                        </div>
-                                                        <script>
-                                                            // Agrega este script para establecer el valor formateado en el campo de entrada
-                                                            document.addEventListener("DOMContentLoaded", function() {
-                                                                var montoInputEdit = document.getElementById("montoInputEdit");
-                                                                if (montoInputEdit) {
-                                                                    montoInputEdit.value = "{{ monto_formateado }}";
-                                                                }
-                                                            });
-                                                        </script>
-                                                        <div class="col-md-6">
-                                                            <label class="label-with-arrow">
-                                                                Medios de pago <span class="campo-obligatorio">*</span>
-                                                                <div class="select-container">
-                                                                    <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
-                                                                        <option value="Efectivo" {% if data.medios_de_pago == 'Efectivo' %}selected{% endif %}>Efectivo</option>
-                                                                        <option value="Mercado pago" {% if data.medios_de_pago == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
-                                                                        <option value="Cuenta DNI" {% if data.medios_de_pago == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
-                                                                    </select>         
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                                    </svg>
-                                                                </div>
-                                                            </label>
-                                                        </div> 
-                                                        <div class="col-md-6">
-                                                            <label class=" label-form label-with-arrow">
-                                                                Tipo de pago <span class="campo-obligatorio">*</span>
-                                                                <div class="select-container">
-                                                                    <select class="form-control mb-3" name="tipo_pago" required value="{{ form_data.tipo_pago if form_data else '' }}">
-                                                                        <option value="Mensual" {% if data.tipo_pago == 'Mensual' %}selected{% endif %}>Mensual</option>
-                                                                        <option value="Diario" {% if data.tipo_pago == 'Diario' %}selected{% endif %}>Diario</option>       
-                                                                    </select>         
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                                    </svg>
-                                                                </div>
-                                                            </label>
-                                                        </div>                                                
+                                                    <div class="col-6">
+                                                        <label>Monto <span class="campo-obligatorio">*</span></label>
+                                                        <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ monto_formateado }}" id="montoInputEdit">
                                                     </div>
-                                                    <div class="text-center">
-                                                        <div class="btn-container">
-                                                            <button type="submit" class="btn-guardar">Guardar</button>
-                                                        <div>
-                                                    </div>
+                                                    <script>
+                                                        // Agrega este script para establecer el valor formateado en el campo de entrada
+                                                        document.addEventListener("DOMContentLoaded", function() {
+                                                            var montoInputEdit = document.getElementById("montoInputEdit");
+                                                            if (montoInputEdit) {
+                                                                montoInputEdit.value = "{{ monto_formateado }}";
+                                                            }
+                                                        });
+                                                    </script>
+                                                    <div class="col-6">
+                                                        <label class="label-with-arrow">
+                                                            Medios de pago <span class="campo-obligatorio">*</span>
+                                                            <div class="select-container">
+                                                                <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
+                                                                    <option value="Efectivo" {% if data.medios_de_pago == 'Efectivo' %}selected{% endif %}>Efectivo</option>
+                                                                    <option value="Mercado pago" {% if data.medios_de_pago == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
+                                                                    <option value="Cuenta DNI" {% if data.medios_de_pago == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
+                                                                </select>         
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                                </svg>
+                                                            </div>
+                                                        </label>
+                                                    </div> 
+                                                    <div class="col-6">
+                                                        <label class=" label-form label-with-arrow">
+                                                            Tipo de pago <span class="campo-obligatorio">*</span>
+                                                            <div class="select-container">
+                                                                <select class="form-control mb-3" name="tipo_pago" required value="{{ form_data.tipo_pago if form_data else '' }}">
+                                                                    <option value="Mensual" {% if data.tipo_pago == 'Mensual' %}selected{% endif %}>Mensual</option>
+                                                                    <option value="Diario" {% if data.tipo_pago == 'Diario' %}selected{% endif %}>Diario</option>       
+                                                                </select>         
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                                </svg>
+                                                            </div>
+                                                        </label>
+                                                    </div>                                                
                                                 </div>
+                                                <div class="text-center">
+                                                    <div class="btn-container">
+                                                        <button type="submit" class="btn-guardar">Guardar</button>
+                                                    <div>
                                                 </div>
+                                                                     
                                             </div>
                                         </form>
                                     </div>
