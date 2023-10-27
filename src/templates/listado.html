@@ -230,16 +230,19 @@
                                                                     <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in d.materia %}checked{% endif %}> Literatura
                                                                 </label>
                                                             </div>
-                                                            <!-- Agrega más casillas de verificación para otras materias -->
                                                         </div>
                                                     </div>
-                                                    
                                                     <div class="col-md-3">
                                                         <button type="submit" class="btn-guardar">Guardar cambios</button>
                                                     </div>
+                                                    <div id="success-message" class="hidden">
+                                                        <div id="success-box">
+                                                            <img src="static/img/exito.svg">
+                                                            Cambios guardados correctamente
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </form>
+                                            </form>                                                                           
                                         </div>
                                     </div>
                                 </div>
@@ -249,7 +252,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div>    
         <script>
         document.addEventListener('DOMContentLoaded', function() {
     function validarCampo(inputId, errorId, mensajeError, regex) {
@@ -388,6 +391,27 @@
                 }
             });
             </script>                     
-
-    {% endblock %}
-</body>
+    {% endblock %}  
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener el botón "Guardar cambios"
+            var guardarBoton = document.querySelector('button.btn-guardar');
+    
+            // Obtener la alerta de cambios guardados
+            var successMessage = document.getElementById('success-message');
+    
+            // Agregar un evento de clic al botón "Guardar cambios"
+            guardarBoton.addEventListener('click', function(event) {
+                event.preventDefault(); // Evitar que el formulario se envíe (si es un formulario)
+    
+                // Mostrar la alerta como una ventana emergente
+                successMessage.style.display = 'block';
+    
+                // Ocultar la alerta después de 2 segundos (2000 milisegundos)
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                }, 2000);
+            });
+        });
+    </script>            
+</body>                                        
