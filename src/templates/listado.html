@@ -42,20 +42,20 @@
                         <tbody>
                             {% for d in data %}
                             <tr>      
-                                <td class="td-table">{{ d.nombre.title() }}</td>
-                                <td class="td-table">{{ d.apellido.title() }}</td>
-                                <td class="td-table">{{ d.email.title() }}</td>
+                                <td class="td-table custom-column">{{ d.nombre.title() }}</td>
+                                <td class="td-table custom-column">{{ d.apellido.title() }}</td>
+                                <td class="td-table custom-column email-column">{{ d.email}}</td>
                                 <td class="td-table">{{ d.telefono }}</td>
                                 <td class="td-table">{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
                                 <td class="td-table">{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>
                                 <td class="td-table">{{ d.colegio.title() }}</td>
                                 <td class="td-table">{{ d.curso }}</td>
                                 <td class="td-table">{{ d.nivel_educativo }}</td>
-                                <td class="td-table">{{ d.nombre_titular.title() }}</td>
+                                <td class="td-table custom-column">{{ d.nombre_titular.title() }}</td>
                                 <td class="td-table">{{ d.telefono_titular }}</td>
-                                <td class="td-table">{{ d.dia }}</td>
+                                <td class="td-table custom-column">{{ d.dia }}</td>
                                 <td class="td-table">{{ d.horario }}</td>
-                                <td class="td-table">{{ d.materia }}</td>
+                                <td class="td-table custom-column">{{ d.materia }}</td>
                                 <td class="text-center"> 
                                     <i class="btn-operacion bi bi-pencil-square text-center" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i>
                                 </td>
@@ -138,7 +138,7 @@
                                                                     </svg>
                                                                 </div>
                                                             </label>
-                                                        </div>         
+                                                        </div>                                                                                                                 
                                                         <div class="col">
                                                             <label class="label-form label-with-arrow">
                                                                 Nivel educativo <span class="campo-obligatorio">*</span>
@@ -212,7 +212,7 @@
                                                                     <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in d.materia %}checked{% endif %}> Matemática
                                                                 </label>
                                                                 <label>
-                                                                    <input type="checkbox" name="materia[]" value="Practicas_del_lenguaje" {% if 'Prácticas_del_lenguaje' in d.materia %}checked{% endif %}> Practicas del lenguaje
+                                                                    <input type="checkbox" name="materia[]" value="Practicas del lenguaje" {% if 'Prácticas_del_lenguaje' in d.materia %}checked{% endif %}> Practicas del lenguaje
                                                                 </label>
                                                                 <label>
                                                                     <input type="checkbox" name="materia[]" value="Historia" {% if 'Historia' in d.materia %}checked{% endif %}> Historia
@@ -391,27 +391,27 @@
                 }
             });
             </script>                     
-    {% endblock %}  
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Obtener el botón "Guardar cambios"
-            var guardarBoton = document.querySelector('button.btn-guardar');
-    
-            // Obtener la alerta de cambios guardados
-            var successMessage = document.getElementById('success-message');
-    
-            // Agregar un evento de clic al botón "Guardar cambios"
-            guardarBoton.addEventListener('click', function(event) {
-                event.preventDefault(); // Evitar que el formulario se envíe (si es un formulario)
-    
-                // Mostrar la alerta como una ventana emergente
-                successMessage.style.display = 'block';
-    
-                // Ocultar la alerta después de 2 segundos (2000 milisegundos)
-                setTimeout(function() {
-                    successMessage.style.display = 'none';
-                }, 2000);
-            });
+    {% endblock %}           
+</body>             
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener el botón "Guardar cambios"
+        var guardarBoton = document.querySelector('button.btn-guardar');
+
+        // Obtener la alerta de cambios guardados
+        var successMessage = document.getElementById('success-message');
+
+        // Agregar un evento de clic al botón "Guardar cambios"
+        guardarBoton.addEventListener('click', function(event) {
+            event.preventDefault(); // Evitar que el formulario se envíe (si es un formulario)
+
+            // Mostrar la alerta como una ventana emergente
+            successMessage.style.display = 'block';
+
+            // Ocultar la alerta después de 5 segundos (5000 milisegundos)
+            setTimeout(function() {
+                successMessage.style.display = 'none';
+            }, 5000);
         });
-    </script>            
-</body>                                        
+    });
+</script>                              

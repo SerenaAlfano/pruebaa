@@ -404,3 +404,19 @@ body {
   border: 1px solid #ddd;
 }
 
+/* Aplicar el estilo solo a las celdas con la clase "custom-column" */
+.td-table.custom-column {
+  width: 100px; /* Ancho igual para todas las celdas estilizadas */
+  word-wrap: break-word; /* Permite que el texto se divida en varias líneas si es necesario */
+  overflow-wrap: break-word; /* Compatibilidad con navegadores */
+}
+
+/* Establecer el ancho máximo para el campo "Email" en 15 caracteres */
+.td-table.custom-column.email-column {
+  max-width: 15em; /* Puedes ajustar el valor según tus necesidades */
+}
+
+/* Establecer el estilo para convertir solo la primera letra en mayúscula en la columna "Email" */
+.td-table.custom-column.email-column {
+  text-transform: capitalize;
+}
