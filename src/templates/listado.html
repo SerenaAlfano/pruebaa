@@ -235,42 +235,36 @@
                                                     <div class="col-md-3">
                                                         <button type="submit" class="btn-guardar">Guardar cambios</button>
                                                     </div>
+                                                    <div id="alerta" style="display: none;" class="alert alert-success fixed-top mx-auto">Cambios guardados correctamente</div>
                                              </div>                                                                                                       
                                             </form>   
                                         </div>                                                      
                                     </div>  
                                 </div>
                             </div>
-                            <div id="alerta" style="display: none;" class="alert alert-success">
-                                Cambios guardados correctamente
-                            </div> 
                             <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    var guardarBoton = document.querySelector('button.btn-guardar');
-                                    var successMessage = document.getElementById('alerta');
-                                    var myModal = new bootstrap.Modal(document.getElementById('modal{{ d.id }}'));
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var guardarBoton = document.querySelector('button.btn-guardar');
+                                var successMessage = document.getElementById('alerta');
+                                var myModal = new bootstrap.Modal(document.getElementById('modal{{ d.id }}'));
                                 
-                                    guardarBoton.addEventListener('click', function(event) {
-                                        event.preventDefault();
-                                
-                                        // Ocultar el modal
-                                        myModal.hide();
-                                
-                                        // Mostrar la alerta
-                                        successMessage.style.display = 'block';
-                                
-                                        // Ocultar la alerta después de 5 segundos
-                                        setTimeout(function() {
-                                            successMessage.style.display = 'none';
-                                        }, 5000);
-                                    });
-                                
-                                    myModal._element.addEventListener('hidden.bs.modal', function() {
-                                        // Restablecer el contenido del modal y ocultar la alerta cuando se oculta el modal
+                                guardarBoton.addEventListener('click', function(event) {
+                                    event.preventDefault();
+                                    // Ocultar el modal
+                                    myModal.hide();
+                                    // Mostrar la alerta
+                                    successMessage.style.display = 'block';
+                                    // Ocultar la alerta después de 5 segundos
+                                    setTimeout(function() {
                                         successMessage.style.display = 'none';
-                                    });
+                                    }, 5000);
                                 });
-                                </script>                                
+                                myModal._element.addEventListener('hidden.bs.modal', function() {
+                                    // Restablecer el contenido del modal cuando se cierra el modal
+                                    successMessage.style.display = 'none';
+                                });
+                                });
+                                </script>
                             {% endfor %}
                         </tbody>
                     </table>
