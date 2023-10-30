@@ -123,13 +123,23 @@ def alta():
     cursor = db_connection.cursor()
     cursor.execute("SELECT * FROM alumnos")
     myresult = cursor.fetchall()
+    # Consulta para recuperar la lista de cursos,nivel educativo,dia y materias desde la base de datos "matricula"
+    cursor.execute("SELECT nombre FROM matricula.curso")
+    cursos = [curso[0] for curso in cursor.fetchall()]
+    cursor.execute("SELECT  nombre_nivel FROM nivel_educativo")
+    niveles_educativos = [row[0] for row in cursor.fetchall()]
+    cursor.execute("SELECT nombre_dia FROM dias")
+    dias_disponibles = [dia[0] for dia in cursor.fetchall()]
+    cursor.execute("SELECT nombre_materia FROM materias")
+    materias_disponibles = [materia[0] for materia in cursor.fetchall()]
+
     # Convertir los datos a diccionario
     insertObject = []
     columnNames = [column[0] for column in cursor.description]
     for record in myresult:
         insertObject.append(dict(zip(columnNames, record)))
     cursor.close()
-    return render_template("index.html", data=insertObject, form_data=form_data)
+    return render_template("index.html", data=insertObject, form_data=form_data, cursos=cursos, niveles_educativos=niveles_educativos,dias_disponibles=dias_disponibles,materias_disponibles=materias_disponibles)
 
 @app.route("/agregarAlumno", methods=["POST"])
 def agregarAlumno():
@@ -639,6 +649,11 @@ def editar(id):
 # Ingresos
 @app.route("/ingresos", methods=["GET", "POST"])
 def ingresos():
+    cursor.execute("SELECT nombre_medio_pago FROM medios_pago")
+    medios_pago_disponibles = [medio_pago[0] for medio_pago in cursor.fetchall()]
+
+    cursor.execute("SELECT nombre_tipo_pago FROM tipos_pago")
+    tipos_pago_disponibles = [tipo_pago[0] for tipo_pago in cursor.fetchall()]
     form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
     
     # Define las variables con valores predeterminados (pueden ser None u otros valores apropiados)
