@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Agenda{% endblock %}
-{% block content %}
 <head>
+{% block title %}Agenda{% endblock %}
+</head>
+<body>
+{% block content %}
 
   <meta charset='utf-8' />
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.js'></script>
@@ -79,7 +81,7 @@
       margin: 0 auto;
     }
   </style>
-</head>
 </html>
+
+     {% endblock %}
 </body>
-{% endblock %}
