@@ -15,15 +15,15 @@
                     <form action="/agregarAlumno" method="POST" onsubmit="return validarFormulario()">
                         <div class="row mb-3">
                             <div class="col-md-3 col-sm-12">
-                                <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
-                                <input type="text" class="form-control mb-3" name="nombre" id="nombre" required value="{{ form_data.nombre if form_data else '' }}">
-                                <div id="nombre-error" class="error-message"></div> 
-                            </div>
-                            <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Apellido <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="apellido" id="apellido" required value="{{ form_data.apellido if form_data else '' }}">
                                 <div id="apellido-error" class="error-message"></div> 
                             </div>
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
+                                <input type="text" class="form-control mb-3" name="nombre" id="nombre" required value="{{ form_data.nombre if form_data else '' }}">
+                                <div id="nombre-error" class="error-message"></div> 
+                            </div>                          
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="email" id="email" required value="{{ form_data.email if form_data else '' }}">                            
@@ -51,11 +51,12 @@
                                 <label class="label-form label-with-arrow">
                                     Curso <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
-                                        <select class="form-control mb-3" name="curso" required value="{{ form_data.curso if form_data else '' }}">
-                                            {% for option in ['Primero', 'Segundo', 'Tercero','Cuarto','Quinto','Sexto'] %}
-                                            <option value="{{ option }}" {% if data.curso == option %}selected{% endif %}>{{ option }}</option>
+                                        <select name="curso" class="form-control mb-3">
+                                            {% for curso in cursos %}
+                                                <option value="{{ curso }}">{{ curso }}</option>
                                             {% endfor %}
                                         </select>
+                                        
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                                         </svg>
@@ -66,9 +67,9 @@
                                 <label class="label-form label-with-arrow">
                                     Nivel educativo <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
-                                        <select class="form-control mb-3" name="nivel_educativo" required value="{{ form_data.nivel_educativo if form_data else '' }}">
-                                            {% for option in ['Primario', 'Secundario', 'Terciario'] %}
-                                            <option value="{{ option }}" {% if data.nivel_educativo == option %}selected{% endif %}>{{ option }}</option>
+                                        <select class="form-control mb-3" name="nivel_educativo" required>
+                                            {% for nivel in niveles_educativos %}
+                                                <option value="{{ nivel }}">{{ nivel }}</option>
                                             {% endfor %}
                                         </select>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
@@ -88,32 +89,23 @@
                                 <div id="telefono-titular-error" class="error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
-                                    Día <span class="campo-obligatorio">*</span>
-                                    <div class="select-container">
-                                        <select class="form-control mb-3" name="dia[]" style="display: none;">
-                                            {% for option in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'] %}
-                                            <option value="{{ option }}" {% if option in data.dia %}selected{% endif %}>{{ option }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="checkbox-container">
-                                        <label>
-                                            <input type="checkbox" name="dia[]" value="Lunes" {% if 'Lunes' in data.dia %}checked{% endif %}> Lunes
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="dia[]" value="Martes" {% if 'Martes' in data.dia %}checked{% endif %}> Martes
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="dia[]" value="Miércoles" {% if 'Miércoles' in data.dia %}checked{% endif %}> Miércoles
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="dia[]" value="Jueves" {% if 'Jueves' in data.dia %}checked{% endif %}> Jueves
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="dia[]" value="Viernes" {% if 'Viernes' in data.dia %}checked{% endif %}> Viernes
-                                        </label>
-                                    </div>
+                                Día <span class="campo-obligatorio">*</span>
+                                <div class="select-container">
+                                    <select class="form-control mb-3" name="dia[]" style="display: none;">
+                                        {% for dia in dias_disponibles %}
+                                        <option value="{{ dia }}" {% if dia in data.dia %}selected{% endif %}>{{ dia }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="checkbox-container">
+                                    {% for dia in dias_disponibles %}
+                                    <label>
+                                        <input type="checkbox" name="dia[]" value="{{ dia }}" {% if dia in data.dia %}checked{% endif %}> {{ dia }}
+                                    </label>
+                                    {% endfor %}
+                                </div>
                             </div>
+                            
                             
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Horario <span class="campo-obligatorio">*</span></label>
@@ -123,37 +115,20 @@
                                 Materia <span class="campo-obligatorio">*</span>
                                 <div class="select-container">
                                     <select class="form-control mb-3" name="materia[]" style="display: none;">
-                                        {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
-                                        <option value="{{ option }}" {% if option in data.dia %}selected{% endif %}>{{ option }}</option>
+                                        {% for materia in materias_disponibles %}
+                                            <option value="{{ materia }}" {% if materia in data.materia %}selected{% endif %}>{{ materia }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
                                 <div class="checkbox-container">
-                                    <label>
-                                        <input type="checkbox" name="materia[]" value="Inglés" {% if 'Inglés' in data.dia %}checked{% endif %}> Inglés
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in data.dia %}checked{% endif %}> Matemática
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" name="materia[]" value="Practicas_del_lenguaje" {% if 'Prácticas_del_lenguaje' in data.dia %}checked{% endif %}> Practicas del lenguaje
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" name="materia[]" value="Historia" {% if 'Historia' in data.dia %}checked{% endif %}> Historia
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" name="materia[]" value="Geografia" {% if 'Geografia' in data.dia %}checked{% endif %}> Geografia
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" name="materia[]" value="Biologia" {% if 'Biologia' in data.dia %}checked{% endif %}> Biologia
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" name="materia[]" value="Contabilidad" {% if 'Contabilidad' in data.dia %}checked{% endif %}> Contabilidad
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in data.dia %}checked{% endif %}> Literatura
-                                    </label>
+                                    {% for materia in materias_disponibles %}
+                                        <label>
+                                            <input type="checkbox" name="materia[]" value="{{ materia }}" {% if materia in data.materia %}checked{% endif %}> {{ materia }}
+                                        </label>
+                                    {% endfor %}
                                 </div>
+                            </div>
+                            
                                 <script>
                                     function validarFormulario() {
                                         // Obtén todos los campos obligatorios
