@@ -4,7 +4,27 @@
 </head>
 <body>
     {% block content %}
-    
+    <form method="POST" action="/caja">
+        <label for="mes">Selecciona un mes:</label>
+        <select name="mes" id="mes">
+            <option value="enero">Enero</option>
+            <option value="febrero">Febrero</option>
+            <option value="marzo">Marzo</option>
+            <option value="abril">abril</option>
+            <option value="mayo">Mayo</option>
+            <option value="junio">Junio</option>
+            <option value="julio">Julio</option>
+            <option value="agosto">Agosto</option>
+            <option value="septiembre">Septiembre</option>
+            <option value="octubre">Octubre</option>
+            <option value="noviembre">Noviembre</option>
+            <option value="diciembre">Diciembre</option>
+            <!-- Add options for other months -->
+        </select>
+        <input type="submit" value="Filtrar">
+    </form>
+
+
     <div class="table-responsive d-flex justify-content-center align-items-center mt-4" style="min-height: 100vh;">
         <table class="table table-bordered m-1 mb-5" style="background-color: white;">
             <thead>
