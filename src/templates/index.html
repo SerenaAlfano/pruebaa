@@ -12,7 +12,7 @@
             <h3 class="text-left subtitulo mt-3">Nuevo alumno</h3>
             <div class="card-contenedor mb-3">
                 <div class="card-body">
-                    <form action="/agregarAlumno" method="POST">
+                    <form action="/agregarAlumno" method="POST" onsubmit="return validarFormulario()">
                         <div class="row mb-3">
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
@@ -22,7 +22,7 @@
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Apellido <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="apellido" id="apellido" required value="{{ form_data.apellido if form_data else '' }}">
-                                <div id="apellido-error" class="text-danger error-message"></div> 
+                                <div id="apellido-error" class="error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
@@ -31,17 +31,17 @@
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
                                 <input type="tel" class="form-control mb-3" name="telefono" id="telefono" pattern="[0-9]+"  required value="{{ form_data.telefono if form_data else '' }}">
-                                <div id="telefono-error" class="text-danger error-message"></div> 
+                                <div id="telefono-error" class=" error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
                                 <input type="date" class="form-control mb-3" name="fecha_nacimiento" id="fecha_nacimiento" required value="{{ form_data.fecha_nacimiento if form_data else '' }}">
-                                <div id="fecha-nacimiento-error" class="text-danger error-message"></div> 
+                                <div id="fecha-nacimiento-error" class=" error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Fecha de inicio <span class="campo-obligatorio">*</span></label>
                                 <input type="date" class="form-control mb-3" name="fecha_inicio" id="fecha_inicio" required value="{{ form_data.fecha_inicio if form_data else '' }}">
-                                <div id="fecha-inicio-error" class="text-danger error-message"></div> 
+                                <div id="fecha-inicio-error" class=" error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Colegio <span class="campo-obligatorio">*</span></label>
@@ -80,12 +80,12 @@
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Nombre tutor <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nombre_titular" id="nombre_titular" required value="{{ form_data.nombre_titular if form_data else '' }}">
-                                <div id="nombre-titular-error" class="text-danger error-message"></div> 
+                                <div id="nombre-titular-error" class=" error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label  class="label-form">Telefono tutor <span class="campo-obligatorio">*</span></label>
                                 <input type="tel" class="form-control mb-3" name="telefono_titular"   id="telefono_titular" maxlength="10" required value="{{ form_data.telefono_titular if form_data else '' }}">
-                                <div id="telefono-titular-error" class="text-danger error-message"></div> 
+                                <div id="telefono-titular-error" class="error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                     Día <span class="campo-obligatorio">*</span>
@@ -165,7 +165,7 @@
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Confirmar Guardar</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
+                                            </div>                               
                                             <div class="modal-body">
                                                 ¿Estás seguro de guardar este alumno?
                                             </div>
@@ -188,9 +188,11 @@
                         </div>
                         {% endif %}
                         {% endwith %}
+                        
                         </form>
                     </div>
                 </div>
+                
                 <a href="/listado">Ver Listado</a>
 
                 
@@ -298,47 +300,110 @@
 });
 
         </script>
-            
-        <script>
-            // Obtener el campo de búsqueda y la tabla
-            var busquedaInput = document.getElementById('busquedaInput');
-            var tablaAlumnos = document.querySelector('.table');
-            
-            // Agregar un evento de escucha para la entrada del usuario
-            busquedaInput.addEventListener('input', function() {
-                var consulta = busquedaInput.value.toLowerCase();
-            
-                // Obtener todas las filas de la tabla
-                var filas = tablaAlumnos.querySelectorAll('tbody tr');
-            
-                // Iterar a través de las filas y celdas y ocultar/mostrar según la consulta
-                for (var i = 0; i < filas.length; i++) {
-                    var fila = filas[i];
-                    var mostrarFila = false;
-            
-                    // Obtener todas las celdas de la fila
-                    var celdas = fila.querySelectorAll('td');
-            
-                    // Iterar a través de las celdas y verificar si alguna contiene la consulta
-                    for (var j = 0; j < celdas.length; j++) {
-                        var celda = celdas[j];
-                        var contenidoCelda = celda.textContent.toLowerCase();
-            
-                        if (contenidoCelda.includes(consulta)) {
-                            mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
-                            break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+       <script>
+        // Obtener el campo de búsqueda y la tabla
+        var busquedaInput = document.getElementById('busquedaInput');
+        var tablaAlumnos = document.querySelector('.table');
+    
+        // Función para verificar si una cadena parece ser una fecha en formato "DD/MM/YYYY"
+        function esFechaValida(texto) {
+            var fechaRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            return fechaRegex.test(texto);
+        }
+    
+        // Función para mostrar u ocultar una fila en función de la coincidencia
+        function mostrarOcultarFila(fila, mostrar) {
+            fila.style.display = mostrar ? '' : 'none';
+        }
+    
+        // Agregar un evento de escucha para la entrada del usuario
+        busquedaInput.addEventListener('input', function() {
+            var consulta = busquedaInput.value.trim().toLowerCase(); // Quitar espacios en blanco y convertir a minúsculas
+    
+            // Obtener todas las filas de la tabla
+            var filas = tablaAlumnos.querySelectorAll('tbody tr');
+    
+            // Iterar a través de las filas y celdas y mostrar/ocultar según la consulta
+            for (var i = 0; i < filas.length; i++) {
+                var fila = filas[i];
+                var mostrarFila = false;
+    
+                // Obtener todas las celdas de la fila
+                var celdas = fila.querySelectorAll('td');
+    
+                // Iterar a través de las celdas y verificar si alguna contiene la consulta
+                for (var j = 0; j < celdas.length; j++) {
+                    var celda = celdas[j];
+                    var contenidoCelda = celda.textContent.trim().toLowerCase(); // Quitar espacios y convertir a minúsculas
+    
+                    // Verificar si la consulta está vacía o si la celda contiene la consulta
+                    if (consulta === "" || contenidoCelda.includes(consulta)) {
+                        mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
+                        break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                    }
+                    
+                    // Verificar si la celda contiene el número de mes o el nombre de mes
+                    var mesData = celda.getAttribute('data-mes');
+                    if (mesData && (mesData == consulta || mesesMapa[consulta] == mesData)) {
+                        mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
+                        break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                    }
+    
+                    // Verificar si la consulta parece ser una fecha en formato "DD/MM/YYYY"
+                    if (esFechaValida(consulta) && contenidoCelda.includes(consulta)) {
+                        mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia de fecha
+                        break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                    }
+    
+                    // Buscar por día, mes o año individualmente
+                    if (esFechaValida(contenidoCelda) && esFechaValida(consulta)) {
+                        var partesFecha = contenidoCelda.split('/');
+                        var partesConsulta = consulta.split('/');
+                        var fecha = new Date(contenidoCelda);
+                        
+                        if (partesConsulta.length === 3) {
+                            // Búsqueda por fecha completa "DD/MM/YYYY"
+                            if (contenidoCelda === consulta) {
+                                mostrarFila = true;
+                                break;
+                            }
+                        } else if (partesConsulta.length === 2) {
+                            // Búsqueda por mes y año "MM/YYYY"
+                            if (partesFecha[1] === partesConsulta[0] && partesFecha[2] === partesConsulta[1]) {
+                                mostrarFila = true;
+                                break;
+                            }
+                        } else if (partesConsulta.length === 1) {
+                            // Búsqueda por año "YYYY"
+                            if (partesFecha[2] === partesConsulta[0]) {
+                                mostrarFila = true;
+                                break;
+                            }
                         }
                     }
-            
-                    if (mostrarFila) {
-                        fila.style.display = ''; // Mostrar la fila
-                    } else {
-                        fila.style.display = 'none'; // Ocultar la fila si no hay coincidencias
-                    }
                 }
-            });
-            </script>                     
-
+    
+                mostrarOcultarFila(fila, mostrarFila); // Mostrar u ocultar la fila según la coincidencia
+            }
+        });
+    </script>     
+    <script>
+    function validarFormulario() {
+        var camposObligatorios = document.querySelectorAll('[required]');
+        var todosCompletos = true;
+        camposObligatorios.forEach(function(campo) {
+            if (campo.value.trim() === '') {
+                todosCompletos = false;
+                console.log('Campo vacío:', campo.name);
+            }
+        });
+        if (!todosCompletos) {
+            alert('Por favor, completa todos los campos obligatorios.');
+            return false;
+        }
+        return true;
+    }
+    </script>           
     {% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
