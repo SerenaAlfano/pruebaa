@@ -949,11 +949,11 @@ def caja():
     cursor = db_connection.cursor()
 
     # Consulta para obtener el total de ingresos
-    cursor.execute("SELECT SUM(monto) FROM ingresos")
+    cursor.execute("SELECT SUM(monto) FROM ingresos WHERE mes = 'enero';")
     total_ingresos = cursor.fetchone()[0]
 
     # Consulta para obtener el total de egresos
-    cursor.execute("SELECT SUM(monto) FROM egresos")
+    cursor.execute("SELECT SUM(monto) FROM egresos WHERE mes = 'febrero';")
     total_egresos = cursor.fetchone()[0]
     
     # Calcular el saldo restando los totales de egresos de los totales de ingresos
