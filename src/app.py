@@ -649,6 +649,7 @@ def editar(id):
 # Ingresos
 @app.route("/ingresos", methods=["GET", "POST"])
 def ingresos():
+    cursor = db_connection.cursor()  # Inicializa cursor
     cursor.execute("SELECT nombre_medio_pago FROM medios_pago")
     medios_pago_disponibles = [medio_pago[0] for medio_pago in cursor.fetchall()]
 
