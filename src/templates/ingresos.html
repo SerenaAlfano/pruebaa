@@ -73,37 +73,34 @@
                                 </script>
                                                                                                                    
                             <div class="col">
-    <label class="label-form label-with-arrow">
-        Medios de pago <span class="campo-obligatorio">*</span>
-        <div class="select-container">
-            <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
-                {% for medio_pago in medios_pago_disponibles %}
-                    <option value="{{ medio_pago }}" {% if medio_pago == data.medios_de_pago %}selected{% endif %}>{{ medio_pago }}</option>
-                {% endfor %}
-            </select>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-            </svg>
-        </div>
-    </label>
-</div>
-
-<div class="col">
-    <label class="label-form label-with-arrow">
-        Tipo de pago <span class="campo-obligatorio">*</span>
-        <div class="select-container">
-            <select class="form-control mb-3" name="tipo_pago" required value="{{ form_data.tipo_pago if form_data else '' }}">
-                {% for tipo_pago in tipos_pago_disponibles %}
-                    <option value="{{ tipo_pago }}" {% if tipo_pago == data.tipo_pago %}selected{% endif %}>{{ tipo_pago }}</option>
-                {% endfor %}
-            </select>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-            </svg>
-        </div>
-    </label>
-</div>
-
+                                <label class="label-with-arrow">
+                                    Medios de pago <span class="campo-obligatorio">*</span>
+                                    <div class="select-container">
+                                        <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
+                                            <option value="Efectivo" {% if data.medios_de_pago == 'Efectivo' %}selected{% endif %}>Efectivo</option>
+                                            <option value="Mercado pago" {% if data.medios_de_pago == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
+                                            <option value="Cuenta DNI" {% if data.medios_de_pago == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
+                                        </select>         
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                        </svg>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="col">
+                                <label class="label-form label-with-arrow">
+                                    Tipo de pago <span class="campo-obligatorio">*</span>
+                                        <div class="select-container">
+                                            <select class="form-control mb-3" name="tipo_pago" required value="{{ form_data.tipo_pago if form_data else '' }}">
+                                                <option value="Mensual" {% if data.tipo_pago == 'Mensual' %}selected{% endif %}>Mensual</option>
+                                                <option value="Diario" {% if data.tipo_pago == 'Diario' %}selected{% endif %}>Diario</option>       
+                                            </select>         
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                            </svg>
+                                        </div>
+                                </label>
+                            </div>
                             <div class=" text-center">
                                 <div class="btn-container">
                                     <button type="submit" class="btn-guardar" data-bs-toggle="modal" data-bs-target="#confirmarGuardar">Guardar</button>
