@@ -42,9 +42,9 @@
                         <tbody>
                             {% for d in data %}
                             <tr>      
-                                <td class="td-table">{{ d.apellido.title() }}</td>
-                                <td class="td-table">{{ d.nombre.title() }}</td>
-                                <td class="td-table">{{ d.email.title() }}</td>
+                                <td class="td-table custom-column">{{ d.apellido.title() }}</td>
+                                <td class="td-table custom-column">{{ d.nombre.title() }}</td>
+                                <td class="td-table custom-column">{{ d.email.title() }}</td>
                                 <td class="td-table">{{ d.telefono }}</td>
                                 <td class="td-table">{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
                                 <td class="td-table">{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>
