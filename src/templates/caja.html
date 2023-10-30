@@ -4,7 +4,11 @@
 </head>
 <body>
     {% block content %}
-    <div class="table-responsive d-flex justify-content-center align-items-center mt-4" style="min-height: 100vh;">
+    <div class="col-md-12 container">
+        <h3 class="text-left subtitulo mt-3">Mis saldos</h3>
+        <div class="card-contenedor mb-3"> 
+            <div class="card-body">
+        <div class="table-responsive d-flex justify-content-center align-items-center mt-4" >
         <table class="table table-bordered m-1 mb-5" style="background-color: white;">
             <thead>
                 <th class="col-tabla" scope="col">Tipo</th>
@@ -26,6 +30,9 @@
             </tbody>
         </table>
     </div>
+</div>
+</div>
+
     
     {% endblock %}
 </body>

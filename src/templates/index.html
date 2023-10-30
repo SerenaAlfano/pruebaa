@@ -9,9 +9,11 @@
     {% block content %}
 
         <div class="col-md-12 container">
+            <a href="/listado" style="float: right;" class="btn-guardar ">Ver Listado</a>
             <h3 class="text-left subtitulo mt-3">Nuevo alumno</h3>
-            <div class="card-contenedor mb-3">
-                <div class="card-body">
+        
+            <div class="card-contenedor mb-3 mt-4">
+                <div class="card-body">                                  
                     <form action="/agregarAlumno" method="POST" onsubmit="return validarFormulario()">
                         <div class="row mb-3">
                             <div class="col-md-3 col-sm-12">
@@ -152,7 +154,9 @@
                                     }
                                     </script>
                             </div>
-                            <div class="col-md-3 col-sm-12">
+
+
+                            <div class="text-center">
                                 <div class="btn-container">
                                     <button type="button" class="btn-guardar" data-bs-toggle="modal" data-bs-target="#confirmarGuardar">Guardar alumno</button>
                                  <!-- Modal de confirmación para guardar un alumno -->
@@ -190,8 +194,7 @@
                     </div>
                 </div>
                 
-                <a href="/listado">Ver Listado</a>
-
+             
                 
             
                             
