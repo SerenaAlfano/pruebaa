@@ -2,11 +2,11 @@ import mysql.connector
 import os #Permite acceder a los directorios
 import re
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session,  jsonify
 from datetime import datetime
 from flask_mysqldb import MySQL
 from datetime import timedelta
-from flask_login import LoginManager,logout_user, login_user, login_required
+from flask_login import LoginManager,logout_user, login_user
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -14,9 +14,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from flask import make_response
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import Spacer
 from config import config
-from flask_sqlalchemy import SQLAlchemy
 
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
@@ -26,7 +24,7 @@ app = Flask(__name__, template_folder = template_dir)
 db = MySQL(app)
 db_config = config["development"]
 
-# Crear una conexión a la base de datos utilizando la configuración
+#Conexión a la base de datos
 db_connection = mysql.connector.connect(
     host=db_config.MYSQL_HOST,
     user=db_config.MYSQL_USER,
@@ -46,33 +44,31 @@ def load_user(id):
     return ModelUser.get_by_id(db, id)
 
 #Validaciones
-
+#Verifica que el nombre contiene solo letras y espacios
 def validar_nombre(nombre):
-    # Utiliza una expresión regular para verificar que el nombre contiene solo letras y espacios
     return bool(re.match(r'^[a-zA-Z\s]+$', nombre))
-
+#Verifica que el apellido contiene solo letras y espacios
 def validar_apellido(apellido):
     return bool(re.match(r'^[a-zA-Z\s]+$', apellido))
-
+#Verifica que el nombre contiene solo letras y espacios
 def validar_nombre_titular(nombre_titular):
     return bool(re.match(r'^[a-zA-Z\s]+$', nombre_titular))
-
+#Verifica que el nombre contiene solo letras y espacios
 def validar_nombre_alumno(nombre_alumno):
     return bool(re.match(r'^[a-zA-Z\s]+$', nombre_alumno))
-
+#Verifica que el apellido contiene solo letras y espacios
 def validar_apellido_alumno(apellido_alumno):
     return bool(re.match(r'^[a-zA-Z\s]+$', apellido_alumno))
 
+#Verifica que el teléfono contiene solo números y ciertos carácteres especiales como +, -, (, y )
 def validar_telefono(telefono):
-    # Expresión regular para validar un número de teléfono que contiene solo números y ciertos caracteres especiales como +, -, (, y )
     patron = r"^[0-9+\-() ]+$"
     if re.match(patron, telefono):
         return True
     else:
         return False 
-    
-def validar_telefono_titular(telefono_titular):
-    # Expresión regular para validar un número de teléfono que contiene solo números y ciertos caracteres especiales como +, -, (, y )
+#Verifica que el número de teléfono contiene solo números y ciertos caracteres especiales como +, -, (, y )    
+def validar_telefono_titular(telefono_titular):   
     patron = r"^[0-9+\-() ]+$"
     
     if re.match(patron, telefono_titular):
@@ -80,18 +76,16 @@ def validar_telefono_titular(telefono_titular):
     else:
         return False 
     
-
-#Rutas
+#RUTAS
 
 @app.route('/')
 def index():
     return redirect(url_for('login'))
 
+#Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        #print(request.form['username'])
-        #print(request.form['password'])
         user = User(0, request.form['username'], request.form['password'])
         logged_user = ModelUser.login(db, user)
         if logged_user != None:
@@ -107,6 +101,7 @@ def login():
     else:
         return render_template('auth/login.html')
 
+#Logout
 @app.route('/logout')
 def logout():
     logout_user()
@@ -117,6 +112,7 @@ def logout():
 def inicio():
     return render_template('inicio.html')
 
+#Nuevo alumno
 @app.route("/index")
 def alta():
     form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
@@ -133,7 +129,6 @@ def alta():
     cursor.execute("SELECT nombre_materia FROM materias")
     materias_disponibles = [materia[0] for materia in cursor.fetchall()]
 
-    # Convertir los datos a diccionario
     insertObject = []
     columnNames = [column[0] for column in cursor.description]
     for record in myresult:
@@ -263,7 +258,7 @@ def agregarAlumno():
         }
         return redirect(url_for('alta'))
 
-    # Obtén la fecha de nacimiento del formulario
+    # Obtiene la fecha de nacimiento del formulario
     fecha_nacimiento_str = request.form["fecha_nacimiento"]
     fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, "%Y-%m-%d").date()
     # Obtiene la fecha actual
@@ -290,7 +285,7 @@ def agregarAlumno():
         }
         return redirect(url_for('alta'))
     
-    # Calcular la fecha mínima permitida para la fecha de nacimiento (6 años atrás)
+    # Calcula la fecha mínima permitida para la fecha de nacimiento (6 años atrás)
     fecha_minima = fecha_actual - timedelta(days=365 * 6)
 
     # Compara la fecha de nacimiento con la fecha mínima
@@ -345,31 +340,21 @@ def agregarAlumno():
             flash("Ya hay 4 alumnos registrados en este horario.", "error")
             return redirect(url_for('alta'))
     except mysql.connector.Error as err:
-        # Maneja los errores de SQL aquí
         print(f"Error de MySQL: {err}")
 
     # Si el conteo es menor a 4, procedemos a insertar el nuevo alumno
     insert_query = "INSERT INTO alumnos (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str)
-
     try:
         cursor.execute(insert_query, data)
-        db_connection.commit()  # Realiza el commit después de la inserción
-
-        # Después de insertar en 'alumnos', obtenga el ID insertado
+        db_connection.commit()  
         id_inserted = cursor.lastrowid
-
-        # Defina la instrucción INSERT para la tabla 'alumnos_horarios'
         sql_alumnos_horarios = "INSERT INTO alumnos_horarios (id, nombre, dia, horario, materia) VALUES (%s, %s, %s, %s)"
-        data_alumnos_horarios = (id, dia_str, horario, materia_str)
-    
+        data_alumnos_horarios = (id, dia_str, horario, materia_str) 
         cursor.execute(sql_alumnos_horarios, data_alumnos_horarios)
-        db_connection.commit()  # Realiza el commit después de la inserción en 'alumnos_horarios'
-
+        db_connection.commit() 
     except mysql.connector.Error as err:
-    # Maneja los errores de SQL aquí
-        print(f"Error de MySQL: {err}")
-    
+        print(f"Error de MySQL: {err}") 
     return redirect(url_for('listado'))
 
 #Listado de alumnos
@@ -378,7 +363,6 @@ def listado():
     cursor = db_connection.cursor()
     cursor.execute("SELECT * FROM alumnos ORDER BY apellido ASC;")
     myresult = cursor.fetchall()
-    # Convertir los datos a un diccionario como lo hiciste antes
     insertObject = []
     columnNames = [column[0] for column in cursor.description]
     for record in myresult:
@@ -545,7 +529,7 @@ def editar(id):
     }
         return redirect(url_for('alta'))
     
-    # Obtén la fecha de nacimiento del formulario
+    # Obtiene la fecha de nacimiento del formulario
     fecha_nacimiento_str = request.form["fecha_nacimiento"]
     fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, "%Y-%m-%d").date()
 
@@ -573,12 +557,11 @@ def editar(id):
         }
         return redirect(url_for('alta'))
     
-    # Obtén la fecha de nacimiento del formulario
+    # Obtiene la fecha de nacimiento del formulario
     fecha_nacimiento_str = request.form["fecha_nacimiento"]
     fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, "%Y-%m-%d").date()
 
-    # Obtén la fecha de inicio del formulario
-        # Obtén la fecha de inicio del formulario
+    # Obtiene la fecha de inicio del formulario
     fecha_inicio_str = request.form["fecha_inicio"]
     fecha_inicio = datetime.strptime(fecha_inicio_str, "%Y-%m-%d").date()
 
@@ -633,7 +616,6 @@ def editar(id):
             }
             return redirect(url_for('alta'))
     except mysql.connector.Error as err:
-        # Maneja los errores de SQL aquí
         print(f"Error de MySQL: {err}")
 
     # Continúa con la actualización de la base de datos
@@ -655,7 +637,7 @@ def ingresos():
 
     cursor.execute("SELECT nombre_tipo_pago FROM tipos_pago")
     tipos_pago_disponibles = [tipo_pago[0] for tipo_pago in cursor.fetchall()]
-    form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
+    form_data = session.pop('form_data', None)  # Obtiene los datos del formulario almacenados en sesión
     
     # Define las variables con valores predeterminados (pueden ser None u otros valores apropiados)
     fecha_pago = None
@@ -666,13 +648,11 @@ def ingresos():
     tipo_pago = None
     
     if request.method == "POST":
-        # Obtén la fecha de pago del formulario
+        # Obtiene la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
-
-        # Mueve la obtención del nombre_alumno aquí
+        # Mueve la obtención del nombre_alumno
         nombre_alumno = request.form["nombre_alumno"]
-
         # Verifica si ya existe un pago para el mismo alumno en el mismo mes y año
         cursor = db_connection.cursor()
         cursor.execute("SELECT COUNT(*) FROM ingresos WHERE nombre_alumno = %s AND MONTH(fecha_pago) = %s AND YEAR(fecha_pago) = %s", (nombre_alumno, fecha_pago.month, fecha_pago.year))
@@ -691,20 +671,14 @@ def ingresos():
             return redirect(url_for('ingresos'))
 
     if request.method == "POST":
-        # Tu lógica para agregar datos aquí
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
-        tipo_pago = request.form["tipo_pago"] 
-        
-       
-        
-        # Obtén la fecha de pago del formulario
+        tipo_pago = request.form["tipo_pago"]               
+        # Obtiene la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]
-        fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
-        
+        fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()        
         # Obtiene la fecha actual
-        fecha_actual = datetime.now().date()
-        
+        fecha_actual = datetime.now().date()       
         if fecha_pago > fecha_actual:
             flash("La fecha de pago debe ser actual o anterior.", "error")
             session['form_data'] = {
@@ -719,7 +693,6 @@ def ingresos():
         if nombre_alumno and fecha_pago and monto and medios_de_pago:
             monto = monto.replace('$', '').replace(',', '')  # Elimina "$" y comas
             monto = float(monto) 
-        # Remove the existing SQL statement
             cursor = db_connection.cursor()
             sql = "INSERT INTO ingresos (nombre_alumno, fecha_pago, monto, medios_de_pago,tipo_pago) VALUES (%s, %s, %s, %s, %s)"
             data = (nombre_alumno, fecha_pago, monto, medios_de_pago,tipo_pago)
@@ -729,36 +702,32 @@ def ingresos():
             return redirect(url_for('ingresos'))
     
     
-    # Tu lógica para mostrar la página de ingresos con la lista de datos aquí
+    #Muestra la página de ingresos con la lista de datos
     cursor = db_connection.cursor()
     cursor.execute("SELECT id_ingresos, nombre_alumno,  fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos")
     myresult = cursor.fetchall()
     
-    # Convertir los datos a un diccionario
+    #Convierte los datos a un diccionario
     insertObject = []
     columnNames = [column[0] for column in cursor.description]
     
     for record in myresult:
         insertObject.append(dict(zip(columnNames, record)))
-    
     cursor.close()
-    # Obtener la lista de nombres y apellidos de los alumnos
-    # Tu lógica para mostrar la página de ingresos con la lista de datos aquí
+    #Obtiene la lista de nombres y apellidos de los alumnos
+    #Muestra la página de ingresos con la lista de datos 
     cursor = db_connection.cursor()
     cursor.execute("SELECT id_ingresos, nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos")
     myresult = cursor.fetchall()
-
-    # Obtener la lista de nombres y apellidos de los alumnos
+    # Obtiene la lista de nombres y apellidos de los alumnos
     cursor.execute("SELECT nombre, apellido FROM alumnos")
     alumnos = cursor.fetchall()
     cursor.close()
-
-    # Crear una lista de nombres y apellidos concatenados
+    # Crea una lista de nombres y apellidos concatenados
     nombres_apellidos = [f"{alumno[0]} {alumno[1]}" for alumno in alumnos]
-
     return render_template("ingresos.html", data=insertObject, form_data=form_data, nombres_apellidos=nombres_apellidos)
 
-#Eliminar
+#Eliminar Ingresos
 @app.route("/eliminar_ingresos/<string:id_ingresos>")
 def eliminar_ingresos(id_ingresos):
     cursor = db_connection.cursor()
@@ -780,13 +749,10 @@ def editaringresos(id_ingresos):
         registro_editar = cursor.fetchone()
         cursor.close()
         data = db.database
-
-        # Obtener el valor del monto sin formato desde la base de datos
+        # Obtiene el valor del monto sin formato desde la base de datos
         monto = registro_editar["monto"]
-
-        # Formatear el monto como una cadena con el signo de peso, comas y punto
+        # Formatea el monto como una cadena con el signo de peso, comas y punto
         monto_formateado = "${:,.2f}".format(monto)
-        # Puedes pasar el monto formateado al formulario
         return render_template("editar_ingresos.html", monto_formateado=monto_formateado, registro=registro_editar, data=data)
 
     if request.method == "POST":
@@ -796,8 +762,6 @@ def editaringresos(id_ingresos):
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
         tipo_pago = request.form["tipo_pago"]
-
-
         # Obtiene la fecha actual
         fecha_actual = datetime.now().date()
         # Compara la fecha de pago con la fecha actual
@@ -819,30 +783,28 @@ def editaringresos(id_ingresos):
             db_connection.commit()
             # Realiza una consulta para obtener los datos actualizados
             cursor.execute("SELECT * FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
-            updated_data = cursor.fetchone()  # Obtén la fila actualizada
+            updated_data = cursor.fetchone()  # Obtiene la fila actualizada
             cursor.close()  # Cierra el cursor
         return redirect(url_for('ingresos'))
 
-#egresos
+#Egresos
 @app.route("/egresos", methods=["GET", "POST"])
 def egresos():
-    form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
+    form_data = session.pop('form_data', None)  # Obtiene los datos del formulario almacenados en sesión
     fecha_pago = None
     fecha_actual = None
     servicios= None
     monto= None
     medios_de_pago = None
     if request.method == "POST":
-        # Tu lógica para agregar datos aquí
         servicios = request.form["servicios"]
         fecha_pago = request.form["fecha_pago"]
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
-
-        # Verificar si el servicio es un gasto fijo mensual
+        #Verifica si el servicio es un gasto fijo mensual
         gastos_fijos_mensuales = ["luz", "agua", "gas", "internet"]
         if servicios.lower() in gastos_fijos_mensuales:
-             # Verificar si el servicio ya se ha registrado este mes
+             #Verifica si el servicio ya se ha registrado este mes
              cursor = db_connection.cursor()
              cursor.execute("SELECT COUNT(*) FROM egresos WHERE servicios = %s AND MONTH(fecha_pago) = MONTH(CURRENT_DATE())", (servicios,))
              count = cursor.fetchone()[0]
@@ -857,13 +819,11 @@ def egresos():
                 }
                 return redirect(url_for('egresos'))
         
-         # Obtén la fecha de pago del formulario
+        #Obtiene la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
-        
-         # Obtiene la fecha actual
+        #Obtiene la fecha actual
         fecha_actual = datetime.now().date()
-
     # Compara la fecha de pago con la fecha actual
     if fecha_pago is not None and fecha_actual is not None and fecha_pago > fecha_actual:
         flash("La fecha de pago debe ser actual o anterior.", "error")
@@ -883,24 +843,20 @@ def egresos():
         data = (servicios, fecha_pago, monto, medios_de_pago)
         cursor.execute(sql, data)
         db_connection.commit()
-        return redirect(url_for('egresos'))  # Redirige a la misma vista después de agregar datos
+        return redirect(url_for('egresos')) 
 
-# Tu lógica para mostrar la página de egresos con la lista de datos aquí
     cursor = db_connection.cursor()
     cursor.execute("SELECT id, servicios, fecha_pago, monto, medios_de_pago FROM egresos")
     myresult = cursor.fetchall()
-    # Convertirmos los datos a diccionario
+    #Convierte los datos a diccionario
     insertObject = []
     columnNames = [column[0] for column in cursor.description]
     for record in myresult:
         insertObject.append(dict(zip(columnNames, record)))
-    cursor.close()
-   
+    cursor.close()  
     return render_template("egresos.html", data=insertObject,form_data=form_data)
 
-
-
-#Eliminar
+#Eliminar egresos
 @app.route("/eliminar_egresos/<string:id>")
 def eliminar_egresos(id):
     cursor = db_connection.cursor()
@@ -910,12 +866,10 @@ def eliminar_egresos(id):
     db_connection.commit()
     return redirect(url_for('egresos'))
 
-
-#Actualizar
+#Actualizar egresos
 @app.route("/editaregresos/<int:id>", methods=["POST", "GET"])
 def editaregresos(id):
-    registro_editar = None  # Define registro_editar inicialmente como None
-
+    registro_editar = None 
     if request.method == "GET":
         cursor = db_connection.cursor()
         cursor.execute("SELECT servicios, fecha_pago, monto, medios_de_pago FROM egresos WHERE id = %s", (id,))
@@ -929,7 +883,6 @@ def editaregresos(id):
             # Manejar el caso si no se encuentra el registro a editar
             flash("Registro no encontrado.", "error")
             return redirect(url_for('egresos'))
-
     if request.method == "POST":
         servicios = request.form["servicios"]
         fecha_pago_str = request.form["fecha_pago"]
@@ -939,7 +892,6 @@ def editaregresos(id):
 
         # Obtiene la fecha actual
         fecha_actual = datetime.now().date()
-
     # Compara la fecha de pago con la fecha actual
     if fecha_pago is not None and fecha_actual is not None and fecha_pago > fecha_actual:
         flash("La fecha de pago debe ser actual o anterior.", "error")
@@ -959,24 +911,23 @@ def editaregresos(id):
 
     return redirect(url_for('egresos'))
 
-#caja
+#Caja
 @app.route('/caja', methods=['GET', 'POST'])
 def caja():
     cursor = db_connection.cursor()
 
-    # Consulta para obtener el total de ingresos
+    #Consulta para obtener el total de ingresos
     cursor.execute("SELECT SUM(monto) FROM ingresos")
     total_ingresos = cursor.fetchone()[0]
 
-    # Consulta para obtener el total de egresos
+    #Consulta para obtener el total de egresos
     cursor.execute("SELECT SUM(monto) FROM egresos")
     total_egresos = cursor.fetchone()[0]
     
-    # Calcular el saldo restando los totales de egresos de los totales de ingresos
+    #Calcula el saldo restando los totales de egresos de los totales de ingresos
     saldo = total_ingresos - total_egresos
-
-
     return render_template('caja.html',total_ingresos=total_ingresos, total_egresos=total_egresos, saldo=saldo)
+
 
 #Agenda
 @app.route('/agenda')
@@ -992,15 +943,10 @@ def obtener_horarios_desde_mysql():
     return jsonify(horarios)
 
 
-
-#Notificar deudas
-
-
 #PDF de ingresos
-
 @app.route('/descargar_pdf/<int:id_ingresos>')
 def descargar_pdf(id_ingresos):
-    # Obtén los datos del alumno con el ID proporcionado 
+    # Obtiene los datos del alumno con el ID 
     cursor = db_connection.cursor()
     cursor.execute("SELECT nombre_alumno,fecha_pago, monto, medios_de_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
     alumno = cursor.fetchone()
@@ -1009,21 +955,21 @@ def descargar_pdf(id_ingresos):
     if alumno is None:
         return "Alumno no encontrado", 404
 
-    # Genera el PDF con los datos del alumno
+    #Genera el PDF con los datos del alumno
     pdf_buffer = BytesIO()
     c = canvas.Canvas(pdf_buffer, pagesize=letter)
 
-      # Agrega la imagen en la parte superior izquierda (ajusta las coordenadas según tu diseño)
+    #Agrega la imagen en la parte superior izquierda
     c.drawImage("src/static/img/logo_fondo_1.png", 40, 690, width=120, height=100)
 
-    # Agrega una línea que ocupe todo el ancho (ajusta las coordenadas según tu diseño)
+    #Agrega una línea que ocupa todo el ancho 
     c.line(50, 670, 550, 670)
 
-    # Agrega el título (ajusta las coordenadas y el estilo según tu diseño)
+    #Agrega el título
     c.setFont("Helvetica", 16)
     c.drawString(220, 700, "Recibo de Pago")
 
-    # Agrega el texto debajo del título (ajusta las coordenadas y el estilo según tu diseño)
+    #Agrega el texto debajo del título 
     c.setFont("Helvetica", 12)
     texto_recibo = f"El recibo corresponde a {alumno[0]} por el monto de ${alumno[2]} en la fecha {alumno[1]}."
     c.drawString(50, 610, texto_recibo)
@@ -1040,38 +986,38 @@ def descargar_pdf(id_ingresos):
     
     return response
 
-#PDF para descargar el listado de alumnos
 
+#PDF para descargar el listado de alumnos
 @app.route('/descargar_lista_alumnos_pdf')
 def descargar_lista_alumnos_pdf():
-    # Obtén los datos de todos los alumnos en tu base de datos
+    # Obtiene los datos de todos los alumnos en tu base de datos
     cursor = db_connection.cursor()
     cursor.execute("SELECT nombre, apellido, curso, nivel_educativo, dia, horario, materia FROM alumnos")
     alumnos = cursor.fetchall()
     cursor.close()
 
-    # Configura el búfer de bytes para el PDF
+    #Configura el búfer de bytes para el PDF
     pdf_buffer = BytesIO()
 
-    # Crea un objeto SimpleDocTemplate para el PDF
+    #Crea un objeto SimpleDocTemplate para el PDF
     doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
 
-    # Crea una lista para almacenar los elementos del PDF
+    #Crea una lista para almacenar los elementos del PDF
     elements = []
 
-    # Agrega un título centrado al PDF
+    #Agrega un título centrado al PDF
     styles = getSampleStyleSheet()
     title_style = styles['Title']
     title = Paragraph('<center><b>Listado de Alumnos</b></center>', title_style)
     elements.append(title)
 
-    # Crea una lista para almacenar los datos de los alumnos
+    #Crea una lista para almacenar los datos de los alumnos
     data = [['Nombre', 'Apellido', 'Curso', 'Nivel Educativo', 'Día', 'Horario', 'Materias']]
 
     for alumno in alumnos:
-        # Dividir las materias por comas y luego unir las materias con <br/>
+        # Divide las materias por comas y luego une las materias con <br/>
         materias = "<br/>".join(alumno[6].split(", "))
-        # Dividir los días por comas y luego unir los días con <br/>
+        # Divide los días por comas y luego une los días con <br/>
         dias = "<br/>".join(alumno[4].split(", "))
         data.append([
             Paragraph(alumno[0], styles['Normal']),  # Nombre
@@ -1091,7 +1037,7 @@ def descargar_lista_alumnos_pdf():
         ('BACKGROUND', (0, 0), (-1, 0), colors.white),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Centrar verticalmente
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Centra verticalmente
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
