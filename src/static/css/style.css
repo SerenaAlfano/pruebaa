@@ -226,7 +226,7 @@ body {
 .btn-container {
   background-color: white;
   padding: 1em; /* Ajusta el espaciado interior según sea necesario */
-  text-align: center; /* Centra horizontalmente el botón */
+  
 }
 .form-control{
   width: 11em !important;

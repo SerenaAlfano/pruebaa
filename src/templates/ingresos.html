@@ -186,34 +186,35 @@
                                         <h5 class="modal-title" id="exampleModalLabel">{{ d.nombre_alumno }}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body ">
                                         <form action="{{ url_for('editaringresos', id_ingresos=d.id_ingresos) }}" method="POST">
                                             <div class="row">    
                                                 <!-- En el formulario de "Ingresos", muestra el nombre del alumno y agrega un campo oculto para almacenar su valor -->
-                                                    <div class="col-6">
-                                                        <label for="nombre_alumno">Nombre del Alumno:</label>
-                                                        <input type="text" class="form-control mb-3" name="nombre_alumno" value="{{ d.nombre_alumno }}" readonly>
-                                                        <!-- Agregar un campo oculto para almacenar el valor del nombre del alumno -->
-                                                        <input type="hidden" name="nombre_alumno_original" value="{{ d.nombre_alumno }}">
+                                                    <div class="col">
+                                                        <label for="nombre_alumno">Nombre del alumno:</label>
+                                                        <input type="text" class="form-control " name="nombre_alumno" value="{{ d.nombre_alumno }}" readonly>
+                                                        <!-- Agregar un campo oculto para almacenar el valor del nombre del alumno -->   
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col">
                                                         <label>Fecha de pago <span class="campo-obligatorio">*</span></label>                                        
                                                         <input type="date" class="form-control mb-3" name="fecha_pago" value="{{ d.fecha_pago }}" required>
-                                                    <div>
-                                                    <div class="col-6">
+                                                    </div>
+                                                    <div class="col">
                                                         <label>Monto <span class="campo-obligatorio">*</span></label>
                                                         <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ monto_formateado }}" id="montoInputEdit">
+                                                        <script>
+                                                            // Agrega este script para establecer el valor formateado en el campo de entrada
+                                                            document.addEventListener("DOMContentLoaded", function() {
+                                                                var montoInputEdit = document.getElementById("montoInputEdit");
+                                                                if (montoInputEdit) {
+                                                                    montoInputEdit.value = "{{ monto_formateado }}";
+                                                                }
+                                                            });
+                                                        </script>
                                                     </div>
-                                                    <script>
-                                                        // Agrega este script para establecer el valor formateado en el campo de entrada
-                                                        document.addEventListener("DOMContentLoaded", function() {
-                                                            var montoInputEdit = document.getElementById("montoInputEdit");
-                                                            if (montoInputEdit) {
-                                                                montoInputEdit.value = "{{ monto_formateado }}";
-                                                            }
-                                                        });
-                                                    </script>
-                                                    <div class="col-6">
+                                                </div>
+                                                <div class="row"> 
+                                                    <div class="col">
                                                         <label class="label-with-arrow">
                                                             Medios de pago <span class="campo-obligatorio">*</span>
                                                             <div class="select-container">
@@ -228,7 +229,7 @@
                                                             </div>
                                                         </label>
                                                     </div> 
-                                                    <div class="col-6">
+                                                    <div class="col">
                                                         <label class=" label-form label-with-arrow">
                                                             Tipo de pago <span class="campo-obligatorio">*</span>
                                                             <div class="select-container">
@@ -241,13 +242,14 @@
                                                                 </svg>
                                                             </div>
                                                         </label>
-                                                    </div>                                                
+                                                    </div>   
+                                                    <div class="col">
+                                                        <div class="btn-container">
+                                                            <button type="submit" class="btn-guardar">Guardar</button>
+                                                        <div>
+                                                    </div>                                             
                                                 </div>
-                                                <div class="text-center">
-                                                    <div class="btn-container">
-                                                        <button type="submit" class="btn-guardar">Guardar</button>
-                                                    <div>
-                                                </div>
+                                               
                                                                      
                                             </div>
                                         </form>
