@@ -1,7 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Agenda{% endblock %}
-{% block content %}
 <head>
+{% block title %}Agenda{% endblock %}
+</head>
+<body>
+{% block content %}
+
   <meta charset='utf-8' />
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.js'></script>
   <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.css' rel='stylesheet' />
@@ -64,7 +67,8 @@
       });
     });
   </script>
-  <style>
+
+ <style>
     body {
       margin: 40px 10px;
       padding: 0;
@@ -77,7 +81,7 @@
       margin: 0 auto;
     }
   </style>
-</head>
 </html>
 
-{% endblock %}
+     {% endblock %}
+</body>
