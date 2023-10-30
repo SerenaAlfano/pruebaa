@@ -44,7 +44,7 @@
                             <tr>      
                                 <td class="td-table custom-column">{{ d.apellido.title() }}</td>
                                 <td class="td-table custom-column">{{ d.nombre.title() }}</td>
-                                <td class="td-table custom-column">{{ d.email.title() }}</td>
+                                <td class="td-table custom-column email-column">{{ d.email}}</td>
                                 <td class="td-table">{{ d.telefono }}</td>
                                 <td class="td-table">{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
                                 <td class="td-table">{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>
@@ -129,8 +129,8 @@
                                                                 Curso <span class="campo-obligatorio">*</span>
                                                                 <div class="select-container">
                                                                     <select class="form-control mb-3" name="curso" required value="{{ form_data.curso if form_data else '' }}">
-                                                                        {% for option in ['Primero', 'Segundo', 'Tercero','Cuarto','Quinto','Sexto'] %}
-                                                                        <option value="{{ option }}" {% if data.curso == option %}selected{% endif %}>{{ option }}</option>
+                                                                        {% for option in ['Primero', 'Segundo', 'Tercero', 'Cuarto', 'Quinto', 'Sexto'] %}
+                                                                            <option value="{{ option }}" {% if option == curso %}selected{% endif %}>{{ option }}</option>
                                                                         {% endfor %}
                                                                     </select>
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
@@ -138,7 +138,7 @@
                                                                     </svg>
                                                                 </div>
                                                             </label>
-                                                        </div>                                                                                                                 
+                                                        </div>                                                                                                                                            
                                                         <div class="col">
                                                             <label class="label-form label-with-arrow">
                                                                 Nivel educativo <span class="campo-obligatorio">*</span>
@@ -235,24 +235,48 @@
                                                     <div class="col-md-3">
                                                         <button type="submit" class="btn-guardar">Guardar cambios</button>
                                                     </div>
-                                                    <div id="success-message" class="hidden">
-                                                        <div id="success-box">
-                                                            <img src="static/img/exito.svg">
-                                                            Cambios guardados correctamente
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>                                                                           
-                                        </div>
-                                    </div>
+                                             </div>                                                                                                       
+                                            </form>   
+                                        </div>                                                      
+                                    </div>  
                                 </div>
                             </div>
+                            <div id="alerta" style="display: none;" class="alert alert-success">
+                                Cambios guardados correctamente
+                            </div> 
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    var guardarBoton = document.querySelector('button.btn-guardar');
+                                    var successMessage = document.getElementById('alerta');
+                                    var myModal = new bootstrap.Modal(document.getElementById('modal{{ d.id }}'));
+                                
+                                    guardarBoton.addEventListener('click', function(event) {
+                                        event.preventDefault();
+                                
+                                        // Ocultar el modal
+                                        myModal.hide();
+                                
+                                        // Mostrar la alerta
+                                        successMessage.style.display = 'block';
+                                
+                                        // Ocultar la alerta después de 5 segundos
+                                        setTimeout(function() {
+                                            successMessage.style.display = 'none';
+                                        }, 5000);
+                                    });
+                                
+                                    myModal._element.addEventListener('hidden.bs.modal', function() {
+                                        // Restablecer el contenido del modal y ocultar la alerta cuando se oculta el modal
+                                        successMessage.style.display = 'none';
+                                    });
+                                });
+                                </script>                                
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>    
+        </div>   
         <script>
         document.addEventListener('DOMContentLoaded', function() {
     function validarCampo(inputId, errorId, mensajeError, regex) {

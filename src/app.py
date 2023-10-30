@@ -417,7 +417,7 @@ def editar(id):
     materia = request.form.getlist("materia[]")
     dia_str = ', '.join(dia)
     materia_str = ', '.join(materia)
-
+    
     if not validar_nombre_titular(nombre_titular):
         flash("El nombre del tutor no es válido. Debe contener solo letras.", "error")
         session['form_data'] = {
@@ -605,7 +605,7 @@ def editar(id):
             'materia': materia
         }
         return redirect(url_for('alta'))
-
+    
     # Consulta SQL para contar el número de alumnos en el mismo horario
     count_query = "SELECT COUNT(*) FROM alumnos WHERE horario = %s"
     count_data = (horario,)
@@ -632,6 +632,7 @@ def editar(id):
                 'materia': materia
             }
             return redirect(url_for('alta'))
+
     except mysql.connector.Error as err:
         # Maneja los errores de SQL aquí
         print(f"Error de MySQL: {err}")
