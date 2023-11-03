@@ -24,7 +24,8 @@
                         <thead>
                             <tr>
                                 <th scope="col" class="col-tabla">Apellido</th>
-                                <th scope="col" class="col-tabla">Nombre</th>                            
+                                <th scope="col" class="col-tabla">Nombre</th>  
+                                <th scope="col" class="col-tabla">Dni</th>                           
                                 <th scope="col" class="col-tabla" >Email</th>
                                 <th scope="col" class="col-tabla">Telefono</th>
                                 <th scope="col" class="col-tabla">Nacimiento</th>
@@ -44,6 +45,7 @@
                             <tr>      
                                 <td class="td-table custom-column">{{ d.apellido.title() }}</td>
                                 <td class="td-table custom-column">{{ d.nombre.title() }}</td>
+                                <td class="td-table custom-column email-column">{{ d.dni}}</td>
                                 <td class="td-table custom-column email-column">{{ d.email}}</td>
                                 <td class="td-table">{{ d.telefono }}</td>
                                 <td class="td-table">{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>

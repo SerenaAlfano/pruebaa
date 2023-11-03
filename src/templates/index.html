@@ -2,6 +2,8 @@
 
 <head>
     {% block title %}Nuevo alumno{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -25,14 +27,19 @@
                                 <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nombre" id="nombre" required value="{{ form_data.nombre if form_data else '' }}">
                                 <div id="nombre-error" class="error-message"></div> 
-                            </div>                          
+                            </div>   
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form">DNI<span class="campo-obligatorio">*</span></label>
+                                <input type="number" class="form-control mb-3" name="dni" id="dni" required value="{{ form_data.dni if form_data else '' }}">
+                                <div id="nombre-error" class="error-message"></div> 
+                            </div>                         
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="email" id="email" required value="{{ form_data.email if form_data else '' }}">                            
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
-                                <input type="tel" class="form-control mb-3" name="telefono" id="telefono" pattern="[0-9]+"  required value="{{ form_data.telefono if form_data else '' }}">
+                                <input type="number" class="form-control mb-3" name="telefono" id="telefono" pattern="[0-9]+"  required value="{{ form_data.telefono if form_data else '' }}">
                                 <div id="telefono-error" class=" error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
@@ -87,7 +94,7 @@
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label  class="label-form">Telefono tutor <span class="campo-obligatorio">*</span></label>
-                                <input type="tel" class="form-control mb-3" name="telefono_titular"   id="telefono_titular" maxlength="10" required value="{{ form_data.telefono_titular if form_data else '' }}">
+                                <input type="number" class="form-control mb-3" name="telefono_titular"   id="telefono_titular" maxlength="10" required value="{{ form_data.telefono_titular if form_data else '' }}">
                                 <div id="telefono-titular-error" class="error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
@@ -182,11 +189,20 @@
                         </div>
                         {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
-                        <div class="alert alert-danger" role="alert">
-                            {% for category, message in messages %}
-                            {{ message }}
-                            {% endfor %}
+                        <div class="alert-container" id="alert-container" style="display: none;">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                            <div class="alert-message">
+                                {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% endwith %}
                         </div>
+                        
                         {% endif %}
                         {% endwith %}
                         
@@ -202,6 +218,29 @@
                 </div>
             </div>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $(".btn-guardar").click(function() {
+            // Realiza una solicitud AJAX al servidor para agregar un alumno
+            $.ajax({
+                type: "POST",
+                url: "/agregarAlumno",
+                data: $("#tuFormulario").serialize(),  // Asegúrate de que esto coincida con el formulario real
+                success: function(response) {
+                    // Muestra la alerta solo si se recibe la respuesta del servidor
+                    if (response && response.script) {
+                        $("body").append(response.script);
+                    }
+                },
+                error: function(error) {
+                    // Manejar errores si es necesario
+                }
+            });
+        });
+    });
+</script>
+
         <script>
         document.addEventListener('DOMContentLoaded', function() {
     function validarCampo(inputId, errorId, mensajeError, regex) {
@@ -232,14 +271,10 @@
     // Llama a la función de validación para el campo de apellido
     validarCampo('apellido', 'apellido-error', 'El apellido solo debe contener letras y espacios.', letrasRegex);
 
-    // Llama a la función de validación para el campo de teléfono
-    validarCampo('telefono', 'telefono-error', 'Por favor, ingresa solo números en el teléfono.', numerosRegex);
+   
     // Llama a la función de validación para el campo de nombre del tutor
     validarCampo('nombre_titular', 'nombre-titular-error', 'El nombre del tutor solo debe contener letras y espacios.', letrasRegex);
 
-    // Llama a la función de validación para el campo de teléfono del tutor
-    validarCampo('telefono_titular', 'telefono-titular-error', 'Por favor, ingresa solo números en el teléfono del tutor.', numerosRegex);
-    
 
     var fechaNacimientoInput = document.getElementById('fecha_nacimiento');
     var fechaNacimientoError = document.getElementById('fecha-nacimiento-error');
@@ -300,6 +335,17 @@
 });
 
         </script>
+        <script>
+            // Muestra el contenedor de alerta
+            var alertContainer = document.getElementById('alert-container');
+            alertContainer.style.display = 'block';
+        
+            // Desaparece después de 5 segundos (5000 ms)
+            setTimeout(function() {
+                alertContainer.style.display = 'none';
+            }, 5000); // Cambia este valor (5000) para ajustar la duración en milisegundos
+        </script>
+        
        <script>
         // Obtener el campo de búsqueda y la tabla
         var busquedaInput = document.getElementById('busquedaInput');

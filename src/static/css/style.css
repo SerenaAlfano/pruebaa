@@ -420,3 +420,40 @@ body {
 .td-table.custom-column.email-column {
   text-transform: capitalize;
 }
+
+.alert-container {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.alert-message {
+  display: inline-block;
+  text-align: left;
+}
+
+.alert {
+  /* Estilos para tus alertas, por ejemplo: */
+  background-color: #FF0000; /* Fondo rojo */
+  color: #FFFFFF; /* Texto blanco */
+  padding: 10px;
+  border-radius: 5px;
+  /* Agrega otros estilos personalizados según tus preferencias */
+}
+
+.fc-button-group{
+  background-color: #7ea56a;
+}
+
+a{
+  text-decoration: none !important;
+  color: #333333 !important;
+  font-weight: 400 !important;
+}
+.form-modal-calendario{
+  padding: 0.2em;
+  border-radius: 0.5em;
+  border: 1px solid #cccccc;
+}

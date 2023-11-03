@@ -1,11 +1,14 @@
 import mysql.connector
 import os #Permite acceder a los directorios
 import re
+import json
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session,  jsonify
 from datetime import datetime
 from flask_mysqldb import MySQL
 from datetime import timedelta
+from datetime import datetime
+
 from flask_login import LoginManager,logout_user, login_user
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
@@ -15,6 +18,15 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from flask import make_response
 from reportlab.lib.styles import getSampleStyleSheet
 from config import config
+from datetime import timedelta
+
+# Función para convertir timedelta a un formato serializable
+def convert_timedelta_to_str(td):
+    total_seconds = td.total_seconds()
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return f"{int(hours):02d}:{int(minutes):02d}:{int(seconds):02d}"
+
 
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
@@ -157,6 +169,17 @@ def agregarAlumno():
     materia = list(set(materia))
     dia_str = ', '.join(dia)
     materia_str = ', '.join(materia)
+    dni = request.form["dni"]
+
+     # Consulta SQL para verificar si el DNI ya existe en la tabla de alumnos
+    check_query = "SELECT COUNT(*) FROM alumnos WHERE dni = %s"
+    check_data = (dni,)
+
+    cursor.execute(check_query, check_data)
+    result = cursor.fetchone()
+    if result[0] > 0:
+        flash("El alumno ya se encuentra registrado en el sistema.", "error")
+        return redirect(url_for('alta'))  # Redirige de vuelta al formulario de alta
 
     if not validar_nombre(nombre):
         flash("El nombre no es válido. Debe contener solo letras.", "error")
@@ -174,7 +197,8 @@ def agregarAlumno():
             'telefono_titular': telefono_titular,
             'dia': dia,
             'horario': horario,
-            'materia': materia
+            'materia': materia,
+            'dni' : dni,
         }
         return redirect(url_for('alta'))
     
@@ -194,7 +218,8 @@ def agregarAlumno():
         'telefono_titular': telefono_titular,
         'dia': dia,
         'horario': horario,
-        'materia': materia
+        'materia': materia,
+        'dni' : dni,
         }
         return redirect(url_for('alta'))
 
@@ -214,7 +239,8 @@ def agregarAlumno():
             'telefono_titular': telefono_titular,
             'dia': dia,
             'horario': horario,
-            'materia': materia
+            'materia': materia,
+            'dni' : dni,
         }
         return redirect(url_for('alta'))
 
@@ -234,7 +260,8 @@ def agregarAlumno():
             'telefono_titular': telefono_titular,
             'dia': dia,
             'horario': horario,
-            'materia': materia
+            'materia': materia,
+            'dni' : dni,
         }
         return redirect(url_for('alta'))
     
@@ -254,7 +281,8 @@ def agregarAlumno():
         'telefono_titular': telefono_titular,
         'dia': dia,
         'horario': horario,
-        'materia': materia
+        'materia': materia,
+        'dni' : dni,
         }
         return redirect(url_for('alta'))
 
@@ -281,7 +309,8 @@ def agregarAlumno():
             'telefono_titular': telefono_titular,
             'dia': dia,
             'horario': horario,
-            'materia': materia
+            'materia': materia,
+            'dni' : dni,
         }
         return redirect(url_for('alta'))
     
@@ -305,7 +334,8 @@ def agregarAlumno():
             'telefono_titular': telefono_titular,
             'dia': dia,
             'horario': horario,
-            'materia': materia
+            'materia': materia,
+            'dni' : dni,
         }
         return redirect(url_for('alta'))
     email = request.form["email"]
@@ -325,7 +355,8 @@ def agregarAlumno():
         'telefono_titular': telefono_titular,
         'dia': dia,
         'horario': horario,
-        'materia': materia
+        'materia': materia,
+        'dni' : dni,
     }
         return redirect(url_for('alta'))
         
@@ -343,8 +374,8 @@ def agregarAlumno():
         print(f"Error de MySQL: {err}")
 
     # Si el conteo es menor a 4, procedemos a insertar el nuevo alumno
-    insert_query = "INSERT INTO alumnos (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str)
+    insert_query = "INSERT INTO alumnos (nombre, apellido,  email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia,dni) VALUES (%s,%s,  %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    data = (nombre, apellido, email ,telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str,dni)
     try:
         cursor.execute(insert_query, data)
         db_connection.commit()  
@@ -400,7 +431,8 @@ def editar(id):
     horario = request.form["horario"]
     materia = request.form.getlist("materia[]")
     dia_str = ', '.join(dia)
-    materia_str = ', '.join(materia)
+    materia_str = ', '.join(materia),
+    dni = request.form["dni"]
     
     if not validar_nombre_titular(nombre_titular):
         flash("El nombre del tutor no es válido. Debe contener solo letras.", "error")
@@ -418,7 +450,8 @@ def editar(id):
             'telefono_titular': telefono_titular,
             'dia': dia,
             'horario': horario,
-            'materia': materia
+            'materia': materia,
+            'dni': dni,
         }
         return redirect(url_for('alta'))
     
@@ -438,7 +471,8 @@ def editar(id):
         'telefono_titular': telefono_titular,
         'dia': dia,
         'horario': horario,
-        'materia': materia
+        'materia': materia,
+        'dni': dni,
         }
         return redirect(url_for('alta'))
     
@@ -464,7 +498,8 @@ def editar(id):
         'telefono_titular': telefono_titular,
         'dia': dia,
         'horario': horario,
-        'materia': materia
+        'materia': materia,
+        'dni': dni,
         }
         return redirect(url_for('alta'))
 
@@ -484,7 +519,8 @@ def editar(id):
             'telefono_titular': telefono_titular,
             'dia': dia,
             'horario': horario,
-            'materia': materia
+            'materia': materia,
+            'dni': dni,
         }
         return redirect(url_for('alta'))
 
@@ -504,7 +540,8 @@ def editar(id):
             'telefono_titular': telefono_titular,
             'dia': dia,
             'horario': horario,
-            'materia': materia
+            'materia': materia,
+            'dni': dni,
         }
         return redirect(url_for('alta'))
     
@@ -525,7 +562,8 @@ def editar(id):
         'telefono_titular': telefono_titular,
         'dia': dia,
         'horario': horario,
-        'materia': materia
+        'materia': materia,
+        'dni': dni,
     }
         return redirect(url_for('alta'))
     
@@ -553,7 +591,8 @@ def editar(id):
             'telefono_titular': telefono_titular,
             'dia': dia,
             'horario': horario,
-            'materia': materia
+            'materia': materia,
+            'dni': dni,
         }
         return redirect(url_for('alta'))
     
@@ -585,7 +624,8 @@ def editar(id):
             'telefono_titular': telefono_titular,
             'dia': dia,
             'horario': horario,
-            'materia': materia
+            'materia': materia,
+            'dni': dni,
         }
         return redirect(url_for('alta'))
     
@@ -612,7 +652,8 @@ def editar(id):
                 'telefono_titular': telefono_titular,
                 'dia': dia,
                 'horario': horario,
-                'materia': materia
+                'materia': materia,
+                'dni': dni,
             }
             return redirect(url_for('alta'))
 
@@ -620,10 +661,10 @@ def editar(id):
         print(f"Error de MySQL: {err}")
 
     # Continúa con la actualización de la base de datos
-    if nombre and apellido and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and dia and horario and materia:
+    if nombre and apellido and dni and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and dia and horario and materia:
         cursor = db_connection.cursor()
-        sql = "UPDATE alumnos SET nombre = %s, apellido  = %s, email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s WHERE id = %s"
-        data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str, id)
+        sql = "UPDATE alumnos SET nombre = %s, apellido  = %s,email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s, dni=%s  WHERE id = %s"
+        data = (nombre, apellido,email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str,dni, id)
         cursor.execute(sql, data)
         db_connection.commit()
     return redirect(url_for('listado'))
@@ -931,17 +972,64 @@ def caja():
 
 
 #Agenda
-@app.route('/agenda')
+@app.route("/agenda", methods=["GET", "POST"])
 def agenda():
-    return render_template('agenda.html')
+    if request.method == "POST":
+        nombre_alumno = request.form["nombre_alumno"]
+        horario = request.form["horario"]
+        materia = request.form.getlist("materia[]")
+        materias_str = ",".join(materia)
 
-@app.route('/obtener_horarios', methods=['GET'])
-def obtener_horarios_desde_mysql():
-    cursor = db.database.cursor(dictionary=True)
-    cursor.execute("SELECT nombre, apellido, dia, horario, materia from alumnos_horarios")
-    horarios = cursor.fetchall()
+        cursor = db_connection.cursor()
+        sql = "INSERT INTO agenda (nombre_alumno, horario, materia) VALUES (%s, %s, %s)"
+        data = (nombre_alumno, horario, materias_str)
+        cursor.execute(sql, data)
+        cursor.close()
+        db_connection.commit()
+
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT nombre, apellido FROM alumnos")
+    alumnos = cursor.fetchall()
     cursor.close()
-    return jsonify(horarios)
+
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT nombre_materia FROM materias")
+    materias_disponibles = [materia[0] for materia in cursor.fetchall()]
+    cursor.close()
+
+    nombres_apellidos = [f"{alumno[0]} {alumno[1]}" for alumno in alumnos]
+
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT nombre_alumno, horario, materia FROM agenda")
+    eventos_guardados = cursor.fetchall()
+    cursor.close()
+
+
+    return render_template("agenda.php", nombres_apellidos=nombres_apellidos, materias_disponibles=materias_disponibles)
+# Ruta para obtener los datos de eventos
+# Ruta para obtener los datos de eventos
+@app.route('/get_eventos')
+def get_eventos():
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT nombre_alumno, horario, materia FROM agenda")
+    eventos_guardados = cursor.fetchall()
+    cursor.close()
+
+    eventos_serializables = []
+    for evento in eventos_guardados:
+        nombre_alumno = evento[0]
+        horario = str(evento[1])  # Convierte el objeto timedelta a una cadena
+        materia = evento[2]
+        eventos_serializables.append({
+            'title': nombre_alumno,
+            'start': horario,
+            'materia': materia
+        })
+
+    return jsonify(eventos_serializables)
+
+
+
 
 
 #PDF de ingresos
@@ -993,7 +1081,7 @@ def descargar_pdf(id_ingresos):
 def descargar_lista_alumnos_pdf():
     # Obtiene los datos de todos los alumnos en tu base de datos
     cursor = db_connection.cursor()
-    cursor.execute("SELECT nombre, apellido, curso, nivel_educativo, dia, horario, materia FROM alumnos")
+    cursor.execute("SELECT nombre, apellido, dni,  curso, nivel_educativo, dia, horario, materia FROM alumnos")
     alumnos = cursor.fetchall()
     cursor.close()
 
@@ -1013,7 +1101,7 @@ def descargar_lista_alumnos_pdf():
     elements.append(title)
 
     #Crea una lista para almacenar los datos de los alumnos
-    data = [['Nombre', 'Apellido', 'Curso', 'Nivel Educativo', 'Día', 'Horario', 'Materias']]
+    data = [['Nombre', 'Apellido','DNI' ,'Curso', 'Nivel Educativo', 'Día', 'Horario', 'Materias']]
 
     for alumno in alumnos:
         # Divide las materias por comas y luego une las materias con <br/>
@@ -1023,10 +1111,11 @@ def descargar_lista_alumnos_pdf():
         data.append([
             Paragraph(alumno[0], styles['Normal']),  # Nombre
             Paragraph(alumno[1], styles['Normal']),  # Apellido
-            Paragraph(alumno[2], styles['Normal']),  # Curso
-            Paragraph(alumno[3], styles['Normal']),  # Nivel Educativo
+            Paragraph(alumno[2], styles['Normal']),  # DNI
+            Paragraph(alumno[3], styles['Normal']),  # Curso
+            Paragraph(alumno[4], styles['Normal']),  # Nivel Educativo
             Paragraph(dias, styles['Normal']),       # Días con saltos de línea
-            Paragraph(alumno[5], styles['Normal']),  # Horario
+            Paragraph(alumno[6], styles['Normal']),  # Horario
             Paragraph(materias, styles['Normal'])    # Materias con saltos de línea
         ])
 
