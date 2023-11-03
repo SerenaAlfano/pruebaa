@@ -100,7 +100,9 @@
               <div class="col-md-4">       
                 <label for="">Alumno:</label>
                   <select id="NombreAlumno"  name="nombre_alumno" class="form-modal-calendario">
-                      <!-- Opciones para seleccionar al alumno -->                    
+                    {% for alumno in nombres_apellidos %}
+                    <option value="{{ alumno }}">{{ alumno }}</option>
+                    {% endfor %}                 
                   </select>  
               </div>            
               <div class="col-md-4">  
@@ -116,12 +118,17 @@
                 </div>
               </div>
             </div>          
-            <div class="row mt-2">             
-              <label for="">Materias</label>
-                <div id="materias-checkbox">
-                    <!-- Las materias se generarán aquí dinámicamente -->
-                </div>
+            <div class="row mt-2">
+              <label for="materia">Materia</label>
+              <div class="select-container">
+                <select class="form-control mb-3" name="materia">
+                  {% for materia in materias_disponibles %}
+                  <option value="{{ materia }}">{{ materia }}</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
+
             <div class="row mt-2">   
               <label for="">Descripción</label>
               <textarea id="Descripcion"  rows="3"  class="form-modal-calendario"></textarea>           
