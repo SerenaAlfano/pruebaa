@@ -388,6 +388,7 @@ def agregarAlumno():
         print(f"Error de MySQL: {err}") 
     return redirect(url_for('listado'))
 
+
 #Listado de alumnos
 @app.route("/listado")
 def listado():
@@ -775,11 +776,15 @@ def ingresos():
 @app.route("/eliminar_ingresos/<string:id_ingresos>")
 def eliminar_ingresos(id_ingresos):
     cursor = db_connection.cursor()
-    sql =  "DELETE FROM ingresos WHERE id_ingresos = %s"
-    data = (id_ingresos,)
-    cursor.execute(sql,data)
-    db_connection.commit()
-    return redirect(url_for('ingresos'))
+    try:
+        sql = "DELETE FROM ingresos WHERE id_ingresos = %s"
+        data = (id_ingresos,)
+        cursor.execute(sql, data)
+        db_connection.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db_connection.rollback()
+        return jsonify({"success": False, "error_message": str(e)})
 
 
 # Actualizar ingresos
@@ -900,15 +905,22 @@ def egresos():
     cursor.close()  
     return render_template("egresos.html", data=insertObject,form_data=form_data)
 
-#Eliminar egresos
+# Eliminar egresos
+# Agrega una nueva ruta para eliminar egresos
 @app.route("/eliminar_egresos/<string:id>")
 def eliminar_egresos(id):
-    cursor = db_connection.cursor()
-    sql =  "DELETE FROM egresos WHERE id = %s"
-    data = (id,)
-    cursor.execute(sql,data)
-    db_connection.commit()
-    return redirect(url_for('egresos'))
+    try:
+        cursor = db_connection.cursor()
+        sql = "DELETE FROM egresos WHERE id = %s"
+        data = (id,)
+        cursor.execute(sql, data)
+        db_connection.commit()
+        return jsonify({"success": True})
+    except mysql.connector.Error as err:
+        print("Error MySQL al eliminar el egreso:", err)
+        return jsonify({"success": False, "error_message": "Error al eliminar el egreso. Ocurrió un error durante la eliminación."})
+
+
 
 #Actualizar egresos
 @app.route("/editaregresos/<int:id>", methods=["POST", "GET"])

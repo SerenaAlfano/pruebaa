@@ -167,11 +167,11 @@
                                 <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i>
                             </td>
                             <td class="text-center"> 
-                                <a href="{{ url_for('eliminar_ingresos', id_ingresos=d.id_ingresos) }}" data-bs-toggle="tooltip" 
-                                data-bs-placement="top" title="Eliminar"><i class="btn-operacion bi bi-trash"></i>
+                                <a href="#" onclick="confirmarEliminacionIngresos('{{ d.id_ingresos }}', '{{ d.nombre_alumno }}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                    <i class="btn-operacion bi bi-trash"></i>
                                 </a>
-
                             </td>
+                            
                             <td class="text-center">
                                 <a href="{{ url_for('descargar_pdf', id_ingresos=d.id_ingresos) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar">
                                     <i class="btn-operacion bi bi-file-earmark-pdf"></i>
@@ -258,6 +258,41 @@
                             </div>
                         </div>
                         {% endfor %}
+                        <script>
+                            function confirmarEliminacionIngresos(id, nombre_alumno) {
+                                Swal.fire({
+                                    title: "Confirmar eliminación",
+                                    text: "¿Estás seguro de eliminar el ingreso de " + nombre_alumno + "?",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#FF5733", // Cambia el color del botón de confirmación
+                                    cancelButtonColor: "#7ea56a", // Cambia el color del botón de cancelar
+                                    confirmButtonText: "Sí, eliminar",
+                                    cancelButtonText: "Cancelar"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Realiza la eliminación del ingreso a través de una solicitud AJAX
+                                        $.ajax({
+                                            type: "GET",  // Puedes cambiar esto a POST si lo prefieres
+                                            url: "/eliminar_ingresos/" + id,
+                                            success: function (response) {
+                                                // Eliminación exitosa, muestra un mensaje y recarga la página
+                                                if (response.success) {
+                                                    Swal.fire("Ingreso eliminado correctamente", "", "success").then(() => {
+                                                        // Recarga la página
+                                                        location.reload();
+                                                    });
+                                                } else {
+                                                    // Manejar errores si la eliminación no fue exitosa
+                                                    Swal.fire("Error al eliminar el ingreso", "Ocurrió un error durante la eliminación.", "error");
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            </script>
+                            
                         <script>
                                // Obtener el campo de búsqueda y la tabla
             var busquedaInput = document.getElementById('busquedaInput');

@@ -148,29 +148,14 @@
                             <td class="td-table">{{ d.medios_de_pago }}</td>
                             <td class="text-center "> <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}"></i></td>
                             <td class="text-center"> 
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#confirmarEliminar{{d.id}}">
+                                <a href="#" onclick="confirmarEliminacionEgresos('{{ d.id }}', '{{ d.servicios }}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
                                     <i class="btn-operacion bi bi-trash"></i>
                                 </a>
                             </td>
+                            
+                            
                         </tr>
-                        <!-- Modal de confirmación de eliminación para cada registro de egresos -->
-                        <div class="modal fade" id="confirmarEliminar{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Confirmar eliminación</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        ¿Estás seguro de eliminar este registro?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn-guardar" style="background-color: #92BD89; color: #ffff;" data-bs-dismiss="modal">Cancelar</button>
-                                        <a href="{{ url_for('eliminar_egresos', id=d.id) }}" class="btn-guardar">Eliminar</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       
                         <!-- MODAL -->
                         <div class="modal fade" id="modal{{ d.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -343,6 +328,41 @@
         // Mostrar la página guardada al cargar la página.
         showPage(currentPage);
       </script>     
+<!-- Agrega el cuadro de diálogo de confirmación para eliminar un egreso -->
+<script>
+    function confirmarEliminacionEgresos(id, nombreEgreso) {
+        Swal.fire({
+            title: "Confirmar eliminación",
+            text: `¿Estás seguro de eliminar el egreso "${nombreEgreso}"?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#FF5733",
+            cancelButtonColor: "#7ea56a",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Realiza la eliminación del egreso a través de una solicitud AJAX
+                $.ajax({
+                    type: "GET",
+                    url: "/eliminar_egresos/" + id,
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire("Egreso eliminado correctamente", "", "success").then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire("Error al eliminar el egreso", response.error_message, "error");
+                        }
+                    }
+                });
+            }
+        });
+    }
+    </script>
+    
+    
+    
     {% endblock %}
 </body>
         
