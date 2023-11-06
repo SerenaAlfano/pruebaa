@@ -88,6 +88,16 @@ def validar_telefono_titular(telefono_titular):
     else:
         return False 
     
+def validar_dni(dni):
+    # Utilizamos una expresión regular para verificar que el DNI cumpla con los requisitos
+    patron = r'^\d{1,8}$'  # Acepta de 1 a 8 dígitos
+
+    if re.match(patron, dni):
+        return True
+    else:
+        return False
+
+    
 #RUTAS
 
 @app.route('/')
@@ -180,6 +190,30 @@ def agregarAlumno():
     if result[0] > 0:
         flash("El alumno ya se encuentra registrado en el sistema.", "error")
         return redirect(url_for('alta'))  # Redirige de vuelta al formulario de alta
+    
+    if validar_dni(dni):
+        print("El DNI es válido.")
+    else:
+        flash("El DNI no es válido. Debe contener solo números y tener como máximo 8 dígitos.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso': curso,
+        'nivel_educativo': nivel_educativo,
+        'nombre_titular': nombre_titular,
+        'telefono_titular': telefono_titular,
+        'dia': dia,
+        'horario': horario,
+        'materia': materia,
+        'dni': dni,
+        }
+        return redirect(url_for('alta'))
+
 
     if not validar_nombre(nombre):
         flash("El nombre no es válido. Debe contener solo letras.", "error")
