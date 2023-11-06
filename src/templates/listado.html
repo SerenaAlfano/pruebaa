@@ -2,6 +2,7 @@
 
 <head>
     {% block title %}Mis alumnos{% endblock %}
+    
 </head>
 
 <body>
@@ -14,13 +15,12 @@
                 <div class="row mb-3">    
                     <div class="d-flex justify-content-between p-3">
                         <input type="text" class="form-control " id="busquedaInput" placeholder="Buscar alumno">
-                        <a href="{{ url_for('descargar_lista_alumnos_pdf') }}" target="_blank" class="btn-guardar" style="background-color:#92BD89;">Descargar Lista de Alumnos</a>
+                        <a href="{{ url_for('descargar_lista_alumnos_pdf') }}" target="_blank" class="btn-lineales-paginacion" >Descargar lista de Alumnos</a>
                     </div>
                 </div>
                 
                 <div class="table-responsive ">
-                    <table class="table table-bordered m-1 mb-5 scrollspy-example" style="background-color: white;">
-                        
+                    <table id="miTabla" class="table table-bordered  scrollspy-example" style="background-color: white;">                                    
                         <thead>
                             <tr>
                                 <th scope="col" class="col-tabla">Apellido</th>
@@ -267,9 +267,17 @@
                                 });
                                 });
                                 </script>
+                               
+                                  
+                                  
+                                  
                             {% endfor %}
                         </tbody>
                     </table>
+                    <div id="paginacion" class="text-right">
+                        <button id="anterior" class="btn-lineales"><i class="bi bi-arrow-left-circle"></i></button>
+                        <button id="siguiente" class="btn-lineales"><i class="bi bi-arrow-right-circle"></i></button>
+                      </div>
                 </div>
             </div>
         </div>   
@@ -410,8 +418,49 @@
                     }
                 }
             });
-            </script>                     
+            </script>    
+            <script>
+                const table = document.getElementById("miTabla");
+                const rows = table.tBodies[0].rows;
+                const perPage = 4; // Número fijo de filas por página.
+                let currentPage = localStorage.getItem("currentPage") || 0;
+              
+                function showPage(page) {
+                  for (let i = 0; i < rows.length; i++) {
+                    if (i >= page * perPage && i < (page + 1) * perPage) {
+                      rows[i].style.display = "";
+                    } else {
+                      rows[i].style.display = "none";
+                    }
+                  }
+                }
+              
+                function saveCurrentPage() {
+                  localStorage.setItem("currentPage", currentPage);
+                }
+              
+                document.getElementById("anterior").addEventListener("click", () => {
+                  if (currentPage > 0) {
+                    currentPage--;
+                    showPage(currentPage);
+                    saveCurrentPage();
+                  }
+                });
+              
+                document.getElementById("siguiente").addEventListener("click", () => {
+                  const totalPages = Math.ceil(rows.length / perPage);
+                  if (currentPage < totalPages - 1) {
+                    currentPage++;
+                    showPage(currentPage);
+                    saveCurrentPage();
+                  }
+                });
+              
+                // Mostrar la página guardada al cargar la página.
+                showPage(currentPage);
+              </script>                 
     {% endblock %}           
+    
 </body>             
 <script>
     document.addEventListener('DOMContentLoaded', function() {
