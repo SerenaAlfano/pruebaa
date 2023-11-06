@@ -29,17 +29,20 @@ switch($_GET['accion']) {
         
         $nombre_alumno = $_POST['nombre_alumno'];
         $inicio = $_POST['inicio'] . ' ' . $_POST['horario'] . ':00'; 
+        // Obtener la lista de materias separadas por comas
+        $materias = $_POST['materias'];
         $respuesta = mysqli_query($conexion, "insert into eventos(nombre_alumno,inicio,materias,descripcion,colortexto,colorfondo) values
-        ('$nombre_alumno','$_POST[inicio]','[materias]','$_POST[descripcion]',
+        ('$nombre_alumno','$inicio','$materias','$_POST[descripcion]',
         '$_POST[colortexto]','$_POST[colorfondo]')");
         echo json_encode($respuesta);    
         break;
 
 // Modificar evento
 case 'modificar':
+    $inicio = $_POST['inicio'] . ' ' . $_POST['horario'] . ':00'; // Forma la nueva fecha y hora
     $respuesta = mysqli_query($conexion, "UPDATE eventos SET 
         nombre_alumno = '$_POST[nombre_alumno]',
-        inicio = '$_POST[inicio]',
+        inicio = '$inicio', // Actualiza el campo 'inicio'
         materias = '[materias]',
         descripcion = '$_POST[descripcion]',
         colortexto = '$_POST[colortexto]',

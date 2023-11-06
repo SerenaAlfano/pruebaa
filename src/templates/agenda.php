@@ -112,19 +112,20 @@
               <div class="col-md-4" id="TituloHoraInicio">
                 <label for="">Horario:</label>
                 <div class="input-group clockpicker" data-autoclose="true">
-                    <input type="time" id="Horario" value=""  autocomplete="off"  class="form-modal-calendario">
+                    <input type="time" id="HorarioInicio" value=""  autocomplete="off"  class="form-modal-calendario">
                 </div>
               </div>
             </div>          
             <div class="row mt-2">             
               <label for="">Materias</label>
                 <div id="materias-checkbox">
+                  
                     <!-- Las materias se generarán aquí dinámicamente -->
                 </div>
             </div>
             <div class="row mt-2">   
               <label for="">Descripción</label>
-              <textarea id="Descripcion"  rows="3"  class="form-modal-calendario"></textarea>           
+              <textarea id="Descripcion" name="descripcion"  rows="3"  class="form-modal-calendario"></textarea>           
             </div>                        
             <div class="row mt-2">  
               <div class="col-6">
@@ -148,230 +149,231 @@
       </div>
     </div>
   
-  <script>
-    document.addEventListener("DOMContentLoaded", function(){
-     
-    let calendario1 = new FullCalendar.Calendar(document.getElementById('Calendario1'),{
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let calendario1 = new FullCalendar.Calendar(document.getElementById('Calendario1'), {
       height: 500,
-      headerToolbar:{
+      headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right:'dayGridMonth,timeGridWeek,timeGridDay',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay',
       },
       editable: true,
       events: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=listar',
-      dateClick: function(info){
+      dateClick: function (info) {
         limpiarFormulario();
         $('#BotonAgregar').show();
         $('#BotonModificar').hide();
         $('#BotonBorrar').hide();
 
-        if (info.allDay){
-          $('#FechaInicio').val(info.dateStr)
-        }else{
+        if (info.allDay) {
+          $('#FechaInicio').val(info.dateStr);
+        } else {
           let fechaHora = info.dateStr.split("T");
           $('#FechaInicio').val(fechaHora[0]);
-          $('#HoraInicio').val(fechaHora[1].substring(0,5));
+          $('#HorarioInicio').val(fechaHora[1].substring(0, 5));
         }
 
-        $("#FormularioEventos").modal('show'); 
+        $("#FormularioEventos").modal('show');
       },
-      eventClick: function(info){
-        $('#BotonAgregar').hide();  
+      eventClick: function (info) {
+        $('#BotonAgregar').hide();
         $('#BotonModificar').show();
-        $('#FormularioBorrar').show();
+        $('#BotonBorrar').show();
 
         $('#Id').val(info.event.id);
-        $('#nombre_alumno').val(info.event.title);
         $('#FechaInicio').val(moment(info.event.start).format("YYYY-MM-DD"));
-        $('#Horario').val(moment(info.event.start).format("HH:mm"));
+        $('#HorarioInicio').val(moment(info.event.start).format("HH:mm"));
         $('#Materias').val(info.event.extendedProps.materias);
         $('#Descripcion').val(info.event.extendedProps.descripcion);
         $('#ColorFondo').val(info.event.backgroundColor);
         $('#ColorTexto').val(info.event.textColor);
-       $("#FormularioEventos").modal('show')  
+        $("#FormularioEventos").modal('show');
+
+       // Recuperar las materias del evento y dividirlas en un array
+        var materias = info.event.extendedProps.materias.split(', ');
+
+      // Marcar los checkbox correspondientes
+      $('#materias-checkbox input').each(function () {
+        if (materias.includes($(this).val())) {
+          $(this).prop('checked', true);
+        } else {
+          $(this).prop('checked', false);
+        }
+      });  
       },
-      
-      eventDrop: function(info){
+      eventDrop: function (info) {
         $('#Id').val(info.event.id);
-        $('#nombre_alumno').val(info.event.title);
+        $('#NombreAlumno').val(info.event.title);
+
         $('#FechaInicio').val(moment(info.event.start).format("YYYY-MM-DD"));
-        $('#Horario').val(moment(info.event.start).format("HH:mm"));
+        $('#HorarioInicio').val(moment(info.event.start).format("HH:mm"));
         $('#Materias').val(info.event.extendedProps.materias);
         $('#Descripcion').val(info.event.extendedProps.descripcion);
         $('#ColorFondo').val(info.event.backgroundColor);
-        $('#ColorTexto').val(info.event.textColor);  
+        $('#ColorTexto').val(info.event.textColor);
         let registro = recuperarDatosFormulario();
         modificarRegistro(registro);
-      }     
       }
-    );
-    
+    });
+
     calendario1.render();
 
-
-    //Eventos de botones 
+    // Eventos de botones
     // Boton Agregar
     $('#BotonAgregar').click(function () {
-            let registro = recuperarDatosFormulario();
-            agregarRegistro(registro);
-            $('#FormularioEventos').modal('hide');
-        });
+      let registro = recuperarDatosFormulario();
+      agregarRegistro(registro);
+      $('#FormularioEventos').modal('hide');
+    });
 
-        // Boton Modificar
-        $('#BotonModificar').click(function () {
-            let registro = recuperarDatosFormulario();
-            modificarRegistro(registro);
-            $('#FormularioEventos').modal('hide');
-        });
+    // Boton Modificar
+    $('#BotonModificar').click(function () {
+      let registro = recuperarDatosFormulario();
+      modificarRegistro(registro);
+      $('#FormularioEventos').modal('hide');
+    });
 
-        // Boton Borrar
-        $('#BotonBorrar').click(function () {
-            let registro = recuperarDatosFormulario();
-            borrarRegistro(registro);
-            $('#FormularioEventos').modal('hide');
-        });
+    // Boton Borrar
+    $('#BotonBorrar').click(function () {
+      let registro = recuperarDatosFormulario();
+      borrarRegistro(registro);
+      $('#FormularioEventos').modal('hide');
+    });
 
-
-
-   // Funciones para comunicarse con el servidor AJAX!
-   function agregarRegistro(registro) {
-            $.ajax({
-                type: 'POST',
-                url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=agregar',
-                data: registro,
-                success: function (msg) {
-                    calendario1.refetchEvents();
-                },
-                error: function (error) {
-                    alert("Hubo un error al agregar el alumno:" + error);
-                }
-            });
+    // Funciones para comunicarse con el servidor AJAX!
+    function agregarRegistro(registro) {
+      $.ajax({
+        type: 'POST',
+        url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=agregar',
+        data: registro,
+        success: function (msg) {
+          calendario1.refetchEvents();
+        },
+        error: function (error) {
+          alert("Hubo un error al agregar el alumno:" + error);
         }
+      });
+    }
 
-        function modificarRegistro(registro) {
-            $.ajax({
-                type: 'POST',
-                url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=modificar',
-                data: registro,
-                success: function (msg) {
-                    calendario1.refetchEvents();
-                },
-                error: function (error) {
-                    alert("Hubo un error al modificar el alumno:" + error);
-                }
-            });
+    function modificarRegistro(registro) {
+      $.ajax({
+        type: 'POST',
+        url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=modificar',
+        data: registro,
+        success: function (msg) {
+          calendario1.refetchEvents();
+        },
+        error: function (error) {
+          alert("Hubo un error al modificar el alumno:" + error);
         }
+      });
+    }
 
-        function borrarRegistro(registro) {
-            $.ajax({
-                type: 'POST',
-                url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=borrar',
-                data: registro,
-                success: function (msg) {
-                    calendario1.refetchEvents();
-                },
-                error: function (error) {
-                    alert("Hubo un error al borrar el alumno: " + JSON.stringify(error));
-                }
-            });
+    function borrarRegistro(registro) {
+      $.ajax({
+        type: 'POST',
+        url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=borrar',
+        data: registro,
+        success: function (msg) {
+          calendario1.refetchEvents();
+        },
+        error: function (error) {
+          alert("Hubo un error al borrar el alumno: " + JSON.stringify(error));
         }
+      });
+    }
 
-        // Funciones que interactúan con el formulario eventos
-        function limpiarFormulario() {
-            $('#Id').val('');
-            var nombreAlumno = $('#NombreAlumno').val();
-            $('#FechaInicio').val('');
-            $('#Horario').val('');
-            $('#Materias').val('');
-            $('#Descripcion').val('');
-            $('#ColorFondo').val('#FBD374');
-            $('#ColorTexto').val('#ffffff');
-        }
-
-        function recuperarDatosFormulario() {
-            let registro = {
-                id: $('#Id').val(),
-                nombre_alumno: $('#NombreAlumno').val(),
-                inicio: $('#FechaInicio').val(),
-                horario: $('#Horario').val(),
-                materias: $('#Materias').val(),
-                descripcion: $('#Descripcion').val(),
-                colorfondo: $('#ColorFondo').val(),
-                colortexto: $('#ColorTexto').val()
-            };
-            return registro;
-        }
-
-        // Antes de mostrar el modal, obtén las materias de la base de datos
-        $("#FormularioEventos").on('show.bs.modal', function () {
-    $.ajax({
+    // Obtener las materias y llenar los checkboxes
+    function obtenerMateriasYActualizarCheckboxes() {
+      $.ajax({
         url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=materias',
         method: 'GET',
         success: function (data) {
-            var materiasCheckbox = $('#materias-checkbox');
-            materiasCheckbox.empty();
+          var materiasCheckbox = $('#materias-checkbox');
+          materiasCheckbox.empty();
 
-            for (var i = 0; i < data.length; i += 2) {
-                var checkboxRow = '<div class="row">';
-
-                // Checkbox 1
-                if (data[i]) {
-                    checkboxRow += `
-                        <div class="form-check col-6">
-                            <input class="form-check-input" type="checkbox" name="materias[]" value="${data[i].id}" id="materia${data[i].id}">
-                            <label class="form-check-label" for="materia${data[i].id}">
-                                ${data[i].nombre_materia}
-                            </label>
-                        </div>`;
-                }
-
-                // Checkbox 2
-                if (data[i + 1]) {
-                    checkboxRow += `
-                        <div class="form-check col-6">
-                            <input class="form-check-input" type="checkbox" name="materias[]" value="${data[i + 1].id}" id="materia${data[i + 1].id}">
-                            <label class="form-check-label" for="materia${data[i + 1].id}">
-                                ${data[i + 1].nombre_materia}
-                            </label>
-                        </div>`;
-                }
-
-                checkboxRow += '</div>';
-                materiasCheckbox.append(checkboxRow);
-            }
+          data.forEach(function (materia) {
+            var checkbox = `
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="materias" value="${materia.nombre_materia}" id="materia${materia.id}">
+                <label class="form-check-label" for="materia${materia.id}">
+                  ${materia.nombre_materia}
+                </label>
+              </div>
+            `;
+            materiasCheckbox.append(checkbox);
+          });
         },
         error: function (error) {
-            console.error('Error al obtener las materias: ' + JSON.stringify(error));
+          console.error('Error al obtener las materias: ' + JSON.stringify(error));
         }
+      });
+    }
+
+    // Antes de mostrar el modal, obtener la lista de alumnos y las materias
+    $("#FormularioEventos").on('show.bs.modal', function () {
+      obtenerMateriasYActualizarCheckboxes();
+      llenarSelectAlumnos();
     });
-});
 
+    // Llenar el select de alumnos
+    function llenarSelectAlumnos() {
+      $.ajax({
+        url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=alumnos',
+        method: 'GET',
+        success: function (data) {
+          var nombreAlumnoSelect = $('#NombreAlumno');
+          nombreAlumnoSelect.empty();
 
-        // Antes de mostrar el modal, obtén la lista de alumnos de tu tabla "alumnos"
-        $("#FormularioEventos").on('show.bs.modal', function () {
-            $.ajax({
-                url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=alumnos',
-                method: 'GET',
-                success: function (data) {
-                    var nombreAlumnoSelect = $('#NombreAlumno');
-                    nombreAlumnoSelect.empty();
+          data.forEach(function (alumno) {
+            var option = `<option value="${alumno.nombre} ${alumno.apellido}">${alumno.nombre} ${alumno.apellido}</option>`;
+            nombreAlumnoSelect.append(option);
+          });
+        },
+        error: function (error) {
+          console.error('Error al obtener la lista de alumnos: ' + JSON.stringify(error));
+        }
+      });
+    }
+  });
 
-                    data.forEach(function (alumno) {
-                        var option = `<option value="${alumno.nombre} ${alumno.apellido}">${alumno.nombre} ${alumno.apellido}</option>`;
-                        nombreAlumnoSelect.append(option);
-                    });
-                },
-                error: function (error) {
-                    console.error('Error al obtener la lista de alumnos: ' + JSON.stringify(error));
-                }
-            });
-});
-});
+  // Funciones para interactuar con el formulario de eventos
+  function limpiarFormulario() {
+    $('#Id').val('');
+    var nombreAlumno = $('#NombreAlumno').val();
+    $('#FechaInicio').val('');
+    $('#HorarioInicio').val('');
+    $('#Materias').val('');
+    $('#Descripcion').val('');
+    $('#ColorFondo').val('#FBD374');
+    $('#ColorTexto').val('#ffffff');
+  }
 
+  function recuperarDatosFormulario() {
+    let registro = {
+      id: $('#Id').val(),
+      nombre_alumno: $('#NombreAlumno').val(),
+      inicio: $('#FechaInicio').val(),
+      horario: $('#HorarioInicio').val(),
+      materias: [],
+      descripcion: $('#Descripcion').val(),
+      colorfondo: $('#ColorFondo').val(),
+      colortexto: $('#ColorTexto').val()
+    };
 
+          // Recuperar las materias seleccionadas y agregarlas al array
+      $('#materias-checkbox input:checked').each(function () {
+        registro.materias.push($(this).val());
+      });
 
-  </script>
+      // Convertir el array de materias en una cadena separada por comas
+      registro.materias = registro.materias.join(', ');
+
+    return registro;
+  }
+</script>
+
   
 </body>
 </html>

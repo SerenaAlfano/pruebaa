@@ -457,3 +457,23 @@ a{
   border-radius: 0.5em;
   border: 1px solid #cccccc;
 }
+
+.btn-lineales{
+  border: none;
+  color: #7ea56a !important;
+  border-radius: 0.5em !important;
+  padding: 0.1em;
+  text-decoration: none !important;
+}
+.btn-lineales-paginacion{
+  border: 1px solid #7ea56a;
+  color: #7ea56a !important;
+  border-radius: 0.5em !important;
+  padding: 0.4em;
+  text-decoration: none !important;
+}
+
+
+#paginacion {
+  text-align: right; /* Alinea el contenido a la derecha */
+}

@@ -126,14 +126,16 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered m-1 mb-5" style="background-color: white;">
-                    <thead>
+                    <table id="miTabla"  class="table table-bordered m-1 mb-2" style="background-color: white;">
+                       
+                        <thead>
                 
                         <th class="col-tabla" scope="col">Nombre del servicio o gasto</th>
                         <th class="col-tabla" scope="col">Fecha de pago</th>
                         <th class="col-tabla" scope="col">Monto</th>
                         <th class="col-tabla" scope="col">Medio de pago</th>
                         <th class="col-tabla" scope="col" colspan="2"></th>
+                       
                     </thead>
                 </div>
                     <tbody>
@@ -293,10 +295,54 @@
 
                         </script>
                     </tbody>
+                 
                 </table>
+                <div id="paginacion" class="text-right">
+                    <button id="anterior" class="btn-lineales"><i class="bi bi-arrow-left-circle"></i></button>
+                    <button id="siguiente" class="btn-lineales"><i class="bi bi-arrow-right-circle"></i></button>
+                  </div>
        
     </div>
-    
+    <script>
+        const table = document.getElementById("miTabla");
+        const rows = table.tBodies[0].rows;
+        const perPage = 4; // Número fijo de filas por página.
+        let currentPage = localStorage.getItem("currentPage") || 0;
+      
+        function showPage(page) {
+          for (let i = 0; i < rows.length; i++) {
+            if (i >= page * perPage && i < (page + 1) * perPage) {
+              rows[i].style.display = "";
+            } else {
+              rows[i].style.display = "none";
+            }
+          }
+        }
+      
+        function saveCurrentPage() {
+          localStorage.setItem("currentPage", currentPage);
+        }
+      
+        document.getElementById("anterior").addEventListener("click", () => {
+          if (currentPage > 0) {
+            currentPage--;
+            showPage(currentPage);
+            saveCurrentPage();
+          }
+        });
+      
+        document.getElementById("siguiente").addEventListener("click", () => {
+          const totalPages = Math.ceil(rows.length / perPage);
+          if (currentPage < totalPages - 1) {
+            currentPage++;
+            showPage(currentPage);
+            saveCurrentPage();
+          }
+        });
+      
+        // Mostrar la página guardada al cargar la página.
+        showPage(currentPage);
+      </script>     
     {% endblock %}
 </body>
         

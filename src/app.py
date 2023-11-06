@@ -1104,14 +1104,13 @@ def descargar_lista_alumnos_pdf():
     data = [['Nombre', 'Apellido','DNI' ,'Curso', 'Nivel Educativo', 'Día', 'Horario', 'Materias']]
 
     for alumno in alumnos:
-        # Divide las materias por comas y luego une las materias con <br/>
-        materias = "<br/>".join(alumno[6].split(", "))
-        # Divide los días por comas y luego une los días con <br/>
-        dias = "<br/>".join(alumno[4].split(", "))
+        materias = "<br/>".join(str(alumno[6]).split(", "))
+        dias = "<br/>".join(str(alumno[4]).split(", "))
+
         data.append([
             Paragraph(alumno[0], styles['Normal']),  # Nombre
             Paragraph(alumno[1], styles['Normal']),  # Apellido
-            Paragraph(alumno[2], styles['Normal']),  # DNI
+            Paragraph(str(alumno[2]), styles['Normal']),  # DNI
             Paragraph(alumno[3], styles['Normal']),  # Curso
             Paragraph(alumno[4], styles['Normal']),  # Nivel Educativo
             Paragraph(dias, styles['Normal']),       # Días con saltos de línea
