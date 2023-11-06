@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -159,6 +159,7 @@
         right: 'dayGridMonth,timeGridWeek,timeGridDay',
       },
       editable: true,
+      locale: 'es',
       events: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=listar',
       dateClick: function (info) {
         limpiarFormulario();

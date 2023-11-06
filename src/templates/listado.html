@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     {% block title %}Mis alumnos{% endblock %}
     
 </head>
@@ -62,28 +64,11 @@
                                     <i class="btn-operacion bi bi-pencil-square text-center" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" ></i>
                                 </td>
                                 <td class="text-center">
-                                     <i class="btn-operacion bi bi bi-trash "id="confirmarEliminar{{d.id}}" data-bs-toggle="modal" data-bs-target="#confirmarEliminar{{d.id}}"data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"></i></td>                         
+                                    <i class="btn-operacion bi bi-trash" id="btn-eliminar{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="confirmarEliminacion('{{ d.id }}', '{{ d.apellido }}', '{{ d.nombre }}')"></i>
                                 </td>
 
                             </tr>
-                            <!-- Modal de confirmación de eliminación para cada alumno -->
-                            <div class="modal fade" id="confirmarEliminar{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Confirmar eliminación</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            ¿Estás seguro de eliminar al alumno {{ d.nombre }} {{ d.apellido }}?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn-guardar" style="background-color: #92BD89; color: #ffff;" data-bs-dismiss="modal">Cancelar</button>
-                                            <a href="{{ url_for('eliminar', id=d.id) }}" class="btn-guardar">Eliminar</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                           
                             <!-- MODAL -->
                             <div class="modal fade" id="modal{{ d.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-xl">
@@ -103,7 +88,12 @@
                                                         <div class="col">
                                                             <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="nombre" required value="{{ d.nombre }}">
-                                                        </div>                      
+                                                        </div>      
+                                                        <div class="col">
+                                                            <label class="label-form">DNI <span class="campo-obligatorio">*</span></label>
+                                                            <input type="number" id="dni"  class="form-control mb-3" name="dni" required value="{{ d.dni }}">
+                                                        </div>      
+                                                                  
                                                         <div class="col">
                                                             <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="email" value="{{ d.email }}" required>
@@ -267,10 +257,7 @@
                                 });
                                 });
                                 </script>
-                               
-                                  
-                                  
-                                  
+      
                             {% endfor %}
                         </tbody>
                     </table>
@@ -378,8 +365,44 @@
 
 });
 
-        </script>
+</script>
+<script>
+    function confirmarEliminacion(id, apellido, nombre) {
+        Swal.fire({
+            title: "Confirmar eliminación",
+            text: "¿Estás seguro de eliminar al alumno " + apellido + " " + nombre + "?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Realiza la eliminación del alumno a través de una solicitud AJAX
+                $.ajax({
+                    type: "GET",  // Puedes cambiar esto a POST si lo prefieres
+                    url: "/eliminar/" + id,
+                    success: function (response) {
+                        // Eliminación exitosa, muestra un mensaje y recarga la página
+                        if (response.success) {
+                            Swal.fire("Alumno eliminado correctamente", "", "success").then(() => {
+                                // Recarga la página
+                                location.reload();
+                            });
+                        } else {
+                            // Manejar errores si la eliminación no fue exitosa
+                            Swal.fire("Error al eliminar al alumno", "Ocurrió un error durante la eliminación.", "error");
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+
             
+                
         <script>
             // Obtener el campo de búsqueda y la tabla
             var busquedaInput = document.getElementById('busquedaInput');
@@ -459,8 +482,7 @@
                 // Mostrar la página guardada al cargar la página.
                 showPage(currentPage);
               </script>                 
-    {% endblock %}           
-    
+    {% endblock %}              
 </body>             
 <script>
     document.addEventListener('DOMContentLoaded', function() {

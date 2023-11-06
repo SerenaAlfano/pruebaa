@@ -402,15 +402,17 @@ def listado():
     return render_template("listado.html", data=insertObject)
 
 
-#Eliminar
 @app.route("/eliminar/<string:id>")
 def eliminar(id):
-    cursor = db_connection.cursor()
-    sql =  "DELETE FROM alumnos WHERE id = %s"
-    data = (id,)
-    cursor.execute(sql,data)
-    db_connection.commit()
-    return redirect(url_for('listado'))
+    try:
+        cursor = db_connection.cursor()
+        sql = "DELETE FROM alumnos WHERE id = %s"
+        data = (id,)
+        cursor.execute(sql, data)
+        db_connection.commit()
+        return jsonify({"success": True, "data": None})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
 
 # Actualizar
 @app.route("/editar/<string:id>", methods=["POST"])
@@ -431,7 +433,7 @@ def editar(id):
     horario = request.form["horario"]
     materia = request.form.getlist("materia[]")
     dia_str = ', '.join(dia)
-    materia_str = ', '.join(materia),
+    materia_str = ', '.join(materia)
     dni = request.form["dni"]
     
     if not validar_nombre_titular(nombre_titular):
