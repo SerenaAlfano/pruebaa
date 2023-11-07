@@ -470,6 +470,29 @@ def editar(id):
     dia_str = ', '.join(dia)
     materia_str = ', '.join(materia)
     dni = request.form["dni"]
+
+    if validar_dni(dni):
+        print("El DNI es válido.")
+    else:
+        flash("El DNI no es válido. Debe contener solo números y tener como máximo 8 dígitos.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso': curso,
+        'nivel_educativo': nivel_educativo,
+        'nombre_titular': nombre_titular,
+        'telefono_titular': telefono_titular,
+        'dia': dia,
+        'horario': horario,
+        'materia': materia,
+        'dni': dni,
+        }
+        return redirect(url_for('alta'))
     
     if not validar_nombre_titular(nombre_titular):
         flash("El nombre del tutor no es válido. Debe contener solo letras.", "error")
@@ -700,10 +723,16 @@ def editar(id):
     # Continúa con la actualización de la base de datos
     if nombre and apellido and dni and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and dia and horario and materia:
         cursor = db_connection.cursor()
-        sql = "UPDATE alumnos SET nombre = %s, apellido  = %s,email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s, dni=%s  WHERE id = %s"
-        data = (nombre, apellido,email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str,dni, id)
-        cursor.execute(sql, data)
-        db_connection.commit()
+        sql = "UPDATE alumnos SET nombre = %s, apellido  = %s, email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s, dni = %s WHERE id = %s"
+        data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str, dni, id)
+
+        try:
+            cursor.execute(sql, data)
+            db_connection.commit()
+        except mysql.connector.Error as err:
+            print(f"Error de MySQL: {err}")
+            flash("Error al actualizar el alumno en la base de datos.", "error")
+
     return redirect(url_for('listado'))
 
 

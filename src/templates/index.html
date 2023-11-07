@@ -19,6 +19,12 @@
                     <form action="/agregarAlumno" method="POST" onsubmit="return validarFormulario()">
                         <div class="row mb-3">
                             <div class="col-md-3 col-sm-12">
+                                <label class="label-form">DNI<span class="campo-obligatorio">*</span></label>
+                                <input type="number" class="form-control mb-3" name="dni" id="dni" required value="{{ form_data.dni if form_data else '' }}" oninput="validarDNI()" maxlength="8" pattern="[0-9]{1,8}">
+
+                                <div id="dni-error" class="error-message" style="display: none;"></div>
+                            </div> 
+                            <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Apellido <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="apellido" id="apellido" required value="{{ form_data.apellido if form_data else '' }}">
                                 <div id="apellido-error" class="error-message"></div> 
@@ -27,13 +33,7 @@
                                 <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nombre" id="nombre" required value="{{ form_data.nombre if form_data else '' }}">
                                 <div id="nombre-error" class="error-message"></div> 
-                            </div>   
-                            <div class="col-md-3 col-sm-12">
-                                <label class="label-form">DNI<span class="campo-obligatorio">*</span></label>
-                                <input type="number" class="form-control mb-3" name="dni" id="dni" required value="{{ form_data.dni if form_data else '' }}" oninput="validarDNI()" maxlength="8" pattern="[0-9]{1,8}">
-
-                                <div id="dni-error" class="error-message" style="display: none;"></div>
-                            </div>                         
+                            </div>                           
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="email" id="email" required value="{{ form_data.email if form_data else '' }}">                            
