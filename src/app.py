@@ -1015,7 +1015,7 @@ def caja():
     total_egresos = cursor.fetchone()[0]
     
     #Calcula el saldo restando los totales de egresos de los totales de ingresos
-    saldo = total_ingresos - total_egresos
+    saldo = total_egresos - total_ingresos  
     return render_template('caja.html',total_ingresos=total_ingresos, total_egresos=total_egresos, saldo=saldo)
 
 

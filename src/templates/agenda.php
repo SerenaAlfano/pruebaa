@@ -87,7 +87,7 @@
   |
     <!-- Formulario de eventos -->
     <div class="modal fade" id="FormularioEventos" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-md" role="document">
+      <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close " style=" color: #7ea56a: background-color:#fffff; border:none; font-size: 1.5em" data-bs-dismiss="modal" aria-label = "close"> 
@@ -97,19 +97,15 @@
           <div class="modal-body ">
             <input type="hidden" id="Id">
             <div class="row">    
-              <div class="col-md-4">       
+              <div class="col">       
                 <label for="">Alumno:</label>
-                  <select id="NombreAlumno"  name="nombre_alumno" class="form-modal-calendario">
-                      <!-- Opciones para seleccionar al alumno -->                    
-                  </select>  
+                <select id="NombreAlumno"  name="nombre_alumno" class="form-modal-calendario"></select>  
               </div>            
-              <div class="col-md-4">  
-                <label for="">Fecha:</label>
-                <div class="input-group" data-autoclose="true">
-                  <input type="date" id="FechaInicio"  value=""  class="form-modal-calendario">
-                </div>         
+              <div class="col">  
+                <label for="">Fecha:</label>      
+                  <input type="date" id="FechaInicio"  value=""  class="form-modal-calendario">               
               </div>
-              <div class="col-md-4" id="TituloHoraInicio">
+              <div class="col" id="TituloHoraInicio">
                 <label for="">Horario:</label>
                 <div class="input-group clockpicker" data-autoclose="true">
                     <input type="time" id="HorarioInicio" value=""  autocomplete="off"  class="form-modal-calendario">

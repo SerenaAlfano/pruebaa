@@ -88,6 +88,16 @@ def validar_telefono_titular(telefono_titular):
     else:
         return False 
     
+def validar_dni(dni):
+    # Utilizamos una expresión regular para verificar que el DNI cumpla con los requisitos
+    patron = r'^\d{1,8}$'  # Acepta de 1 a 8 dígitos
+
+    if re.match(patron, dni):
+        return True
+    else:
+        return False
+
+    
 #RUTAS
 
 @app.route('/')
@@ -180,6 +190,30 @@ def agregarAlumno():
     if result[0] > 0:
         flash("El alumno ya se encuentra registrado en el sistema.", "error")
         return redirect(url_for('alta'))  # Redirige de vuelta al formulario de alta
+    
+    if validar_dni(dni):
+        print("El DNI es válido.")
+    else:
+        flash("El DNI no es válido. Debe contener solo números y tener como máximo 8 dígitos.", "error")
+        session['form_data'] = {
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'telefono': telefono,
+        'fecha_nacimiento': fecha_nacimiento,
+        'fecha_inicio': fecha_inicio,
+        'colegio': colegio,
+        'curso': curso,
+        'nivel_educativo': nivel_educativo,
+        'nombre_titular': nombre_titular,
+        'telefono_titular': telefono_titular,
+        'dia': dia,
+        'horario': horario,
+        'materia': materia,
+        'dni': dni,
+        }
+        return redirect(url_for('alta'))
+
 
     if not validar_nombre(nombre):
         flash("El nombre no es válido. Debe contener solo letras.", "error")
@@ -388,6 +422,7 @@ def agregarAlumno():
         print(f"Error de MySQL: {err}") 
     return redirect(url_for('listado'))
 
+
 #Listado de alumnos
 @app.route("/listado")
 def listado():
@@ -402,15 +437,17 @@ def listado():
     return render_template("listado.html", data=insertObject)
 
 
-#Eliminar
 @app.route("/eliminar/<string:id>")
 def eliminar(id):
-    cursor = db_connection.cursor()
-    sql =  "DELETE FROM alumnos WHERE id = %s"
-    data = (id,)
-    cursor.execute(sql,data)
-    db_connection.commit()
-    return redirect(url_for('listado'))
+    try:
+        cursor = db_connection.cursor()
+        sql = "DELETE FROM alumnos WHERE id = %s"
+        data = (id,)
+        cursor.execute(sql, data)
+        db_connection.commit()
+        return jsonify({"success": True, "data": None})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
 
 # Actualizar
 @app.route("/editar/<string:id>", methods=["POST"])
@@ -431,7 +468,7 @@ def editar(id):
     horario = request.form["horario"]
     materia = request.form.getlist("materia[]")
     dia_str = ', '.join(dia)
-    materia_str = ', '.join(materia),
+    materia_str = ', '.join(materia)
     dni = request.form["dni"]
     
     if not validar_nombre_titular(nombre_titular):
@@ -773,11 +810,15 @@ def ingresos():
 @app.route("/eliminar_ingresos/<string:id_ingresos>")
 def eliminar_ingresos(id_ingresos):
     cursor = db_connection.cursor()
-    sql =  "DELETE FROM ingresos WHERE id_ingresos = %s"
-    data = (id_ingresos,)
-    cursor.execute(sql,data)
-    db_connection.commit()
-    return redirect(url_for('ingresos'))
+    try:
+        sql = "DELETE FROM ingresos WHERE id_ingresos = %s"
+        data = (id_ingresos,)
+        cursor.execute(sql, data)
+        db_connection.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db_connection.rollback()
+        return jsonify({"success": False, "error_message": str(e)})
 
 
 # Actualizar ingresos
@@ -898,15 +939,22 @@ def egresos():
     cursor.close()  
     return render_template("egresos.html", data=insertObject,form_data=form_data)
 
-#Eliminar egresos
+# Eliminar egresos
+# Agrega una nueva ruta para eliminar egresos
 @app.route("/eliminar_egresos/<string:id>")
 def eliminar_egresos(id):
-    cursor = db_connection.cursor()
-    sql =  "DELETE FROM egresos WHERE id = %s"
-    data = (id,)
-    cursor.execute(sql,data)
-    db_connection.commit()
-    return redirect(url_for('egresos'))
+    try:
+        cursor = db_connection.cursor()
+        sql = "DELETE FROM egresos WHERE id = %s"
+        data = (id,)
+        cursor.execute(sql, data)
+        db_connection.commit()
+        return jsonify({"success": True})
+    except mysql.connector.Error as err:
+        print("Error MySQL al eliminar el egreso:", err)
+        return jsonify({"success": False, "error_message": "Error al eliminar el egreso. Ocurrió un error durante la eliminación."})
+
+
 
 #Actualizar egresos
 @app.route("/editaregresos/<int:id>", methods=["POST", "GET"])
