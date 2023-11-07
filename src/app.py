@@ -159,8 +159,9 @@ def alta():
     return render_template("index.html", data=insertObject, form_data=form_data, cursos=cursos, niveles_educativos=niveles_educativos,dias_disponibles=dias_disponibles,materias_disponibles=materias_disponibles)
 
 @app.route("/agregarAlumno", methods=["POST"])
-def agregarAlumno():
+def agregarAlumno():  
     cursor = db_connection.cursor()
+    dni = request.form["dni"]
     nombre = request.form["nombre"]
     apellido = request.form["apellido"]
     email = request.form["email"]
@@ -179,7 +180,7 @@ def agregarAlumno():
     materia = list(set(materia))
     dia_str = ', '.join(dia)
     materia_str = ', '.join(materia)
-    dni = request.form["dni"]
+   
 
      # Consulta SQL para verificar si el DNI ya existe en la tabla de alumnos
     check_query = "SELECT COUNT(*) FROM alumnos WHERE dni = %s"
@@ -196,8 +197,9 @@ def agregarAlumno():
     else:
         flash("El DNI no es válido. Debe contener solo números y tener como máximo 8 dígitos.", "error")
         session['form_data'] = {
-        'nombre': nombre,
+        'dni': dni,
         'apellido': apellido,
+        'nombre': nombre,
         'email': email,
         'telefono': telefono,
         'fecha_nacimiento': fecha_nacimiento,
@@ -210,7 +212,7 @@ def agregarAlumno():
         'dia': dia,
         'horario': horario,
         'materia': materia,
-        'dni': dni,
+        
         }
         return redirect(url_for('alta'))
 
@@ -218,8 +220,9 @@ def agregarAlumno():
     if not validar_nombre(nombre):
         flash("El nombre no es válido. Debe contener solo letras.", "error")
         session['form_data'] = {
-            'nombre': nombre,
+            'dni' : dni,
             'apellido': apellido,
+            'nombre': nombre, 
             'email': email,
             'telefono': telefono,
             'fecha_nacimiento': fecha_nacimiento,
@@ -232,15 +235,16 @@ def agregarAlumno():
             'dia': dia,
             'horario': horario,
             'materia': materia,
-            'dni' : dni,
+            
         }
         return redirect(url_for('alta'))
     
     if not validar_telefono(telefono):
         flash("El número de teléfono no es válido. Debe contener solo dígitos.", "error")
         session['form_data'] = {
-        'nombre': nombre,
+        'dni' : dni,
         'apellido': apellido,
+        'nombre': nombre, 
         'email': email,
         'telefono': telefono,
         'fecha_nacimiento': fecha_nacimiento,
@@ -253,15 +257,16 @@ def agregarAlumno():
         'dia': dia,
         'horario': horario,
         'materia': materia,
-        'dni' : dni,
+        
         }
         return redirect(url_for('alta'))
 
     if not validar_apellido(apellido):
         flash("El apellido no es válido. Debe contener solo letras.", "error")
         session['form_data'] = {
-            'nombre': nombre,
+            'dni' : dni, 
             'apellido': apellido,
+            'nombre': nombre,
             'email': email,
             'telefono': telefono,
             'fecha_nacimiento': fecha_nacimiento,
@@ -274,15 +279,16 @@ def agregarAlumno():
             'dia': dia,
             'horario': horario,
             'materia': materia,
-            'dni' : dni,
+            
         }
         return redirect(url_for('alta'))
 
     if not validar_nombre_titular(nombre_titular):
         flash("El nombre del tutor no es válido. Debe contener solo letras.", "error")
         session['form_data'] = {
-            'nombre': nombre,
+            'dni' : dni,
             'apellido': apellido,
+            'nombre': nombre,
             'email': email,
             'telefono': telefono,
             'fecha_nacimiento': fecha_nacimiento,
@@ -295,15 +301,16 @@ def agregarAlumno():
             'dia': dia,
             'horario': horario,
             'materia': materia,
-            'dni' : dni,
+        
         }
         return redirect(url_for('alta'))
     
     if not validar_telefono_titular(telefono_titular):
         flash("El número de teléfono tutor no es válido. Debe contener solo dígitos.", "error")
         session['form_data'] = {
-        'nombre': nombre,
+        'dni' : dni,
         'apellido': apellido,
+        'nombre': nombre,      
         'email': email,
         'telefono': telefono,
         'fecha_nacimiento': fecha_nacimiento,
@@ -316,7 +323,7 @@ def agregarAlumno():
         'dia': dia,
         'horario': horario,
         'materia': materia,
-        'dni' : dni,
+
         }
         return redirect(url_for('alta'))
 
@@ -330,8 +337,9 @@ def agregarAlumno():
     if fecha_nacimiento >= fecha_actual:
         flash("La fecha de nacimiento debe ser en el pasado.", "error")
         session['form_data'] = {
-            'nombre': nombre,
+            'dni' : dni,
             'apellido': apellido,
+            'nombre': nombre,
             'email': email,
             'telefono': telefono,
             'fecha_nacimiento': fecha_nacimiento_str,
@@ -344,7 +352,7 @@ def agregarAlumno():
             'dia': dia,
             'horario': horario,
             'materia': materia,
-            'dni' : dni,
+            
         }
         return redirect(url_for('alta'))
     
@@ -355,8 +363,9 @@ def agregarAlumno():
     if fecha_nacimiento > fecha_minima:
         flash("El alumno debe tener al menos 6 años de edad.", "error")
         session['form_data'] = {
-            'nombre': nombre,
+            'dni' : dni,
             'apellido': apellido,
+            'nombre': nombre,
             'email': email,
             'telefono': telefono,
             'fecha_nacimiento': fecha_nacimiento_str,
@@ -369,15 +378,16 @@ def agregarAlumno():
             'dia': dia,
             'horario': horario,
             'materia': materia,
-            'dni' : dni,
+            
         }
         return redirect(url_for('alta'))
     email = request.form["email"]
     if any(letra.isupper() for letra in email):
         flash("El campo de correo electrónico no debe contener letras mayúsculas.", "error")
         session['form_data'] = {
-        'nombre': nombre,
+        'dni' : dni,
         'apellido': apellido,
+        'nombre': nombre, 
         'email': email,
         'telefono': telefono,
         'fecha_nacimiento': fecha_nacimiento,
@@ -390,7 +400,7 @@ def agregarAlumno():
         'dia': dia,
         'horario': horario,
         'materia': materia,
-        'dni' : dni,
+        
     }
         return redirect(url_for('alta'))
         
@@ -408,8 +418,8 @@ def agregarAlumno():
         print(f"Error de MySQL: {err}")
 
     # Si el conteo es menor a 4, procedemos a insertar el nuevo alumno
-    insert_query = "INSERT INTO alumnos (nombre, apellido,  email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia,dni) VALUES (%s,%s,  %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    data = (nombre, apellido, email ,telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str,dni)
+    insert_query = "INSERT INTO alumnos (dni,apellido,nombre, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia, horario, materia) VALUES (%s,%s,  %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    data = (dni,apellido, nombre,  email ,telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str)
     try:
         cursor.execute(insert_query, data)
         db_connection.commit()  
@@ -453,8 +463,9 @@ def eliminar(id):
 @app.route("/editar/<string:id>", methods=["POST"])
 def editar(id):
     cursor = db_connection.cursor()
-    nombre = request.form["nombre"]
+    dni = request.form["dni"]
     apellido = request.form["apellido"]
+    nombre = request.form["nombre"]
     email = request.form["email"]
     telefono = request.form["telefono"]
     fecha_nacimiento = request.form["fecha_nacimiento"]
@@ -469,15 +480,15 @@ def editar(id):
     materia = request.form.getlist("materia[]")
     dia_str = ', '.join(dia)
     materia_str = ', '.join(materia)
-    dni = request.form["dni"]
 
     if validar_dni(dni):
         print("El DNI es válido.")
     else:
         flash("El DNI no es válido. Debe contener solo números y tener como máximo 8 dígitos.", "error")
         session['form_data'] = {
-        'nombre': nombre,
+        'dni': dni,
         'apellido': apellido,
+        'nombre': nombre,
         'email': email,
         'telefono': telefono,
         'fecha_nacimiento': fecha_nacimiento,
@@ -490,15 +501,16 @@ def editar(id):
         'dia': dia,
         'horario': horario,
         'materia': materia,
-        'dni': dni,
+       
         }
         return redirect(url_for('alta'))
     
     if not validar_nombre_titular(nombre_titular):
         flash("El nombre del tutor no es válido. Debe contener solo letras.", "error")
         session['form_data'] = {
-            'nombre': nombre,
+            'dni': dni,
             'apellido': apellido,
+            'nombre': nombre,           
             'email': email,
             'telefono': telefono,
             'fecha_nacimiento': fecha_nacimiento,
@@ -511,15 +523,16 @@ def editar(id):
             'dia': dia,
             'horario': horario,
             'materia': materia,
-            'dni': dni,
+           
         }
         return redirect(url_for('alta'))
     
     if not validar_telefono(telefono):
         flash("El número de teléfono no es válido. Debe contener solo dígitos.", "error")
         session['form_data'] = {
-        'nombre': nombre,
+        'dni': dni,
         'apellido': apellido,
+        'nombre': nombre,   
         'email': email,
         'telefono': telefono,
         'fecha_nacimiento': fecha_nacimiento,
@@ -532,7 +545,7 @@ def editar(id):
         'dia': dia,
         'horario': horario,
         'materia': materia,
-        'dni': dni,
+        
         }
         return redirect(url_for('alta'))
     
@@ -545,8 +558,9 @@ def editar(id):
     if not validar_telefono(telefono):
         flash("El número de teléfono no es válido. Debe contener solo dígitos.", "error")
         session['form_data'] = {
-        'nombre': nombre,
+        'dni': dni,
         'apellido': apellido,
+        'nombre': nombre,
         'email': email,
         'telefono': telefono,
         'fecha_nacimiento': fecha_nacimiento,
@@ -559,15 +573,16 @@ def editar(id):
         'dia': dia,
         'horario': horario,
         'materia': materia,
-        'dni': dni,
+        
         }
         return redirect(url_for('alta'))
 
     if not validar_nombre(nombre):
         flash("El nombre no es válido. Debe contener solo letras.", "error")
         session['form_data'] = {
-            'nombre': nombre,
+            'dni': dni,
             'apellido': apellido,
+            'nombre': nombre, 
             'email': email,
             'telefono': telefono,
             'fecha_nacimiento': fecha_nacimiento,
@@ -580,15 +595,16 @@ def editar(id):
             'dia': dia,
             'horario': horario,
             'materia': materia,
-            'dni': dni,
+            
         }
         return redirect(url_for('alta'))
 
     if not validar_apellido(apellido):
         flash("El apellido no es válido. Debe contener solo letras.", "error")
         session['form_data'] = {
-            'nombre': nombre,
+            'dni': dni,
             'apellido': apellido,
+            'nombre': nombre,
             'email': email,
             'telefono': telefono,
             'fecha_nacimiento': fecha_nacimiento,
@@ -601,7 +617,7 @@ def editar(id):
             'dia': dia,
             'horario': horario,
             'materia': materia,
-            'dni': dni,
+            
         }
         return redirect(url_for('alta'))
     
@@ -609,8 +625,9 @@ def editar(id):
     if any(letra.isupper() for letra in email):
         flash("El campo de correo electrónico no debe contener letras mayúsculas.", "error")
         session['form_data'] = {
-        'nombre': nombre,
+        'dni': dni,
         'apellido': apellido,
+        'nombre': nombre,       
         'email': email,
         'telefono': telefono,
         'fecha_nacimiento': fecha_nacimiento,
@@ -623,7 +640,7 @@ def editar(id):
         'dia': dia,
         'horario': horario,
         'materia': materia,
-        'dni': dni,
+        
     }
         return redirect(url_for('alta'))
     
@@ -638,8 +655,9 @@ def editar(id):
     if fecha_nacimiento >= fecha_actual:
         flash("La fecha de nacimiento debe ser en el pasado.", "error")
         session['form_data'] = {
-            'nombre': nombre,
+            'dni': dni,
             'apellido': apellido,
+            'nombre': nombre,    
             'email': email,
             'telefono': telefono,
             'fecha_nacimiento': fecha_nacimiento_str,
@@ -652,7 +670,7 @@ def editar(id):
             'dia': dia,
             'horario': horario,
             'materia': materia,
-            'dni': dni,
+            
         }
         return redirect(url_for('alta'))
     
@@ -671,8 +689,9 @@ def editar(id):
     if fecha_nacimiento >= fecha_inicio:
         flash("La fecha de nacimiento debe ser anterior a la fecha de inicio.", "error")
         session['form_data'] = {
-            'nombre': nombre,
+            'dni': dni,
             'apellido': apellido,
+            'nombre': nombre,
             'email': email,
             'telefono': telefono,
             'fecha_nacimiento': fecha_nacimiento_str,
@@ -685,7 +704,7 @@ def editar(id):
             'dia': dia,
             'horario': horario,
             'materia': materia,
-            'dni': dni,
+            
         }
         return redirect(url_for('alta'))
     
@@ -699,8 +718,9 @@ def editar(id):
         if result[0] >= 4:
             flash("Ya hay 4 alumnos registrados en este horario.", "error")
             session['form_data'] = {
-                'nombre': nombre,
+                'dni': dni,
                 'apellido': apellido,
+                'nombre': nombre,               
                 'email': email,
                 'telefono': telefono,
                 'fecha_nacimiento': fecha_nacimiento_str,
@@ -713,7 +733,7 @@ def editar(id):
                 'dia': dia,
                 'horario': horario,
                 'materia': materia,
-                'dni': dni,
+                
             }
             return redirect(url_for('alta'))
 
@@ -721,10 +741,10 @@ def editar(id):
         print(f"Error de MySQL: {err}")
 
     # Continúa con la actualización de la base de datos
-    if nombre and apellido and dni and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and dia and horario and materia:
+    if dni and apellido and nombre and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular and dia and horario and materia:
         cursor = db_connection.cursor()
-        sql = "UPDATE alumnos SET nombre = %s, apellido  = %s, email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s, dni = %s WHERE id = %s"
-        data = (nombre, apellido, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str, dni, id)
+        data = (dni, apellido,nombre,  email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, dia_str, horario, materia_str, id)
+        sql = "UPDATE alumnos SET dni = %s, apellido  = %s, nombre =  %s,  email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s, dia = %s, horario = %s, materia = %s WHERE id = %s"
 
         try:
             cursor.execute(sql, data)
