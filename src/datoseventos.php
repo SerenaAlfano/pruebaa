@@ -43,7 +43,8 @@ case 'modificar':
     $respuesta = mysqli_query($conexion, "UPDATE eventos SET 
         nombre_alumno = '$_POST[nombre_alumno]',
         inicio = '$inicio', // Actualiza el campo 'inicio'
-        materias = '[materias]',
+        materias = '$_POST[materias]',
+
         descripcion = '$_POST[descripcion]',
         colortexto = '$_POST[colortexto]',
         colorfondo = '$_POST[colorfondo]'

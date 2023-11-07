@@ -20,7 +20,7 @@
                         <div class="row mb-3">
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">DNI<span class="campo-obligatorio">*</span></label>
-                                <input type="number" class="form-control mb-3" name="dni" id="dni" required value="{{ form_data.dni if form_data else '' }}" oninput="validarDNI()" maxlength="8" pattern="[0-9]{1,8}">
+                                <input type="number" class="form-control mb-3" pattern="[0-9]{8}" maxlength="8" name="dni" id="dni" required value="{{ form_data.dni if form_data else '' }}" oninput="validarDNI()" >
 
                                 <div id="dni-error" class="error-message" style="display: none;"></div>
                             </div> 

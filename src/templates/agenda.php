@@ -118,6 +118,7 @@
                   
                     <!-- Las materias se generarán aquí dinámicamente -->
                 </div>
+                
             </div>
             <div class="row mt-2">   
               <label for="">Descripción</label>
@@ -186,18 +187,34 @@
         $('#ColorFondo').val(info.event.backgroundColor);
         $('#ColorTexto').val(info.event.textColor);
         $("#FormularioEventos").modal('show');
+        console.log('Materias almacenadas en el evento:', info.event.extendedProps.materias);
+        if (info.event.extendedProps && info.event.extendedProps.materias) {
+    var materias = info.event.extendedProps.materias.split(', ');
 
-       // Recuperar las materias del evento y dividirlas en un array
-        var materias = info.event.extendedProps.materias.split(', ');
+    // Iterar sobre los checkboxes y marcarlos según las materias almacenadas
+    $('#materias-checkbox input').each(function () {
+      if (materias.includes($(this).val())) {
+        $(this).prop('checked', true);
+      } else {
+        $(this).prop('checked', false);
+      }
+  });
+} else {
+  console.log('No se encontraron materias en el evento seleccionado.');
+}
 
-      // Marcar los checkbox correspondientes
-      $('#materias-checkbox input').each(function () {
-        if (materias.includes($(this).val())) {
-          $(this).prop('checked', true);
-        } else {
-          $(this).prop('checked', false);
-        }
-      });  
+
+  // Imprimir datos del evento en la consola
+  console.log('ID del evento:', info.event.id);
+  console.log('Fecha de inicio:', info.event.start);
+  console.log('Descripción:', info.event.extendedProps.descripcion);
+  console.log('Color de fondo:', info.event.backgroundColor);
+  console.log('Color de texto:', info.event.textColor);
+
+  // Verificar si 'materias' se recuperó correctamente
+  if (materias) {
+    console.log('Materias:', materias);
+  }
       },
       eventDrop: function (info) {
         $('#Id').val(info.event.id);
@@ -359,13 +376,14 @@
       colortexto: $('#ColorTexto').val()
     };
 
-          // Recuperar las materias seleccionadas y agregarlas al array
-      $('#materias-checkbox input:checked').each(function () {
-        registro.materias.push($(this).val());
-      });
+    // Recuperar las materias seleccionadas y agregarlas al array
+$('#materias-checkbox input:checked').each(function () {
+  registro.materias.push($(this).val());
+});
 
-      // Convertir el array de materias en una cadena separada por comas
-      registro.materias = registro.materias.join(', ');
+// Convertir el array de materias en una cadena separada por comas
+registro.materias = registro.materias.join(', ');
+
 
     return registro;
   }
