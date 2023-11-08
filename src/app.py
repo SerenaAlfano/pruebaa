@@ -3,7 +3,7 @@ import os #Permite acceder a los directorios
 import re
 import json
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session,  jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session,  jsonify, send_from_directory
 from datetime import datetime
 from flask_mysqldb import MySQL
 from datetime import timedelta
@@ -855,9 +855,9 @@ def editaringresos(id_ingresos):
 @app.route("/egresos", methods=["GET", "POST"])
 def egresos():
     form_data = session.pop('form_data', None)  # Obtiene los datos del formulario almacenados en sesión
-    fecha_pago = None
-    fecha_actual = None
     servicios= None
+    fecha_pago = None
+    fecha_actual = None 
     monto= None
     medios_de_pago = None
     if request.method == "POST":
@@ -867,8 +867,8 @@ def egresos():
         medios_de_pago = request.form["medios_de_pago"]
 
         cursor = db_connection.cursor()
-        cursor.execute("SELECT nombre FROM medios_pago")
-        medios_de_pago = cursor.fetchall()
+        cursor.execute("SELECT id, nombre_medio_pago FROM medios_pago")
+        medios_de_pago_rows = cursor.fetchall()
         cursor.close()
 
         #Verifica si el servicio es un gasto fijo mensual
@@ -910,7 +910,7 @@ def egresos():
         monto = float(monto)  
         cursor = db_connection.cursor()
         sql = "INSERT INTO egresos (servicios, fecha_pago, monto, medios_de_pago) VALUES (%s, %s, %s, %s)"
-        data = (servicios, fecha_pago, monto, medios_de_pago)
+        data = (servicios, fecha_pago, monto, medios_de_pago)       
         cursor.execute(sql, data)
         db_connection.commit()
         return redirect(url_for('egresos')) 
@@ -924,7 +924,7 @@ def egresos():
     for record in myresult:
         insertObject.append(dict(zip(columnNames, record)))
     cursor.close()  
-    return render_template("egresos.html", data=insertObject,form_data=form_data)
+    return render_template("egresos.html", data=insertObject,form_data=form_data, medios_de_pago=medios_de_pago)
 
 # Eliminar egresos
 # Agrega una nueva ruta para eliminar egresos
@@ -1123,6 +1123,17 @@ def descargar_lista_alumnos_pdf():
 
     return response
 
+# Definir la ruta para la descarga del PDF
+@app.route('/descargar_pdf_manual', methods=['GET'])
+def descargar_pdf_manual():
+    directorio_pdf = r'C:\xampp\htdocs\prueba\pruebaa\src'
+    nombre_pdf = 'manual_usuario.pdf'
+    return send_from_directory(directorio_pdf, nombre_pdf)
+
+# Ruta para renderizar la plantilla HTML que contiene el enlace para descargar el PDF
+@app.route('/descargar_pdf', methods=['GET'])
+def mostrar_pagina_descargar_pdf():
+    return render_template('descargar_pdf.html')
 
 if __name__ == "__main__":
     app.config.from_object(config['development'])

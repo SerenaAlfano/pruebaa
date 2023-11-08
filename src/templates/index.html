@@ -73,21 +73,8 @@
                                     </div>
                                 </label>
                             </div>
-                            <div class="col-md-3 col-sm-12" >
-                                <label class="label-form label-with-arrow">
-                                    Nivel educativo <span class="campo-obligatorio">*</span>
-                                    <div class="select-container">
-                                        <select class="form-control mb-3" name="nivel_educativo" required>
-                                            {% for nivel in niveles_educativos %}
-                                                <option value="{{ nivel }}">{{ nivel }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                        </svg>
-                                    </div>
-                                </label>
-                            </div>
+                          
+                            
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Nombre tutor <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nombre_titular" id="nombre_titular" required value="{{ form_data.nombre_titular if form_data else '' }}">

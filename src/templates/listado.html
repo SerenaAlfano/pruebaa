@@ -42,26 +42,31 @@
                         <tbody>
                             {% for d in data %}
                             <tr>  
-                                <td class="td-table custom-column email-column">{{ d.dni}}</td>    
+                                <td class="td-table custom-column ">{{ d.dni}}</td>    
                                 <td class="td-table custom-column">{{ d.apellido.title() }}</td>
                                 <td class="td-table custom-column">{{ d.nombre.title() }}</td>
-                                <td class="td-table custom-column email-column">{{ d.email}}</td>
+                                <td class="td-table custom-column ">{{ d.email}}</td>
                                 <td class="td-table">{{ d.telefono }}</td>
                                 <td class="td-table">{{ d.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
                                 <td class="td-table">{{ d.fecha_inicio.strftime('%d/%m/%Y') }}</td>
                                 <td class="td-table">{{ d.colegio.title() }}</td>
                                 <td class="td-table">{{ d.curso }}</td>
                                 <td class="td-table">{{ d.nivel_educativo }}</td>
-                                <td class="td-table custom-column">{{ d.nombre_titular.title() }}</td>
-                                <td class="td-table">{{ d.telefono_titular }}</td>
-                                <td class="text-center"> 
-                                    <i class="btn-operacion bi bi-pencil-square text-center" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" ></i>
+                                <td class="td-table custom-column email-column">{{ d.nombre_titular.title() }}</td>
+                                <td class="td-table">{{ d.telefono_titular }}</td>                              
+                                <td class="td-icon text-center"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"> 
+                                        <i class="btn-operacion bi bi-pencil-square" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}"  ></i>
                                 </td>
-                                <td class="text-center">
+                                <td class="td-icon text-center " >
                                     <i class="btn-operacion bi bi-trash" id="btn-eliminar{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="confirmarEliminacion('{{ d.id }}', '{{ d.apellido }}', '{{ d.nombre }}')"></i>
                                 </td>
-
                             </tr>
+                            <script>
+    $(document).ready(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+</script>
+
                            
                             <!-- MODAL -->
                             <div class="modal fade" id="modal{{ d.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -91,6 +96,8 @@
                                                             <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="email" value="{{ d.email }}" required>
                                                         </div>
+                                                    </div>
+                                                    <div class="row">
                                                         <div class="col">
                                                             <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
                                                             <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" value="{{ d.telefono }}" required>
@@ -98,9 +105,7 @@
                                                         <div class="col">
                                                             <label class="label-form">Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
                                                             <input type="date" class="form-control mb-3" name="fecha_nacimiento" value="{{ d.fecha_nacimiento }}" required>
-                                                        </div>                                    
-                                                    </div>
-                                                    <div class="row">
+                                                        </div>                                                  
                                                         <div class="col">
                                                             <label class="label-form">Fecha de inicio <span class="campo-obligatorio">*</span></label>
                                                             <input type="date" class="form-control mb-3" name="fecha_inicio" value="{{ d.fecha_inicio }}" required>
@@ -109,6 +114,8 @@
                                                             <label class="label-form">Colegio <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="colegio" value="{{ d.colegio }}" required>
                                                         </div>
+                                                    </div>
+                                                    <div class="row">
                                                         <div class="col">
                                                             <label class="label-form label-with-arrow">
                                                                 Curso <span class="campo-obligatorio">*</span>
@@ -145,8 +152,6 @@
                                                             <label class="label-form"> Nombre tutor <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="nombre_titular" value="{{ d.nombre_titular }}" required>
                                                         </div>
-                                                    </div>
-                                                    <div class="row">
                                                         <div class="col">
                                                             <label class="label-form">Teléfono tutor <span class="campo-obligatorio">*</span></label>
                                                             <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" value="{{ d.telefono_titular }}" required>

@@ -403,7 +403,9 @@ body {
   padding: 8px;
   border: 1px solid #ddd;
 }
-
+.col-tabla {
+  width: 8%; /* Ajusta este valor según tus necesidades */
+}
 /* Aplicar el estilo solo a las celdas con la clase "custom-column" */
 .td-table.custom-column {
   width: 100px; /* Ancho igual para todas las celdas estilizadas */
@@ -480,4 +482,10 @@ a{
 
 .swal2-styled.swal2-confirm{
   background-color: #7ea56a !important;
+}
+
+.btn-manual{
+  color: #FFFFFF;
+  border-radius: 1em;
+  border: 1px solid #FFFFFF;
 }
