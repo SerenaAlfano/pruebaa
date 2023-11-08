@@ -180,7 +180,7 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <label>Monto <span class="campo-obligatorio">*</span></label>
-                                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                                    <input type="text" class="form-control" name="monto" placeholder="0.00" value="{{ d.monto }}" required value="{{ form_d.monto if form_data else '' }}" id="montoInput">
                                                 </div>
 
                                                 <script>
@@ -217,9 +217,9 @@
                                                     Medios de pago <span class="campo-obligatorio">*</span>
                                                     <div class="select-container">
                                                         <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
-                                                            <option value="Efectivo" {% if data.medios_de_pago == 'Efectivo' %}selected{% endif %}>Efectivo</option>
-                                                            <option value="Mercado pago" {% if data.medios_de_pago == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
-                                                            <option value="Cuenta DNI" {% if data.medios_de_pago == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
+                                                            <option value="Efectivo" {% if d.medios_de_pago == 'Efectivo' %}selected{% endif %}>Efectivo</option>
+                                                            <option value="Mercado pago" {% if d.medios_de_pago == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
+                                                            <option value="Cuenta DNI" {% if d.medios_de_pago == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
                                                         </select>         
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                                             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>

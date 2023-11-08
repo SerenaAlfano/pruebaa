@@ -201,17 +201,26 @@
                                                     </div>
                                                     <div class="col">
                                                         <label>Monto <span class="campo-obligatorio">*</span></label>
-                                                        <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ monto_formateado }}" id="montoInputEdit">
+                                                        <input type="text" class="form-control" name="monto" placeholder="0.00" value="{{d.monto}}" required id="montoInputEdit">
                                                         <script>
-                                                            // Agrega este script para establecer el valor formateado en el campo de entrada
-                                                            document.addEventListener("DOMContentLoaded", function() {
-                                                                var montoInputEdit = document.getElementById("montoInputEdit");
-                                                                if (montoInputEdit) {
-                                                                    montoInputEdit.value = "{{ monto_formateado }}";
-                                                                }
+                                                            // Obtener el campo de entrada por su ID
+                                                            var montoInputEdit = document.getElementById('montoInputEdit');
+                                                            // Agregar un manejador de eventos para el evento 'input'
+                                                            montoInputEdit.addEventListener('input', function() {
+                                                                // Obtener el valor actual del campo
+                                                                var valor = montoInputEdit.value;
+                                                                // Quitar cualquier carácter que no sea un número o punto
+                                                                valor = valor.replace(/[^0-9.]/g, '');
+                                                                // Formatear el valor con dos decimales
+                                                                valor = parseFloat(valor).toFixed(2);
+                                                                // Agregar separadores de miles y el signo de dólar
+                                                                valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                                                // Asignar el valor formateado de nuevo al campo
+                                                                montoInputEdit.value = valor;
                                                             });
                                                         </script>
-                                                    </div>
+                                                    </div> 
+
                                                 </div>
                                                 <div class="row"> 
                                                     <div class="col">
@@ -219,9 +228,9 @@
                                                             Medios de pago <span class="campo-obligatorio">*</span>
                                                             <div class="select-container">
                                                                 <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
-                                                                    <option value="Efectivo" {% if data.medios_de_pago == 'Efectivo' %}selected{% endif %}>Efectivo</option>
-                                                                    <option value="Mercado pago" {% if data.medios_de_pago == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
-                                                                    <option value="Cuenta DNI" {% if data.medios_de_pago == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
+                                                                    <option value="Efectivo" {% if d.medios_de_pago == 'Efectivo' %}selected{% endif %}>Efectivo</option>
+                                                                    <option value="Mercado pago" {% if d.medios_de_pago == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
+                                                                    <option value="Cuenta DNI" {% if d.medios_de_pago == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
                                                                 </select>         
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -234,8 +243,8 @@
                                                             Tipo de pago <span class="campo-obligatorio">*</span>
                                                             <div class="select-container">
                                                                 <select class="form-control mb-3" name="tipo_pago" required value="{{ form_data.tipo_pago if form_data else '' }}">
-                                                                    <option value="Mensual" {% if data.tipo_pago == 'Mensual' %}selected{% endif %}>Mensual</option>
-                                                                    <option value="Diario" {% if data.tipo_pago == 'Diario' %}selected{% endif %}>Diario</option>       
+                                                                    <option value="Mensual" {% if d.tipo_pago == 'Mensual' %}selected{% endif %}>Mensual</option>
+                                                                    <option value="Diario" {% if d.tipo_pago == 'Diario' %}selected{% endif %}>Diario</option>       
                                                                 </select>         
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>

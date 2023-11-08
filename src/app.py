@@ -422,25 +422,26 @@ def editar(id):
     nivel_educativo = request.form["nivel_educativo"]
     nombre_titular = request.form["nombre_titular"]
     telefono_titular = request.form["telefono_titular"]
+
     if validar_dni(dni):
         print("El DNI es válido.")
     else:
         flash("El DNI no es válido. Debe contener solo números y tener como máximo 8 dígitos.", "error")
         session['form_data'] = {
-        'dni': dni,
-        'apellido': apellido,
-        'nombre': nombre,
-        'email': email,
-        'telefono': telefono,
-        'fecha_nacimiento': fecha_nacimiento,
-        'fecha_inicio': fecha_inicio,
-        'colegio': colegio,
-        'curso': curso,
-        'nivel_educativo': nivel_educativo,
-        'nombre_titular': nombre_titular,
-        'telefono_titular': telefono_titular,   
-        }
-        return redirect(url_for('alta'))
+            'dni': dni,
+            'apellido': apellido,
+            'nombre': nombre,
+            'email': email,
+            'telefono': telefono,
+            'fecha_nacimiento': fecha_nacimiento,
+            'fecha_inicio': fecha_inicio,
+            'colegio': colegio,
+            'curso': curso,
+            'nivel_educativo': nivel_educativo,
+            'nombre_titular': nombre_titular,
+            'telefono_titular': telefono_titular,   
+            }
+        return redirect(url_for('listado'))
     
     if not validar_nombre_titular(nombre_titular):
         flash("El nombre del tutor no es válido. Debe contener solo letras.", "error")
@@ -458,7 +459,7 @@ def editar(id):
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,          
         }
-        return redirect(url_for('alta'))
+        return redirect(url_for('listado'))
     
     if not validar_telefono(telefono):
         flash("El número de teléfono no es válido. Debe contener solo dígitos.", "error")
@@ -476,13 +477,13 @@ def editar(id):
         'nombre_titular': nombre_titular,
         'telefono_titular': telefono_titular,      
         }
-        return redirect(url_for('alta'))
+        return redirect(url_for('listado'))
     
     if not validar_telefono_titular(telefono_titular):
         flash("El número de teléfono del tutor no es válido. Debe contener solo dígitos.", "error")
         session['form_data'] = {
     }
-        return redirect(url_for('alta'))
+        return redirect(url_for('listado'))
 
     if not validar_telefono(telefono):
         flash("El número de teléfono no es válido. Debe contener solo dígitos.", "error")
@@ -500,7 +501,7 @@ def editar(id):
         'nombre_titular': nombre_titular,
         'telefono_titular': telefono_titular,       
         }
-        return redirect(url_for('alta'))
+        return redirect(url_for('listado'))
 
     if not validar_nombre(nombre):
         flash("El nombre no es válido. Debe contener solo letras.", "error")
@@ -518,7 +519,7 @@ def editar(id):
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,          
         }
-        return redirect(url_for('alta'))
+        return redirect(url_for('listado'))
 
     if not validar_apellido(apellido):
         flash("El apellido no es válido. Debe contener solo letras.", "error")
@@ -536,7 +537,7 @@ def editar(id):
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,           
         }
-        return redirect(url_for('alta'))
+        return redirect(url_for('listado'))
     
     email = request.form["email"]
     if any(letra.isupper() for letra in email):
@@ -555,7 +556,7 @@ def editar(id):
         'nombre_titular': nombre_titular,
         'telefono_titular': telefono_titular,      
     }
-        return redirect(url_for('alta'))
+        return redirect(url_for('listado'))
     
     # Obtiene la fecha de nacimiento del formulario
     fecha_nacimiento_str = request.form["fecha_nacimiento"]
@@ -581,7 +582,7 @@ def editar(id):
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,           
         }
-        return redirect(url_for('alta'))
+        return redirect(url_for('listado'))
     
     # Obtiene la fecha de nacimiento del formulario
     fecha_nacimiento_str = request.form["fecha_nacimiento"]
@@ -611,7 +612,7 @@ def editar(id):
             'nombre_titular': nombre_titular,
             'telefono_titular': telefono_titular,           
         }
-        return redirect(url_for('alta'))
+        return redirect(url_for('listado'))
     
     # Consulta SQL para contar el número de alumnos en el mismo horario
     count_query = "SELECT COUNT(*) FROM alumnos WHERE horario = %s"
@@ -635,7 +636,7 @@ def editar(id):
                 'nombre_titular': nombre_titular,
                 'telefono_titular': telefono_titular,             
             }
-            return redirect(url_for('alta'))
+            return redirect(url_for('listado'))
 
     except mysql.connector.Error as err:
         print(f"Error de MySQL: {err}")
@@ -786,12 +787,12 @@ def obtener_tipos_pago():
     return tipos_pago
 
 
+
 @app.route("/editaringresos/<int:id_ingresos>", methods=["POST", "GET"])
 
 def editaringresos(id_ingresos):
     registro_editar = None  # Define registro_editar inicialmente como None
     
-
     if request.method == "GET":
         cursor = db.database.cursor()
         cursor.execute("SELECT nombre_alumno,fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
