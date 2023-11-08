@@ -38,10 +38,12 @@ switch($_GET['accion']) {
 
 // Modificar evento
 case 'modificar':
-    $inicio = $_POST['inicio'] . ' ' . $_POST['horario'] . ':00'; // Forma la nueva fecha y hora
+    $inicio = $_POST['inicio'] . ' ' . $_POST['horario'] . ':00';
+    $inicio = date('Y-m-d H:i:s', strtotime($inicio));
+
     $respuesta = mysqli_query($conexion, "UPDATE eventos SET 
         nombre_alumno = '$_POST[nombre_alumno]',
-        inicio = '$inicio', // Actualiza el campo 'inicio'
+        inicio = '$inicio', 
         descripcion = '$_POST[descripcion]',
         colortexto = '$_POST[colortexto]',
         colorfondo = '$_POST[colorfondo]'

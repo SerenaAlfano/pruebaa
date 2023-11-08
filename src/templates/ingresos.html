@@ -163,8 +163,8 @@
                             <td class="td-table">${{ '{:,.2f}'.format(d.monto) }}</td>
                             <td class="td-table">{{ d.medios_de_pago }}</td>
                             <td class="td-table">{{ d.tipo_pago }}</td>
-                            <td class="text-center "> 
-                                <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i>
+                            <td class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"> 
+                                <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id_ingresos }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id_ingresos }}" ></i>
                             </td>
                             <td class="text-center"> 
                                 <a href="#" onclick="confirmarEliminacionIngresos('{{ d.id_ingresos }}', '{{ d.nombre_alumno }}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
@@ -179,6 +179,11 @@
                                 </a>
                             </td>           
                         </tr>
+                        <script>
+                            $(document).ready(function () {
+                                $('[data-bs-toggle="tooltip"]').tooltip();
+                            });
+                        </script>
                         <div class="modal fade" id="modal{{ d.id_ingresos }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl">
                                 <div class="modal-content">
