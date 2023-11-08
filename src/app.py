@@ -158,7 +158,7 @@ def alta():
     cursor.close()
     return render_template("index.html", data=insertObject, form_data=form_data, cursos=cursos, niveles_educativos=niveles_educativos,dias_disponibles=dias_disponibles,materias_disponibles=materias_disponibles)
 
-@app.route("/agregarAlumno", methods=["POST"])
+@app.route("/agregarAlumno", methods=["POST", "GET"])
 def agregarAlumno():  
     cursor = db_connection.cursor()
     dni = request.form["dni"]
@@ -853,7 +853,7 @@ def ingresos():
     cursor.close()
     # Crea una lista de nombres y apellidos concatenados
     nombres_apellidos = [f"{alumno[0]} {alumno[1]}" for alumno in alumnos]
-    return render_template("ingresos.html", data=insertObject, form_data=form_data, nombres_apellidos=nombres_apellidos)
+    return render_template("ingresos.html", data=insertObject, form_data=form_data, nombres_apellidos=nombres_apellidos, medios_pago_disponibles=medios_pago_disponibles)
 
 #Eliminar Ingresos
 @app.route("/eliminar_ingresos/<string:id_ingresos>")
@@ -871,21 +871,49 @@ def eliminar_ingresos(id_ingresos):
 
 
 # Actualizar ingresos
+def obtener_medios_pago():
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT nombre_medio_pago FROM medios_pago")
+    medios_pago = [medio_pago[0] for medio_pago in cursor.fetchall()]
+    cursor.close()
+    return medios_pago
+
+def obtener_tipos_pago():
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT nombre_tipo_pago FROM tipos_pago")
+    tipos_pago = [tipo_pago[0] for tipo_pago in cursor.fetchall()]
+    cursor.close()
+    return tipos_pago
+
+
 @app.route("/editaringresos/<int:id_ingresos>", methods=["POST", "GET"])
+
 def editaringresos(id_ingresos):
     registro_editar = None  # Define registro_editar inicialmente como None
+    
 
     if request.method == "GET":
         cursor = db.database.cursor()
         cursor.execute("SELECT nombre_alumno,fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
         registro_editar = cursor.fetchone()
+        medios_pago_query = "SELECT nombre FROM medios_pago"
+        cursor.execute(medios_pago_query)
+        medios_pago = [row[0] for row in cursor.fetchall()]
+
+        # Obtener opciones de tipos de pago desde la base de datos
+        tipos_pago_query = "SELECT nombre FROM tipos_pago"
+        cursor.execute(tipos_pago_query)
+        tipos_pago = [row[0] for row in cursor.fetchall()]
+
         cursor.close()
         data = db.database
         # Obtiene el valor del monto sin formato desde la base de datos
         monto = registro_editar["monto"]
         # Formatea el monto como una cadena con el signo de peso, comas y punto
         monto_formateado = "${:,.2f}".format(monto)
-        return render_template("editar_ingresos.html", monto_formateado=monto_formateado, registro=registro_editar, data=data)
+        medios_pago = obtener_medios_pago()  # Obtener las opciones de medios de pago
+        tipos_pago = obtener_tipos_pago() 
+        return render_template("editar_ingresos.html", monto_formateado=monto_formateado, registro=registro_editar, data=data, medios_pago=medios_pago, tipos_pago=tipos_pago)
 
     if request.method == "POST":
         nombre_alumno = request.form["nombre_alumno"]
@@ -911,12 +939,15 @@ def editaringresos(id_ingresos):
             cursor = db_connection.cursor()
             sql = "UPDATE ingresos SET nombre_alumno = %s,  fecha_pago = %s, monto = %s, medios_de_pago = %s ,  tipo_pago = %s WHERE id_ingresos = %s"
             data = (nombre_alumno, fecha_pago, monto, medios_de_pago, tipo_pago, id_ingresos)
+            
+
             cursor.execute(sql, data)
             db_connection.commit()
             # Realiza una consulta para obtener los datos actualizados
             cursor.execute("SELECT * FROM ingresos WHERE id_ingresos = %s", (id_ingresos,))
             updated_data = cursor.fetchone()  # Obtiene la fila actualizada
             cursor.close()  # Cierra el cursor
+            
         return redirect(url_for('ingresos'))
 
 #Egresos
@@ -933,6 +964,12 @@ def egresos():
         fecha_pago = request.form["fecha_pago"]
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
+
+        cursor = db_connection.cursor()
+        cursor.execute("SELECT nombre FROM medios_pago")
+        medios_de_pago = cursor.fetchall()
+        cursor.close()
+
         #Verifica si el servicio es un gasto fijo mensual
         gastos_fijos_mensuales = ["luz", "agua", "gas", "internet"]
         if servicios.lower() in gastos_fijos_mensuales:
@@ -1178,7 +1215,7 @@ def descargar_pdf(id_ingresos):
 def descargar_lista_alumnos_pdf():
     # Obtiene los datos de todos los alumnos en tu base de datos
     cursor = db_connection.cursor()
-    cursor.execute("SELECT nombre, apellido, dni,  curso, nivel_educativo, dia, horario, materia FROM alumnos")
+    cursor.execute("SELECT nombre, apellido, dni,  curso, nivel_educativo FROM alumnos")
     alumnos = cursor.fetchall()
     cursor.close()
 
@@ -1198,11 +1235,10 @@ def descargar_lista_alumnos_pdf():
     elements.append(title)
 
     #Crea una lista para almacenar los datos de los alumnos
-    data = [['Nombre', 'Apellido','DNI' ,'Curso', 'Nivel Educativo', 'Día', 'Horario', 'Materias']]
+    data = [['Nombre', 'Apellido','DNI' ,'Curso', 'Nivel Educativo']]
 
     for alumno in alumnos:
-        materias = "<br/>".join(str(alumno[6]).split(", "))
-        dias = "<br/>".join(str(alumno[4]).split(", "))
+
 
         data.append([
             Paragraph(alumno[0], styles['Normal']),  # Nombre
@@ -1210,9 +1246,6 @@ def descargar_lista_alumnos_pdf():
             Paragraph(str(alumno[2]), styles['Normal']),  # DNI
             Paragraph(alumno[3], styles['Normal']),  # Curso
             Paragraph(alumno[4], styles['Normal']),  # Nivel Educativo
-            Paragraph(dias, styles['Normal']),       # Días con saltos de línea
-            Paragraph(alumno[6], styles['Normal']),  # Horario
-            Paragraph(materias, styles['Normal'])    # Materias con saltos de línea
         ])
 
     # Crea una tabla para mostrar los datos de los alumnos

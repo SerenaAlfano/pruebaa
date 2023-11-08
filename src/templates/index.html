@@ -97,48 +97,7 @@
                                 <label  class="label-form">Telefono tutor <span class="campo-obligatorio">*</span></label>
                                 <input type="number" class="form-control mb-3" name="telefono_titular"   id="telefono_titular" maxlength="10" required value="{{ form_data.telefono_titular if form_data else '' }}">
                                 <div id="telefono-titular-error" class="error-message"></div> 
-                            </div>
-                            <div class="col-md-3 col-sm-12">
-                                Día <span class="campo-obligatorio">*</span>
-                                <div class="select-container">
-                                    <select class="form-control mb-3" name="dia[]" style="display: none;">
-                                        {% for dia in dias_disponibles %}
-                                        <option value="{{ dia }}" {% if dia in data.dia %}selected{% endif %}>{{ dia }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="checkbox-container">
-                                    {% for dia in dias_disponibles %}
-                                    <label>
-                                        <input type="checkbox" name="dia[]" value="{{ dia }}" {% if dia in data.dia %}checked{% endif %}> {{ dia }}
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            
-                            
-                         
-                        <div class="col-md-3 col-sm-12">
-                                <label class="label-form">Horario <span class="campo-obligatorio">*</span></label>
-                                <input class="form-control mb-3" type="time" id="horario" name="horario" required value="{{ form_data.horario if form_data else '' }}">
-                            </div>
-                            <div class="col-md-3 col-sm-12">
-                                Materia <span class="campo-obligatorio">*</span>
-                                <div class="select-container">
-                                    <select class="form-control mb-3" name="materia[]" style="display: none;">
-                                        {% for materia in materias_disponibles %}
-                                            <option value="{{ materia }}" {% if materia in data.materia %}selected{% endif %}>{{ materia }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="checkbox-container">
-                                    {% for materia in materias_disponibles %}
-                                        <label>
-                                            <input type="checkbox" name="materia[]" value="{{ materia }}" {% if materia in data.materia %}checked{% endif %}> {{ materia }}
-                                        </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
+                            </div>                      
                             
                                 <script>
                                     function validarFormulario() {

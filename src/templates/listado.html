@@ -37,9 +37,6 @@
                                 <th scope="col" class="col-tabla">Nivel</th>
                                 <th scope="col" class="col-tabla">Nombre tutor</th>
                                 <th scope="col" class="col-tabla">Telefono tutor</th>
-                                <th scope="col" class="col-tabla">Día</th>
-                                <th scope="col" class="col-tabla">Horario</th>
-                                <th scope="col" class="col-tabla">Materia</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,9 +54,6 @@
                                 <td class="td-table">{{ d.nivel_educativo }}</td>
                                 <td class="td-table custom-column">{{ d.nombre_titular.title() }}</td>
                                 <td class="td-table">{{ d.telefono_titular }}</td>
-                                <td class="td-table custom-column">{{ d.dia }}</td>
-                                <td class="td-table">{{ d.horario }}</td>
-                                <td class="td-table custom-column">{{ d.materia }}</td>
                                 <td class="text-center"> 
                                     <i class="btn-operacion bi bi-pencil-square text-center" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" ></i>
                                 </td>
@@ -119,11 +113,12 @@
                                                             <label class="label-form label-with-arrow">
                                                                 Curso <span class="campo-obligatorio">*</span>
                                                                 <div class="select-container">
-                                                                    <select class="form-control mb-3" name="curso" required value="{{ form_data.curso if form_data else '' }}">
+                                                                    <select class="form-control mb-3" name="curso" required>
                                                                         {% for option in ['Primero', 'Segundo', 'Tercero', 'Cuarto', 'Quinto', 'Sexto'] %}
-                                                                            <option value="{{ option }}" {% if option == curso %}selected{% endif %}>{{ option }}</option>
+                                                                            <option value="{{ option }}" {% if option == d.curso %}selected{% endif %}>{{ option }}</option>
                                                                         {% endfor %}
                                                                     </select>
+                                                                    
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                                                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                                                                     </svg>
@@ -134,11 +129,12 @@
                                                             <label class="label-form label-with-arrow">
                                                                 Nivel educativo <span class="campo-obligatorio">*</span>
                                                                 <div class="select-container">
-                                                                    <select class="form-control mb-3" name="nivel_educativo" required value="{{ form_data.nivel_educativo if form_data else '' }}">
-                                                                        {% for option in ['Primario', 'Secundario', 'Terciario'] %}
-                                                                        <option value="{{ option }}" {% if data.nivel_educativo == option %}selected{% endif %}>{{ option }}</option>
-                                                                        {% endfor %}
-                                                                    </select>
+                                                                   <select class="form-control mb-3" name="nivel_educativo" required>
+                                                                    {% for option in ['Primario', 'Secundario', 'Terciario'] %}
+                                                                        <option value="{{ option }}" {% if option == d.nivel_educativo %}selected{% endif %}>{{ option }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                                                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                                                                     </svg>
@@ -154,74 +150,8 @@
                                                         <div class="col">
                                                             <label class="label-form">Teléfono tutor <span class="campo-obligatorio">*</span></label>
                                                             <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" value="{{ d.telefono_titular }}" required>
-                                                        </div>
-                                                        <div class="col-md-3 col-sm-12">
-                                                            Día <span class="campo-obligatorio">*</span>
-                                                            <div class="select-container">
-                                                                <select class="form-control mb-3" name="dia[]" style="display: none;">
-                                                                    {% for option in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'] %}
-                                                                    <option value="{{ option }}" {% if option in d.dia %}selected{% endif %}>{{ option }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                            </div>
-                                                            <div class="checkbox-container">
-                                                                <label>
-                                                                    <input type="checkbox" name="dia[]" value="Lunes" {% if 'Lunes' in d.dia %}checked{% endif %}> Lunes
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="dia[]" value="Martes" {% if 'Martes' in d.dia %}checked{% endif %}> Martes
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="dia[]" value="Miércoles" {% if 'Miércoles' in d.dia %}checked{% endif %}> Miércoles
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="dia[]" value="Jueves" {% if 'Jueves' in d.dia %}checked{% endif %}> Jueves
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="dia[]" value="Viernes" {% if 'Viernes' in d.dia %}checked{% endif %}> Viernes
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col">
-                                                            <label class="label-form">Horario <span class="campo-obligatorio">*</span></label>
-                                                            <input class="form-control mb-3" type="time" id="horario" name="horario" value="{{ d.horario }}" required>
-                                                        </div>
-                                                        <div class="col-md-3 col-sm-12">
-                                                            Materia <span class="campo-obligatorio">*</span>
-                                                            <div class="select-container">
-                                                                <select class="form-control mb-3" name="materia[]" style="display: none;">
-                                                                    {% for option in ['Inglés', 'Matemática', 'Prácticas del lenguaje','Historia', 'Geografía', 'Biología', 'Contabilidad', 'Literatura'] %}
-                                                                    <option value="{{ option }}" {% if option in d.dia %}selected{% endif %}>{{ option }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                            </div>
-                                                            <div class="checkbox-container">
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Inglés" {% if 'Inglés' in d.materia %}checked{% endif %}> Inlges
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Matemática" {% if 'Matemática' in d.materia %}checked{% endif %}> Matemática
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Practicas del lenguaje" {% if 'Prácticas_del_lenguaje' in d.materia %}checked{% endif %}> Practicas del lenguaje
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Historia" {% if 'Historia' in d.materia %}checked{% endif %}> Historia
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Geografia" {% if 'Geografia' in d.materia %}checked{% endif %}> Geografia
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Biologia" {% if 'Biologia' in d.materia %}checked{% endif %}> Biologia
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Contabilidad" {% if 'Contabilidad' in d.materia %}checked{% endif %}> Contabilidad
-                                                                </label>
-                                                                <label>
-                                                                    <input type="checkbox" name="materia[]" value="Literatura" {% if 'Literatura' in d.materia %}checked{% endif %}> Literatura
-                                                                </label>
-                                                            </div>
-                                                        </div>
+                                                        </div>                                                                                         
+                                                     
                                                     </div>
                                                     <div class="col-md-3">
                                                         <button type="submit" class="btn-guardar">Guardar cambios</button>
@@ -480,28 +410,29 @@
               
                 // Mostrar la página guardada al cargar la página.
                 showPage(currentPage);
-              </script>                 
+              </script>      
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Obtener el botón "Guardar cambios"
+                    var guardarBoton = document.querySelector('button.btn-guardar');
+            
+                    // Obtener la alerta de cambios guardados
+                    var successMessage = document.getElementById('success-message');
+            
+                    // Agregar un evento de clic al botón "Guardar cambios"
+                    guardarBoton.addEventListener('click', function(event) {
+                        event.preventDefault(); // Evitar que el formulario se envíe (si es un formulario)
+            
+                        // Mostrar la alerta como una ventana emergente
+                        successMessage.style.display = 'block';
+            
+                        // Ocultar la alerta después de 5 segundos (5000 milisegundos)
+                        setTimeout(function() {
+                            successMessage.style.display = 'none';
+                        }, 5000);
+                    });
+                });
+            </script>             
     {% endblock %}              
 </body>             
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Obtener el botón "Guardar cambios"
-        var guardarBoton = document.querySelector('button.btn-guardar');
-
-        // Obtener la alerta de cambios guardados
-        var successMessage = document.getElementById('success-message');
-
-        // Agregar un evento de clic al botón "Guardar cambios"
-        guardarBoton.addEventListener('click', function(event) {
-            event.preventDefault(); // Evitar que el formulario se envíe (si es un formulario)
-
-            // Mostrar la alerta como una ventana emergente
-            successMessage.style.display = 'block';
-
-            // Ocultar la alerta después de 5 segundos (5000 milisegundos)
-            setTimeout(function() {
-                successMessage.style.display = 'none';
-            }, 5000);
-        });
-    });
-</script>                              
+                            
