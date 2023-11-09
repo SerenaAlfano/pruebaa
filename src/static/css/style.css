@@ -489,3 +489,7 @@ a{
   border-radius: 1em;
   border: 1px solid #FFFFFF;
 }
+.cruz{
+  border: none !important;
+  color:#7ea56a !important;
+}
