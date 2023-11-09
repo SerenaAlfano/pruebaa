@@ -644,7 +644,8 @@ def editar(id):
     if dni and apellido and nombre and email and telefono and fecha_nacimiento and fecha_inicio and colegio and curso and nivel_educativo and nombre_titular and telefono_titular:
         cursor = db_connection.cursor()
         data = (dni, apellido,nombre,  email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, id)
-        sql = "UPDATE alumnos SET dni = %s, apellido  = %s, nombre =  %s,  email  = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s WHERE id = %s"
+        sql = "UPDATE alumnos SET dni = %s, apellido = %s, nombre = %s, email = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s WHERE id = %s"
+
 
         try:
             cursor.execute(sql, data)
