@@ -55,7 +55,7 @@
                                 <td class="td-table custom-column">{{ d.nombre_titular.title() }}</td>
                                 <td class="td-table">{{ d.telefono_titular }}</td>
                                 <td class="text-center"> 
-                                    <i class="btn-operacion bi bi-pencil-square text-center" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" ></i>
+                                    <i class="btn-operacion bi bi-pencil-square text-center btn-editar" data-modal-id="{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"></i>
                                 </td>
                                 <td class="text-center">
                                     <i class="btn-operacion bi bi-trash" id="btn-eliminar{{ d.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="confirmarEliminacion('{{ d.id }}', '{{ d.apellido }}', '{{ d.nombre }}')"></i>
@@ -77,38 +77,46 @@
                                                     <div class="row">
                                                         <div class="col">
                                                             <label class="label-form">DNI <span class="campo-obligatorio">*</span></label>
-                                                            <input type="number" id="dni"  class="form-control mb-3" name="dni" required value="{{ d.dni }}" maxlength="8" pattern="[0-9]{1,8}">
+                                                            <input type="number" id="dni"  class="form-control mb-3" name="dni" required value="{{ d.dni }}"  pattern="[0-9]{8}" maxlength="8" oninput="limitarDigitosDNI();">
                                                         </div>      
                                                         <div class="col">
                                                             <label>Apellido <span class="campo-obligatorio">*</span></label>
-                                                            <input type="text" class="form-control mb-3" name="apellido" value="{{ d.apellido }}" required>
+                                                            <input type="text" class="form-control mb-3" name="apellido" value="{{ d.apellido }}" required oninput="validarLetras(this)">
+                                                            <div id="apellido-error" class="error-message"></div> 
                                                         </div>
                                                         <div class="col">
                                                             <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
-                                                            <input type="text" class="form-control mb-3" name="nombre" required value="{{ d.nombre }}">
+                                                            <input type="text" class="form-control mb-3" name="nombre" required value="{{ d.nombre }}" required oninput="validarLetras(this)">
+                                                            <div id="nombre-error" class="error-message"></div> 
                                                         </div>       
                                                         <div class="col">
                                                             <label class="label-form">Email <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="email" value="{{ d.email }}" required>
                                                         </div>
+                                                    </div>
+                                                    <div class="row">
                                                         <div class="col">
                                                             <label class="label-form">Telefono <span class="campo-obligatorio">*</span></label>
-                                                            <input type="tel" class="form-control mb-3" name="telefono" maxlength="10" value="{{ d.telefono }}" required>
+                                                            <input type="number" class="form-control mb-3" name="telefono" maxlength="10" value="{{ d.telefono }}" required>
+                                                            <div id="telefono-error" class=" error-message"></div> 
                                                         </div>            
                                                         <div class="col">
                                                             <label class="label-form">Fecha de nacimiento <span class="campo-obligatorio">*</span></label>
                                                             <input type="date" class="form-control mb-3" name="fecha_nacimiento" value="{{ d.fecha_nacimiento }}" required>
+                                                            <div id="fecha-nacimiento-error" class=" error-message"></div> 
                                                         </div>                                    
-                                                    </div>
-                                                    <div class="row">
                                                         <div class="col">
                                                             <label class="label-form">Fecha de inicio <span class="campo-obligatorio">*</span></label>
                                                             <input type="date" class="form-control mb-3" name="fecha_inicio" value="{{ d.fecha_inicio }}" required>
+                                                            <div id="fecha-inicio-error" class=" error-message"></div> 
                                                         </div>
                                                         <div class="col">
                                                             <label class="label-form">Colegio <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="colegio" value="{{ d.colegio }}" required>
+                                                            <div id="colegio-error" class="error-message"></div>
                                                         </div>
+                                                    </div>
+                                                    <div class="row">
                                                         <div class="col">
                                                             <label class="label-form label-with-arrow">
                                                                 Curso <span class="campo-obligatorio">*</span>
@@ -117,8 +125,7 @@
                                                                         {% for option in ['Primero', 'Segundo', 'Tercero', 'Cuarto', 'Quinto', 'Sexto'] %}
                                                                             <option value="{{ option }}" {% if option == d.curso %}selected{% endif %}>{{ option }}</option>
                                                                         {% endfor %}
-                                                                    </select>
-                                                                    
+                                                                    </select>                               
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                                                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                                                                     </svg>
@@ -144,295 +151,286 @@
                                                         <div class="col">
                                                             <label class="label-form"> Nombre tutor <span class="campo-obligatorio">*</span></label>
                                                             <input type="text" class="form-control mb-3" name="nombre_titular" value="{{ d.nombre_titular }}" required>
+                                                            <div id="nombre-titular-error" class=" error-message"></div> 
                                                         </div>
-                                                    </div>
-                                                    <div class="row">
                                                         <div class="col">
                                                             <label class="label-form">Teléfono tutor <span class="campo-obligatorio">*</span></label>
                                                             <input type="tel" class="form-control mb-3" name="telefono_titular" maxlength="10" value="{{ d.telefono_titular }}" required>
+                                                            <div id="telefono-titular-error" class="error-message"></div> 
                                                         </div>                                                                                         
-                                                     
+                                                    </div>   
+                                                   
+                                                    <div class="text-center">
+                                                        <button type="submit" class="btn-guardar btn-guardar-{{ d.id }}">Guardar cambios</button>
+
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <button type="submit" class="btn-guardar">Guardar cambios</button>
-                                                    </div>
-                                                    <div id="alerta" style="display: none;" class="alert alert-success fixed-top mx-auto">Cambios guardados correctamente</div>
+                                                    <div id="success-message" style="display: none;">Cambios guardados correctamente</div>
+
                                              </div>                                                                                                       
                                             </form>   
                                         </div>                                                      
                                     </div>  
                                 </div>
                             </div>
-                            <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                var guardarBoton = document.querySelector('button.btn-guardar');
-                                var successMessage = document.getElementById('alerta');
-                                var myModal = new bootstrap.Modal(document.getElementById('modal{{ d.id }}'));
-                                
-                                guardarBoton.addEventListener('click', function(event) {
-                                    event.preventDefault();
-                                    // Ocultar el modal
-                                    myModal.hide();
-                                    // Mostrar la alerta
-                                    successMessage.style.display = 'block';
-                                    // Ocultar la alerta después de 5 segundos
-                                    setTimeout(function() {
-                                        successMessage.style.display = 'none';
-                                    }, 5000);
-                                });
-                                myModal._element.addEventListener('hidden.bs.modal', function() {
-                                    // Restablecer el contenido del modal cuando se cierra el modal
-                                    successMessage.style.display = 'none';
-                                });
-                                });
-                                </script>
+                           
       
                             {% endfor %}
                         </tbody>
                     </table>
-                    <div id="paginacion" class="text-right">
-                        <button id="anterior" class="btn-lineales"><i class="bi bi-arrow-left-circle"></i></button>
-                        <button id="siguiente" class="btn-lineales"><i class="bi bi-arrow-right-circle"></i></button>
-                      </div>
                 </div>
             </div>
         </div>   
+        <!-- VALIDACIONES -->
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    function validarCampo(inputId, errorId, mensajeError, regex) {
-        var input = document.getElementById(inputId);
-        var error = document.getElementById(errorId);
-
-        input.addEventListener('input', function() {
-            var valor = input.value.trim();
-
-            if (!regex.test(valor)) {
-                error.style.display = 'block';
-                error.textContent = mensajeError;
-            } else {
-                error.style.display = 'none';
+            function limitarDigitosDNI() {
+                var dniInput = document.getElementById('dni');
+        
+                // Obtén el valor del campo del DNI
+                var dniValue = dniInput.value;
+        
+                // Verifica si la longitud del DNI es mayor a 8
+                if (dniValue.length > 8) {
+                    // Corta el valor del DNI a los primeros 8 dígitos
+                    dniInput.value = dniValue.slice(0, 8);
+                }
             }
-        });
-    }
+        </script>
+        
+        <script>
+            function validarLongitudDNI() {
+                var dniInput = document.getElementById('dni');
+        
+                // Obtén el valor del campo del DNI
+                var dniValue = dniInput.value;
+        
+                // Verifica si la longitud del DNI es menor a 8
+                if (dniValue.length < 8) {
+                    // Muestra una Sweet Alert indicando el error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'El DNI debe contener al menos 8 dígitos',
+                    });
+        
+                    // Devuelve false para evitar que el formulario se envíe
+                    return false;
+                }
+        
+                // Devuelve true para permitir que el formulario se envíe
+                return true;
+            }
+        </script>
+        <script>
+            function validarColegio() {
+                var colegioInput = document.getElementById('colegio');
+                var errorDiv = document.getElementById('colegio-error');
+        
+                // Expresión regular para permitir solo letras y números en el colegio
+                var colegioRegex = /^[a-zA-Z0-9\s]+$/;
+        
+                var valorColegio = colegioInput.value.trim();
+        
+                if (!colegioRegex.test(valorColegio)) {
+                    errorDiv.style.display = 'block';
+                    errorDiv.textContent = 'El nombre del colegio solo debe contener letras, números y espacios.';
+                    return false;
+                } else {
+                    errorDiv.style.display = 'none';
+                    return true;
+                }
+            }
+        
+            // Llama a la función de validación cuando se realiza una entrada en el campo colegio
+            var colegioInput = document.getElementById('colegio');
+            colegioInput.addEventListener('input', validarColegio);
+        </script>
 
-    // Expresión regular para validar que el campo de teléfono contiene solo números
-    var numerosRegex = /^[0-9]+$/;
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            function validarCampo(inputId, errorId, mensajeError, regex) {
+            var input = document.getElementById(inputId);
+            var error = document.getElementById(errorId);
 
-    // Expresión regular para validar que los campos de nombre y apellido contienen solo letras y espacios
-    var letrasRegex = /^[a-zA-Z\s]*$/;
+            input.addEventListener('input', function() {
+                var valor = input.value.trim();
 
-    // Llama a la función de validación para el campo de nombre
-    validarCampo('nombre', 'nombre-error', 'El nombre solo debe contener letras y espacios.', letrasRegex);
+                if (!regex.test(valor)) {
+                    error.style.display = 'block';
+                    error.textContent = mensajeError;
+                } else {
+                    error.style.display = 'none';
+                }
+            });
+        }
 
-    // Llama a la función de validación para el campo de apellido
-    validarCampo('apellido', 'apellido-error', 'El apellido solo debe contener letras y espacios.', letrasRegex);
+        // Expresión regular para validar que el campo de teléfono contiene solo números
+        var numerosRegex = /^[0-9]+$/;
 
-    // Llama a la función de validación para el campo de teléfono
-    validarCampo('telefono', 'telefono-error', 'Por favor, ingresa solo números en el teléfono.', numerosRegex);
-    // Llama a la función de validación para el campo de nombre del tutor
-    validarCampo('nombre_titular', 'nombre-titular-error', 'El nombre del tutor solo debe contener letras y espacios.', letrasRegex);
+        // Expresión regular para validar que los campos de nombre y apellido contienen solo letras y espacios
+        var letrasRegex = /^[a-zA-Z\s]*$/;
 
-    // Llama a la función de validación para el campo de teléfono del tutor
-    validarCampo('telefono_titular', 'telefono-titular-error', 'Por favor, ingresa solo números en el teléfono del tutor.', numerosRegex);
-    
+        // Llama a la función de validación para el campo de nombre
+        validarCampo('nombre', 'nombre-error', 'El nombre solo debe contener letras y espacios.', letrasRegex);
 
-    var fechaNacimientoInput = document.getElementById('fecha_nacimiento');
-    var fechaNacimientoError = document.getElementById('fecha-nacimiento-error');
-    var fechaInicioInput = document.getElementById('fecha_inicio');
-    var fechaInicioError = document.getElementById('fecha-inicio-error');
+        // Llama a la función de validación para el campo de apellido
+        validarCampo('apellido', 'apellido-error', 'El apellido solo debe contener letras y espacios.', letrasRegex);
 
-    // Expresión regular para validar que el campo de fecha de nacimiento tiene el formato correcto (YYYY-MM-DD)
-    var fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
 
-    validarCampo('fecha_nacimiento', 'fecha-nacimiento-error', 'Por favor, ingresa una fecha válida (YYYY-MM-DD).', fechaRegex);
+        // Llama a la función de validación para el campo de nombre del tutor
+        validarCampo('nombre_titular', 'nombre-titular-error', 'El nombre del tutor solo debe contener letras y espacios.', letrasRegex);
 
-    fechaNacimientoInput.addEventListener('input', function() {
-        var fechaNacimiento = new Date(fechaNacimientoInput.value);
-        var fechaActual = new Date();
-        var fechaHace6Anios = new Date();
-        fechaHace6Anios.setFullYear(fechaActual.getFullYear() - 6);
 
-        if (isNaN(fechaNacimiento.getTime())) {
-            fechaNacimientoError.textContent = 'Por favor, ingresa una fecha válida.';
-            fechaNacimientoError.style.display = 'block';
-        } else {
-            fechaNacimientoError.style.display = 'none';
+        var fechaNacimientoInput = document.getElementById('fecha_nacimiento');
+        var fechaNacimientoError = document.getElementById('fecha-nacimiento-error');
+        var fechaInicioInput = document.getElementById('fecha_inicio');
+        var fechaInicioError = document.getElementById('fecha-inicio-error');
 
-            if (fechaNacimiento >= fechaActual) {
-                fechaNacimientoError.textContent = 'La fecha de nacimiento no puede ser la fecha actual.';
-                fechaNacimientoError.style.display = 'block';
-            } else if (fechaNacimiento >= fechaHace6Anios) {
-                fechaNacimientoError.textContent = 'La fecha de nacimiento debe ser anterior a los últimos 6 años.';
+        // Expresión regular para validar que el campo de fecha de nacimiento tiene el formato correcto (YYYY-MM-DD)
+        var fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+        validarCampo('fecha_nacimiento', 'fecha-nacimiento-error', 'Por favor, ingresa una fecha válida (YYYY-MM-DD).', fechaRegex);
+
+        fechaNacimientoInput.addEventListener('input', function() {
+            var fechaNacimiento = new Date(fechaNacimientoInput.value);
+            var fechaActual = new Date();
+            var fechaHace6Anios = new Date();
+            fechaHace6Anios.setFullYear(fechaActual.getFullYear() - 6);
+
+            if (isNaN(fechaNacimiento.getTime())) {
+                fechaNacimientoError.textContent = 'Por favor, ingresa una fecha válida.';
                 fechaNacimientoError.style.display = 'block';
             } else {
                 fechaNacimientoError.style.display = 'none';
 
-                // Validación en comparación con la fecha de inicio
-                var fechaInicio = new Date(fechaInicioInput.value);
-                if (fechaInicio <= fechaNacimiento) {
-                    fechaInicioError.textContent = 'La fecha de inicio debe ser posterior a la fecha de nacimiento.';
-                    fechaInicioError.style.display = 'block';
+                if (fechaNacimiento >= fechaActual) {
+                    fechaNacimientoError.textContent = 'La fecha de nacimiento no puede ser la fecha actual.';
+                    fechaNacimientoError.style.display = 'block';
+                } else if (fechaNacimiento >= fechaHace6Anios) {
+                    fechaNacimientoError.textContent = 'La fecha de nacimiento debe ser anterior a los últimos 6 años.';
+                    fechaNacimientoError.style.display = 'block';
                 } else {
-                    fechaInicioError.style.display = 'none';
+                    fechaNacimientoError.style.display = 'none';
+
+                    // Validación en comparación con la fecha de inicio
+                    var fechaInicio = new Date(fechaInicioInput.value);
+                    if (fechaInicio <= fechaNacimiento) {
+                        fechaInicioError.textContent = 'La fecha de inicio debe ser posterior a la fecha de nacimiento.';
+                        fechaInicioError.style.display = 'block';
+                    } else {
+                        fechaInicioError.style.display = 'none';
+                    }
                 }
             }
-        }
-    });
+        });
 
-    fechaInicioInput.addEventListener('input', function() {
-        // Validación en comparación con la fecha de nacimiento
-        var fechaNacimiento = new Date(fechaNacimientoInput.value);
-        var fechaInicio = new Date(fechaInicioInput.value);
+        fechaInicioInput.addEventListener('input', function() {
+            // Validación en comparación con la fecha de nacimiento
+            var fechaNacimiento = new Date(fechaNacimientoInput.value);
+            var fechaInicio = new Date(fechaInicioInput.value);
 
-        if (fechaInicio <= fechaNacimiento) {
-            fechaInicioError.textContent = 'La fecha de inicio debe ser posterior a la fecha de nacimiento.';
-            fechaInicioError.style.display = 'block';
-        } else {
-            fechaInicioError.style.display = 'none';
-        }
-    });
-
-});
-
-</script>
-<script>
-    function confirmarEliminacion(id, apellido, nombre) {
-        Swal.fire({
-            title: "Confirmar eliminación",
-            text: "¿Estás seguro de eliminar al alumno " + apellido + " " + nombre + "?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#FBD374",
-            cancelButtonColor: "#FBD374",
-            confirmButtonText: "Sí, eliminar",
-            cancelButtonText: "Cancelar"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Realiza la eliminación del alumno a través de una solicitud AJAX
-                $.ajax({
-                    type: "GET",  // Puedes cambiar esto a POST si lo prefieres
-                    url: "/eliminar/" + id,
-                    success: function (response) {
-                        // Eliminación exitosa, muestra un mensaje y recarga la página
-                        if (response.success) {
-                            Swal.fire("Alumno eliminado correctamente", "", "success").then(() => {
-                                // Recarga la página
-                                location.reload();
-                            });
-                        } else {
-                            // Manejar errores si la eliminación no fue exitosa
-                            Swal.fire("Error al eliminar al alumno", "Ocurrió un error durante la eliminación.", "error");
-                        }
-                    }
-                });
+            if (fechaInicio <= fechaNacimiento) {
+                fechaInicioError.textContent = 'La fecha de inicio debe ser posterior a la fecha de nacimiento.';
+                fechaInicioError.style.display = 'block';
+            } else {
+                fechaInicioError.style.display = 'none';
             }
         });
-    }
-</script>
 
-            
-                
+        });
+
+    </script>
+    
+    <script>
+        function validarLetras(input) {
+            // Reemplaza todo lo que no sea una letra con una cadena vacía
+            input.value = input.value.replace(/[^a-zA-Z]/g, '');
+    
+            // Puedes mostrar un mensaje de error si se ingresan caracteres no permitidos
+            var errorDivId = input.id + "-error";
+            var errorDiv = document.getElementById(errorDivId);
+            if (input.value.match(/[^a-zA-Z]/g)) {
+                errorDiv.innerHTML = "Solo se permiten letras.";
+            } else {
+                errorDiv.innerHTML = "";
+            }
+        }
+    </script>
+
+    <!-- SCRIPT BUSCADOR -->
         <script>
-            // Obtener el campo de búsqueda y la tabla
+            // Obtiene el campo de búsqueda y la tabla
             var busquedaInput = document.getElementById('busquedaInput');
             var tablaAlumnos = document.querySelector('.table');
             
-            // Agregar un evento de escucha para la entrada del usuario
+            // Agrega un evento de escucha para la entrada del usuario
             busquedaInput.addEventListener('input', function() {
                 var consulta = busquedaInput.value.toLowerCase();
             
-                // Obtener todas las filas de la tabla
+                // Obteniene todas las filas de la tabla
                 var filas = tablaAlumnos.querySelectorAll('tbody tr');
             
-                // Iterar a través de las filas y celdas y ocultar/mostrar según la consulta
+                // Iterar a través de las filas y celdas y oculta/muestra según la consulta
                 for (var i = 0; i < filas.length; i++) {
                     var fila = filas[i];
                     var mostrarFila = false;
             
-                    // Obtener todas las celdas de la fila
+                    // Obtiene todas las celdas de la fila
                     var celdas = fila.querySelectorAll('td');
             
-                    // Iterar a través de las celdas y verificar si alguna contiene la consulta
+                    // Itera a través de las celdas y verifica si alguna contiene la consulta
                     for (var j = 0; j < celdas.length; j++) {
                         var celda = celdas[j];
                         var contenidoCelda = celda.textContent.toLowerCase();
             
                         if (contenidoCelda.includes(consulta)) {
-                            mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
-                            break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                            mostrarFila = true; // Muestra la fila si se encuentra una coincidencia
+                            break; 
                         }
                     }
             
                     if (mostrarFila) {
-                        fila.style.display = ''; // Mostrar la fila
+                        fila.style.display = ''; // Muestra la fila
                     } else {
-                        fila.style.display = 'none'; // Ocultar la fila si no hay coincidencias
+                        fila.style.display = 'none'; // Oculta la fila si no hay coincidencias
                     }
                 }
             });
-            </script>    
+            </script>  
+            <!-- SCRIPT PARA CONFIRMAR ELIMINACIÓN DE ALUMNO --> 
             <script>
-                const table = document.getElementById("miTabla");
-                const rows = table.tBodies[0].rows;
-                const perPage = 4; // Número fijo de filas por página.
-                let currentPage = localStorage.getItem("currentPage") || 0;
-              
-                function showPage(page) {
-                  for (let i = 0; i < rows.length; i++) {
-                    if (i >= page * perPage && i < (page + 1) * perPage) {
-                      rows[i].style.display = "";
-                    } else {
-                      rows[i].style.display = "none";
-                    }
-                  }
-                }
-              
-                function saveCurrentPage() {
-                  localStorage.setItem("currentPage", currentPage);
-                }
-              
-                document.getElementById("anterior").addEventListener("click", () => {
-                  if (currentPage > 0) {
-                    currentPage--;
-                    showPage(currentPage);
-                    saveCurrentPage();
-                  }
-                });
-              
-                document.getElementById("siguiente").addEventListener("click", () => {
-                  const totalPages = Math.ceil(rows.length / perPage);
-                  if (currentPage < totalPages - 1) {
-                    currentPage++;
-                    showPage(currentPage);
-                    saveCurrentPage();
-                  }
-                });
-              
-                // Mostrar la página guardada al cargar la página.
-                showPage(currentPage);
-              </script>      
-              <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Obtener el botón "Guardar cambios"
-                    var guardarBoton = document.querySelector('button.btn-guardar');
-            
-                    // Obtener la alerta de cambios guardados
-                    var successMessage = document.getElementById('success-message');
-            
-                    // Agregar un evento de clic al botón "Guardar cambios"
-                    guardarBoton.addEventListener('click', function(event) {
-                        event.preventDefault(); // Evitar que el formulario se envíe (si es un formulario)
-            
-                        // Mostrar la alerta como una ventana emergente
-                        successMessage.style.display = 'block';
-            
-                        // Ocultar la alerta después de 5 segundos (5000 milisegundos)
-                        setTimeout(function() {
-                            successMessage.style.display = 'none';
-                        }, 5000);
+                function confirmarEliminacion(id, apellido, nombre) {
+                    Swal.fire({
+                        title: "Confirmar eliminación",
+                        text: "¿Estás seguro de eliminar al alumno " + apellido + " " + nombre + "?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#FBD374",
+                        cancelButtonColor: "#FBD374",
+                        confirmButtonText: "Sí, eliminar",
+                        cancelButtonText: "Cancelar"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Realiza la eliminación del alumno a través de una solicitud AJAX
+                            $.ajax({
+                                type: "GET",  // Puedes cambiar esto a POST si lo prefieres
+                                url: "/eliminar/" + id,
+                                success: function (response) {
+                                    // Eliminación exitosa, muestra un mensaje y recarga la página
+                                    if (response.success) {
+                                        Swal.fire("Alumno eliminado correctamente", "", "success").then(() => {
+                                            // Recarga la página
+                                            location.reload();
+                                        });
+                                    } else {
+                                        // Manejar errores si la eliminación no fue exitosa
+                                        Swal.fire("Error al eliminar al alumno", "Ocurrió un error durante la eliminación.", "error");
+                                    }
+                                }
+                            });
+                        }
                     });
-                });
-            </script>             
+                }
+            </script>   
     {% endblock %}              
 </body>             
                             

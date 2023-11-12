@@ -3,35 +3,30 @@
 <head>
     {% block title %}Nuevo alumno{% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
 
 <body>
-
     {% block content %}
-
         <div class="col-md-12 container">
             <a href="/listado" style="float: right;" class="btn-guardar ">Ver Listado</a>
             <h3 class="text-left subtitulo mt-3">Nuevo alumno</h3>
         
             <div class="card-contenedor mb-3 mt-4">
                 <div class="card-body">                                  
-                    <form action="/agregarAlumno" method="POST" onsubmit="return validarFormulario()">
+                    <form action="/agregarAlumno" method="POST" onsubmit="return validarFormulario() && validarLongitudDNI()">
                         <div class="row mb-3">
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">DNI<span class="campo-obligatorio">*</span></label>
-                                <input type="number" class="form-control mb-3" pattern="[0-9]{8}" maxlength="8" name="dni" id="dni" required value="{{ form_data.dni if form_data else '' }}" oninput="validarDNI()" >
-
-                                <div id="dni-error" class="error-message" style="display: none;"></div>
+                                <input type="number" class="form-control mb-3" pattern="[0-9]{8}" maxlength="8" name="dni" id="dni" required value="{{ form_data.dni if form_data else '' }}"  oninput="limitarDigitosDNI();">                       
                             </div> 
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Apellido <span class="campo-obligatorio">*</span></label>
-                                <input type="text" class="form-control mb-3" name="apellido" id="apellido" required value="{{ form_data.apellido if form_data else '' }}">
+                                <input type="text" class="form-control mb-3" required oninput="validarLetras(this)" name="apellido" id="apellido" required value="{{ form_data.apellido if form_data else '' }}">
                                 <div id="apellido-error" class="error-message"></div> 
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Nombre <span class="campo-obligatorio">*</span></label>
-                                <input type="text" class="form-control mb-3" name="nombre" id="nombre" required value="{{ form_data.nombre if form_data else '' }}">
+                                <input type="text" class="form-control mb-3" required oninput="validarLetras(this)" name="nombre" id="nombre" required value="{{ form_data.nombre if form_data else '' }}">
                                 <div id="nombre-error" class="error-message"></div> 
                             </div>                           
                             <div class="col-md-3 col-sm-12">
@@ -55,8 +50,9 @@
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Colegio <span class="campo-obligatorio">*</span></label>
-                                <input type="text" class="form-control mb-3" name="colegio" required value="{{ form_data.colegio if form_data else '' }}">
-                            </div>
+                                <input type="text" class="form-control mb-3" name="colegio" id="colegio" required value="{{ form_data.colegio if form_data else '' }}">
+                                <div id="colegio-error" class="error-message"></div>
+                            </div>                           
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form label-with-arrow">
                                     Curso <span class="campo-obligatorio">*</span>
@@ -65,16 +61,29 @@
                                             {% for curso in cursos %}
                                                 <option value="{{ curso }}">{{ curso }}</option>
                                             {% endfor %}
-                                        </select>
-                                        
+                                        </select>                                       
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                                         </svg>
                                     </div>
                                 </label>
                             </div>
-                          
-                            
+                           
+                            <div class="col-md-3 col-sm-12">
+                                <label class="label-form label-with-arrow">
+                                    Nivel Educativo <span class="campo-obligatorio">*</span>
+                                    <div class="select-container">
+                                        <select name="nivel_educativo" class="form-control mb-3">
+                                            {% for nivel in niveles_educativos %}
+                                                <option value="{{ nivel }}">{{ nivel }}</option>
+                                            {% endfor %}
+                                        </select>                           
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                        </svg>
+                                    </div>
+                                </label>
+                            </div>                          
                             <div class="col-md-3 col-sm-12">
                                 <label class="label-form">Nombre tutor <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control mb-3" name="nombre_titular" id="nombre_titular" required value="{{ form_data.nombre_titular if form_data else '' }}">
@@ -84,33 +93,9 @@
                                 <label  class="label-form">Telefono tutor <span class="campo-obligatorio">*</span></label>
                                 <input type="number" class="form-control mb-3" name="telefono_titular"   id="telefono_titular" maxlength="10" required value="{{ form_data.telefono_titular if form_data else '' }}">
                                 <div id="telefono-titular-error" class="error-message"></div> 
-                            </div>                      
-                            
-                                <script>
-                                    function validarFormulario() {
-                                        // Obtén todos los campos obligatorios
-                                        var camposObligatorios = document.querySelectorAll('[required]');
-                                        var todosCompletos = true;
-                                    
-                                        camposObligatorios.forEach(function(campo) {
-                                            if (campo.value.trim() === '') {
-                                                todosCompletos = false;
-                                            }
-                                        });
-                                    
-                                        if (!todosCompletos) {
-                                            // Si no todos los campos obligatorios están completos, muestra una alerta
-                                            alert('Por favor, completa todos los campos obligatorios.');
-                                            return false; // Evita que se envíe el formulario
-                                        }
-                                    
-                                        // Si todos los campos obligatorios están completos, el formulario se enviará
-                                        return true;
-                                    }
-                                    </script>
+                            </div>                                                
+                              
                             </div>
-
-
                             <div class="text-center">
                                 <div class="btn-container">
                                     <button type="button" class="btn-guardar" data-bs-toggle="modal" data-bs-target="#confirmarGuardar">Guardar alumno</button>
@@ -149,25 +134,81 @@
                             </div>
                             {% endif %}
                             {% endwith %}
-                        </div>
-                        
+                        </div>                        
                         {% endif %}
-                        {% endwith %}
-                        
+                        {% endwith %}                   
                         </form>
                     </div>
-                </div>
-                
-             
-                
-            
-                            
-                       
+                </div>                                                         
                 </div>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
+        <script>
+            function limitarDigitosDNI() {
+                var dniInput = document.getElementById('dni');
+        
+                // Obtén el valor del campo del DNI
+                var dniValue = dniInput.value;
+        
+                // Verifica si la longitud del DNI es mayor a 8
+                if (dniValue.length > 8) {
+                    // Corta el valor del DNI a los primeros 8 dígitos
+                    dniInput.value = dniValue.slice(0, 8);
+                }
+            }
+        </script>
+        <script>
+            function validarLongitudDNI() {
+                var dniInput = document.getElementById('dni');
+        
+                // Obtén el valor del campo del DNI
+                var dniValue = dniInput.value;
+        
+                // Verifica si la longitud del DNI es menor a 8
+                if (dniValue.length < 8) {
+                    // Muestra una Sweet Alert indicando el error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'El DNI debe contener al menos 8 dígitos',
+                    });
+        
+                    // Devuelve false para evitar que el formulario se envíe
+                    return false;
+                }
+        
+                // Devuelve true para permitir que el formulario se envíe
+                return true;
+            }
+        </script>
+        <script>
+            function validarColegio() {
+                var colegioInput = document.getElementById('colegio');
+                var errorDiv = document.getElementById('colegio-error');
+        
+                // Expresión regular para permitir solo letras y números en el colegio
+                var colegioRegex = /^[a-zA-Z0-9\s]+$/;
+        
+                var valorColegio = colegioInput.value.trim();
+        
+                if (!colegioRegex.test(valorColegio)) {
+                    errorDiv.style.display = 'block';
+                    errorDiv.textContent = 'El nombre del colegio solo debe contener letras, números y espacios.';
+                    return false;
+                } else {
+                    errorDiv.style.display = 'none';
+                    return true;
+                }
+            }
+        
+            // Llama a la función de validación cuando se realiza una entrada en el campo colegio
+            var colegioInput = document.getElementById('colegio');
+            colegioInput.addEventListener('input', validarColegio);
+        </script>
+        
+        
+    <script>
     $(document).ready(function() {
         $(".btn-guardar").click(function() {
             // Realiza una solicitud AJAX al servidor para agregar un alumno
@@ -187,11 +228,11 @@
             });
         });
     });
-</script>
+    </script>
 
-        <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-    function validarCampo(inputId, errorId, mensajeError, regex) {
+        function validarCampo(inputId, errorId, mensajeError, regex) {
         var input = document.getElementById(inputId);
         var error = document.getElementById(errorId);
 
@@ -385,19 +426,31 @@
     function validarFormulario() {
         var camposObligatorios = document.querySelectorAll('[required]');
         var todosCompletos = true;
+
         camposObligatorios.forEach(function(campo) {
             if (campo.value.trim() === '') {
                 todosCompletos = false;
                 console.log('Campo vacío:', campo.name);
             }
         });
+
+        // Validar que se haya seleccionado una opción en el campo "Curso"
+        var cursoSelect = document.querySelector('[name="curso"]');
+        if (cursoSelect.value.trim() === '') {
+            todosCompletos = false;
+            console.log('Campo "Curso" no seleccionado');
+            alert('Por favor, selecciona una opción en el campo "Curso".');
+        }
+
         if (!todosCompletos) {
             alert('Por favor, completa todos los campos obligatorios.');
             return false;
         }
+
         return true;
     }
-    </script>           
+</script>
+
     {% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -441,4 +494,20 @@
         });
     });
 </script> 
+<script>
+    function validarLetras(input) {
+        // Reemplaza todo lo que no sea una letra con una cadena vacía
+        input.value = input.value.replace(/[^a-zA-Z]/g, '');
+
+        // Puedes mostrar un mensaje de error si se ingresan caracteres no permitidos
+        var errorDivId = input.id + "-error";
+        var errorDiv = document.getElementById(errorDivId);
+        if (input.value.match(/[^a-zA-Z]/g)) {
+            errorDiv.innerHTML = "Solo se permiten letras.";
+        } else {
+            errorDiv.innerHTML = "";
+        }
+    }
+</script>
+
 </body>

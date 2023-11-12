@@ -357,18 +357,7 @@ def agregarAlumno():
     }
         return redirect(url_for('alta'))
         
-    # Consulta SQL para contar el número de alumnos en el mismo horario
-    count_query = "SELECT COUNT(*) FROM alumnos WHERE horario = %s"
-   
-
-    try:
-        cursor.execute(count_query)
-        result = cursor.fetchone()
-        if result[0] >= 4:
-            flash("Ya hay 4 alumnos registrados en este horario.", "error")
-            return redirect(url_for('alta'))
-    except mysql.connector.Error as err:
-        print(f"Error de MySQL: {err}")
+  
 
     # Si el conteo es menor a 4, procedemos a insertar el nuevo alumno
     insert_query = "INSERT INTO alumnos (dni,apellido,nombre, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -615,11 +604,9 @@ def editar(id):
         }
         return redirect(url_for('listado'))
     
-    # Consulta SQL para contar el número de alumnos en el mismo horario
-    count_query = "SELECT COUNT(*) FROM alumnos WHERE horario = %s"
-  
+
     try:
-        cursor.execute(count_query)
+  
         result = cursor.fetchone()
         if result[0] >= 4:
             flash("Ya hay 4 alumnos registrados en este horario.", "error")

@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="/static/css/datatables.min.css">
   <link rel="stylesheet" href="/static/css/bootstrap-clockpicker.css">
 
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <!-- Scripts JS -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="/static/js/jquery-3.7.1.min.js"></script>
@@ -71,9 +71,14 @@
           </li>
 
         </ul>
-        <div class="text-center ">
-          <a class="nav-link" href="{{ url_for('logout') }}">Cerrar Sesión</a>
-        </div>
+        <div class="text-center">
+                <a class="nav-link" href="{{ url_for('logout') }}">Cerrar Sesión</a>  
+            </div>
+            <div class="text-center" style="margin-left:1rem;">
+              <a href="{{ url_for('descargar_pdf_manual') }}" target="_blank" >
+                <i class="btn-manual bi bi-question" data-toggle="tooltip"  data-placement="bottom" title="Manual de Usuario"></i>
+              </a>
+          </div>
       </div>
     </div>
   </nav>
@@ -101,11 +106,14 @@
         <div class="modal-body">
           <input type="hidden" id="Id">
           <div class="row mb-2">
-            <div class="form-group col">
-              <label for="">Nombre del alumno</label>
-              <input type="text" id="Titulo" class="form-control w-100" placeholder="">
-            </div>
-          </div>
+          <div class="form-group col">
+  <label for="">Nombre del alumno</label>
+  <select id="Titulo" class="form-control w-100">
+    <!-- Opciones de alumnos se cargarán dinámicamente aquí -->
+  </select>
+</div>
+
+
 
           <div class="row mb-2">
             <div class="form-group col">
@@ -268,21 +276,27 @@
 
       //Funciones para comunicarse con el servidor AJAX
       function agregarRegistro(registro) {
-        $.ajax({
-          type: 'POST',
-          url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=agregar',
-          data: registro,
-          success: function (msg) {
-            calendario1.refetchEvents();
-            mostrarSweetAlert("¡Alumno agregado correctamente!", "El alumno ha sido agregado exitosamente.", "success");
-            $('#FormularioEventos').modal('hide'); // Esto oculta el modal después de agregar
-          },
-          error: function (error) {
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=agregar',
+        data: registro,
+        success: function (response) {
+            if (response.error) {
+                // Mostrar alerta de SweetAlert con el mensaje de error
+                mostrarSweetAlert("Error", response.error, "error");
+            } else {
+                // Éxito: recargar eventos y mostrar mensaje de éxito
+                calendario1.refetchEvents();
+                mostrarSweetAlert("¡Alumno agregado correctamente!", "El alumno ha sido agregado exitosamente.", "success");
+                $('#FormularioEventos').modal('hide');
+            }
+        },
+        error: function (error) {
             mostrarSweetAlert("Error", "Hubo un error al agregar el evento.", "error");
             console.log("Hubo un error al agregar el evento:", error);
-          }
-        });
-      }
+        }
+    });
+}
 
 
       function modificarRegistro(registro) {
@@ -293,7 +307,6 @@
           success: function (msg) {
             calendario1.refetchEvents();
             mostrarSweetAlert("¡Cambios guardados correctamente!", "Los cambios han sido guardados exitosamente.", "success");
-            $('#FormularioEventos').modal('hide'); // Esto oculta el modal después de modificar
           },
           error: function (error) {
             mostrarSweetAlert("Error", "Hubo un error al modificar el evento.", "error");
@@ -301,7 +314,6 @@
           }
         });
       }
-
       function mostrarSweetAlert(title, text, icon) {
         Swal.fire({
           title: title,
@@ -342,14 +354,16 @@
       }
 
       function recuperarDatosFormulario() {
+        let idAlumnoSeleccionado = $('#Titulo').val();
         let fechaInicio = $('#FechaInicio').val();
         let horaInicio = $('#HoraInicio').val();
         let fechaFin = $('#FechaFin').val();
         let horaFin = $('#HoraFin').val();
+        
         // Formatear fecha y hora correctamente
         let inicio = moment(`${fechaInicio} ${horaInicio}`, 'YYYY-MM-DD HH:mm').format();
         let fin = moment(`${fechaFin} ${horaFin}`, 'YYYY-MM-DD HH:mm').format();
-
+        let idAlumno = obtenerIdAlumno();
 
         let registro = {
           id: $('#Id').val(),
@@ -362,375 +376,38 @@
         }
         return registro;
       }
-
-    </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Formulario de eventos 
-  <div class="modal fade" id="FormularioEventos" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-md" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close "
-            style=" color: #7ea56a: background-color:#fffff; border:none; font-size: 1.5em" data-bs-dismiss="modal"
-            aria-label="close">
-            <span aria-hidden="true">x</span>
-          </button>
-        </div>
-        <div class="modal-body ">
-          <input type="hidden" id="Id">
-          <div class="row mb-2">
-            <div class="col">
-              <label for="">Alumno:</label>
-              <select id="NombreAlumno" name="nombre_alumno" class="form-modal-calendario"></select>
-            </div>
-            <div class="col">
-              <label for="">Fecha:</label>
-              <div>
-                <input type="date" id="FechaInicio" value="" class="form-modal-calendario">
-              </div>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col" id="TituloHoraInicio">
-              <label for="">Horario:</label>
-              <div class="input-group clockpicker" data-autoclose="true">
-                <input type="time" id="HorarioInicio" value="" autocomplete="off" class="form-modal-calendario">
-              </div>
-            </div>
-            <div class="col">
-              <label for="">Color de fondo:</label>
-              <div>
-              <input type="color" id="ColorFondo" class="form-modal-calendario" style="height: 15px;"></input>
-              </div>
-            </div>
-          </div>
-          <div class="row mt-2">
-            <label for="">Descripción</label>
-            <textarea id="Descripcion" name="descripcion" rows="3" class="form-modal-calendario"></textarea>
-          </div>
-         
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="BotonAgregar" class="btn-guardar" >Agregar</button>
-          <button type="button" id="BotonModificar" class="btn btn-success" style="background-color:#FBD374; border:none">Modificar</button>
-          <button type="button" id="BotonBorrar" class="btn-guardar" style="background:#7ea56a;">Borrar</button>
-          <button type="button" class="btn btn-success" data-bs-dismiss="modal" style="background-color:#FBD374; border:none">Cancelar</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      let calendario1 = new FullCalendar.Calendar(document.getElementById('Calendario1'), {
-        height: 500,
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay',
+      function obtenerIdAlumno() {
+    let idAlumnoSeleccionado = $('#Titulo').val();
+    let idAlumno = idAlumnoSeleccionado.split(',')[0];
+    return idAlumno;
+}
+      function cargarListaAlumnos() {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=obtener_alumnos', // Reemplaza con la ruta correcta
+        success: function (alumnos) {
+          // Limpiar el desplegable antes de agregar nuevas opciones
+          $('#Titulo').empty();
+
+          // Agregar una opción por cada alumno
+          alumnos.forEach(function (alumno) {
+            $('#Titulo').append(`<option value="${alumno.apellido}, ${alumno.nombre}">${alumno.apellido}, ${alumno.nombre}</option>`);
+
+          });
         },
-        editable: true,
-        locale: 'es',
-        events: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=listar',
-        dateClick: function (info) {
-          limpiarFormulario();
-          $('#BotonAgregar').show();
-          $('#BotonModificar').hide();
-          $('#BotonBorrar').hide();
-          if (info.allDay) {
-            $('#FechaInicio').val(info.dateStr);
-          } else {
-            let fechaHora = info.dateStr.split("T");
-            $('#FechaInicio').val(fechaHora[0]);
-            $('#HorarioInicio').val(fechaHora[1].substring(0, 5));
-          }
-
-          $("#FormularioEventos").modal('show');
-        },
-        eventClick: function (info) {
-          $('#BotonAgregar').hide();
-          $('#BotonModificar').show();
-          $('#BotonBorrar').show();
-          $('#Id').val(info.event.id);
-          $('#FechaInicio').val(moment(info.event.start).format("YYYY-MM-DD"));
-          $('#HorarioInicio').val(moment(info.event.start).format("HH:mm"));
-          $('#Descripcion').val(info.event.extendedProps.descripcion);
-          $('#ColorFondo').val(info.event.backgroundColor);
-          $('#ColorTexto').val(info.event.textColor);
-          $("#FormularioEventos").modal('show');
-        },
-        eventDrop: function (info) {
-          $('#Id').val(info.event.id);
-          $('#NombreAlumno').val(info.event.title);
-          $('#FechaInicio').val(moment(info.event.start).format("YYYY-MM-DD"));
-          $('#HorarioInicio').val(moment(info.event.start).format("HH:mm"));
-          $('#Descripcion').val(info.event.extendedProps.descripcion);
-          $('#ColorFondo').val(info.event.backgroundColor);
-          $('#ColorTexto').val(info.event.textColor);
-          let registro = recuperarDatosFormulario();
-          modificarRegistro(registro);
+        error: function (error) {
+          console.log("Hubo un error al cargar la lista de alumnos:", error);
         }
       });
-
-      calendario1.render();
-
-      // Eventos de botones
-      // Boton Agregar
-      $('#BotonAgregar').click(function () {
-        let registro = recuperarDatosFormulario();
-        agregarRegistro(registro);
-        $('#FormularioEventos').modal('hide');
-      });
-
-      // Boton Modificar
-      $('#BotonModificar').click(function () {
-        let registro = recuperarDatosFormulario();
-        modificarRegistro(registro);
-        $('#FormularioEventos').modal('hide');
-      });
-
-      // Boton Borrar
-      $('#BotonBorrar').click(function () {
-        let registro = recuperarDatosFormulario();
-        borrarRegistro(registro);
-        $('#FormularioEventos').modal('hide');
-      });
-
-      // Funciones para comunicarse con el servidor AJAX!
-      function agregarRegistro(registro) {
-        $.ajax({
-          type: 'POST',
-          url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=agregar',
-          data: registro,
-          success: function (msg) {
-            calendario1.refetchEvents();
-          },
-          error: function (error) {
-            alert("Hubo un error al agregar el alumno:" + error);
-          }
-        });
-      }
-
-      function modificarRegistro(registro) {
-      $.ajax({
-          type: 'POST',
-          url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=modificar',
-          data: registro,
-          success: function (msg) {
-              console.log("Respuesta del servidor:", msg);
-              calendario1.refetchEvents();
-          },
-          error: function (error) {
-              console.log("Error al modificar el evento: " + JSON.stringify(error));
-          }
-      });
     }
 
-
-      function borrarRegistro(registro) {
-        $.ajax({
-          type: 'POST',
-          url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=borrar',
-          data: registro,
-          success: function (msg) {
-            calendario1.refetchEvents();
-          },
-          error: function (error) {
-            alert("Hubo un error al borrar el alumno: " + JSON.stringify(error));
-          }
-        });
-      }
-
-      // Antes de mostrar el modal, obtener la lista de alumnos y las materias
-      $("#FormularioEventos").on('show.bs.modal', function () {
-        llenarSelectAlumnos();
-      });
-
-      // Llenar el select de alumnos
-      function llenarSelectAlumnos() {
-        $.ajax({
-          url: 'http://localhost/prueba/pruebaa/src/datoseventos.php?accion=alumnos',
-          method: 'GET',
-          success: function (data) {
-            var nombreAlumnoSelect = $('#NombreAlumno');
-            nombreAlumnoSelect.empty();
-
-            data.forEach(function (alumno) {
-              var option = `<option value="${alumno.nombre} ${alumno.apellido}">${alumno.nombre} ${alumno.apellido}</option>`;
-              nombreAlumnoSelect.append(option);
-            });
-          },
-          error: function (error) {
-            console.error('Error al obtener la lista de alumnos: ' + JSON.stringify(error));
-          }
-        });
-      }
+    // Llamar a la función al cargar la página
+    $(document).ready(function () {
+      cargarListaAlumnos();
     });
 
-    // Funciones para interactuar con el formulario de eventos
-    function limpiarFormulario() {
-      $('#Id').val('');
-      var nombreAlumno = $('#NombreAlumno').val();
-      $('#FechaInicio').val('');
-      $('#HorarioInicio').val('');
-      $('#Descripcion').val('');
-      $('#ColorFondo').val('#FBD374');
-      $('#ColorTexto').val('#ffffff');
-    }
 
-    function recuperarDatosFormulario() {
-      let registro = {
-        id: $('#Id').val(),
-        nombre_alumno: $('#NombreAlumno').val(),
-        inicio: $('#FechaInicio').val(),
-        horario: $('#HorarioInicio').val(),
-        descripcion: $('#Descripcion').val(),
-        colorfondo: $('#ColorFondo').val(),
-        colortexto: $('#ColorTexto').val()
-      };
-      return registro;
-    }
-  </script>-->
-
+    </script>
 
 </body>
 
