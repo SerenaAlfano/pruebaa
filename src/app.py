@@ -856,7 +856,7 @@ def editaringresos(id_ingresos):
 #Egresos
 @app.route("/egresos", methods=["GET", "POST"])
 def egresos():
-    form_data = session.pop('form_data', None)  # Obtiene los datos del formulario almacenados en sesión
+    form_data = session.pop('form_data', {})  # Obtiene los datos del formulario almacenados en sesión
     servicios= None
     fecha_pago = None
     fecha_actual = None 
@@ -872,25 +872,27 @@ def egresos():
         cursor.execute("SELECT id, nombre_medio_pago FROM medios_pago")
         medios_de_pago_rows = cursor.fetchall()
         cursor.close()
-
-        #Verifica si el servicio es un gasto fijo mensual
-        gastos_fijos_mensuales = ["luz", "agua", "gas", "internet"]
-        if servicios.lower() in gastos_fijos_mensuales:
-             #Verifica si el servicio ya se ha registrado este mes
-             cursor = db_connection.cursor()
-             cursor.execute("SELECT COUNT(*) FROM egresos WHERE servicios = %s AND MONTH(fecha_pago) = MONTH(CURRENT_DATE())", (servicios,))
-             count = cursor.fetchone()[0]
-             cursor.close()
-             if count > 0:
-                flash(f"El servicio {servicios} ya se ha registrado este mes.", "error")
-                session['form_data'] = {
-                    'servicios': servicios,
-                    'fecha_pago': fecha_pago,
-                    'monto': monto,
-                    'medios_de_pago': medios_de_pago
-                }
-                return redirect(url_for('egresos'))
         
+        # Extraer mes y año de la fecha de pago
+        mes_pago = datetime.strptime(fecha_pago, '%Y-%m-%d').month
+        anio_pago = datetime.strptime(fecha_pago, '%Y-%m-%d').year
+        
+        # Verifica si el servicio ya se ha registrado este mes y año
+        cursor = db_connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM egresos WHERE servicios = %s AND MONTH(fecha_pago) = %s AND YEAR(fecha_pago) = %s", (servicios, mes_pago, anio_pago))
+        count = cursor.fetchone()[0]
+        cursor.close()
+        
+        if count > 0:
+            flash(f"El servicio {servicios} ya se ha registrado este mes.", "error")
+            session['form_data'] = {
+                'servicios': servicios,
+                'fecha_pago': fecha_pago,
+                'monto': monto,
+                'medios_de_pago': medios_de_pago
+                }
+            return redirect(url_for('egresos'))
+
         #Obtiene la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
