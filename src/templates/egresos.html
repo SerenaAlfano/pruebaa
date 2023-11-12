@@ -12,7 +12,7 @@
                         <div class="row mb-3">
                             <div class="col-md-3 col-sm-12">
                                 <label  class="label-form">Nombre del servicio o gasto <span class="campo-obligatorio">*</span></label>
-                                <input type="text" class="form-control mb-3" name="servicios" required value="{{ form_data.servicios if form_data else '' }}">
+                                <input type="text" class="form-control mb-3" name="servicios" required value="{{ form_data['servicios'] if form_data else '' }}">
                             </div>
                             <script>
                                 // Obtener el valor ingresado por el usuario en el campo de entrada de texto
@@ -31,11 +31,11 @@
                             </script>                            
                             <div class="col-md-3">
                                 <label class="label-form" >Fecha de pago <span class="campo-obligatorio">*</span></label>
-                                <input type="date" class="form-control mb-3" name="fecha_pago" required value="{{ form_data.fecha_pago if form_data else '' }}">
+                                <input type="date" class="form-control mb-3" name="fecha_pago" required value="{{ form_data['fecha_pago'] if form_data else '' }}">
                             </div>
                             <div class="col-md-3">
                                 <label  class="label-form">Monto <span class="campo-obligatorio">*</span></label>
-                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                    <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data['monto'] if form_data else '' }}" id="montoInput">
                             </div>
                             <script>
                             // Obtener el campo de entrada por su ID
@@ -70,10 +70,10 @@
                                 <label class="form-label label-with-arrow">
                                     Medios de pago <span class="campo-obligatorio">*</span>
                                     <div class="select-container">
-                                        <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data.medios_de_pago if form_data else '' }}">
-                                            <option value="Efectivo" {% if data.medios_de_pago == 'Efectivo' %}selected{% endif %}>Efectivo</option>
-                                            <option value="Mercado pago" {% if data.medios_de_pago == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
-                                            <option value="Cuenta DNI" {% if data.medios_de_pago == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
+                                        <select class="form-control mb-3" name="medios_de_pago" required value="{{ form_data['medios_de_pago'] if form_data else '' }}">
+                                            <option value="Efectivo" {% if form_data['medios_de_pago'] == 'Efectivo' %}selected{% endif %}>Efectivo</option>
+                                            <option value="Mercado pago" {% if form_data['medios_de_pago'] == 'Mercado pago' %}selected{% endif %}>Mercado pago</option>
+                                            <option value="Cuenta DNI" {% if form_data['medios_de_pago'] == 'Cuenta DNI' %}selected{% endif %}>Cuenta DNI</option>
                                         </select>         
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -126,35 +126,30 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id="miTabla"  class="table table-bordered m-1 mb-2" style="background-color: white;">
-                       
+                    <table id="miTabla" class="table table-bordered m-1 mb-2" style="background-color: white;">
                         <thead>
-                
-                        <th class="col-tabla" scope="col">Nombre del servicio o gasto</th>
-                        <th class="col-tabla" scope="col">Fecha de pago</th>
-                        <th class="col-tabla" scope="col">Monto</th>
-                        <th class="col-tabla" scope="col">Medio de pago</th>
-                        <th class="col-tabla" scope="col" colspan="2"></th>
-                       
-                    </thead>
-                </div>
-                    <tbody>
-                        {% for d in data %}
-                        <tr>
-                       
-                            <td class="td-table">{{ d.servicios.title() }}</td>
-                            <td class="td-table">{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
-                            <td class="td-table">${{ '{:,.2f}'.format(d.monto) }}</td>
-                            <td class="td-table">{{ d.medios_de_pago }}</td>
-                            <td class="text-center "> <i class="btn-operacion bi bi-pencil-square " id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}"></i></td>
-                            <td class="text-center"> 
-                                <a href="#" onclick="confirmarEliminacionEgresos('{{ d.id }}', '{{ d.servicios }}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
-                                    <i class="btn-operacion bi bi-trash"></i>
-                                </a>
-                            </td>
-                            
-                            
-                        </tr>
+                            <th class="col-tabla" scope="col">Nombre del servicio o gasto</th>
+                            <th class="col-tabla" scope="col">Fecha de pago</th>
+                            <th class="col-tabla" scope="col">Monto</th>
+                            <th class="col-tabla" scope="col">Medio de pago</th>
+                            <th class="col-tabla" scope="col" colspan="2"></th>
+                        </thead>
+                        <tbody>
+                            {% for d in data %}
+                                <tr>
+                                    <td class="td-table">{{ d.servicios.title() }}</td>
+                                    <td class="td-table">{{ d.fecha_pago.strftime('%d/%m/%Y') }}</td>
+                                    <td class="td-table">${{ '{:,.2f}'.format(d.monto) }}</td>
+                                    <td class="td-table">{{ d.medios_de_pago }}</td>
+                                    <td class="text-center">
+                                        <i class="btn-operacion bi bi-pencil-square" id="btn-editar{{ d.id }}" data-bs-toggle="modal" data-bs-target="#modal{{ d.id }}"></i>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="#" onclick="confirmarEliminacionEgresos('{{ d.id }}', '{{ d.servicios }}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                            <i class="btn-operacion bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
                        
                         <!-- MODAL -->
                         <div class="modal fade" id="modal{{ d.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -180,7 +175,7 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <label>Monto <span class="campo-obligatorio">*</span></label>
-                                                    <input type="text" class="form-control" name="monto" placeholder="0.00" value="{{ d.monto }}" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                                    <input type="text" class="form-control" name="monto" placeholder="0.00" value="{{ d.monto }}" required value="{{ form_data['monto'] if form_data else '' }}" id="montoInput">
                                                 </div>
 
                                                 <script>

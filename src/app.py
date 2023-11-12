@@ -655,7 +655,7 @@ def ingresos():
 
     cursor.execute("SELECT nombre_tipo_pago FROM tipos_pago")
     tipos_pago_disponibles = [tipo_pago[0] for tipo_pago in cursor.fetchall()]
-    form_data = session.pop('form_data', None)  # Obtiene los datos del formulario almacenados en sesión
+    form_data = session.pop('form_data', {})  # Obtiene los datos del formulario almacenados en sesión
     
     # Define las variables con valores predeterminados (pueden ser None u otros valores apropiados)
     fecha_pago = None
@@ -665,20 +665,40 @@ def ingresos():
     medios_de_pago = None
     tipo_pago = None
     
+        # Verifica si es una solicitud POST
     if request.method == "POST":
         # Obtiene la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
-        # Mueve la obtención del nombre_alumno
         nombre_alumno = request.form["nombre_alumno"]
+
         # Verifica si ya existe un pago para el mismo alumno en el mismo mes y año
-        cursor = db_connection.cursor()
         cursor.execute("SELECT COUNT(*) FROM ingresos WHERE nombre_alumno = %s AND MONTH(fecha_pago) = %s AND YEAR(fecha_pago) = %s", (nombre_alumno, fecha_pago.month, fecha_pago.year))
         pago_existente = cursor.fetchone()[0]
-        cursor.close()
 
-        if pago_existente > 0:
-            flash("Ya existe un pago para este alumno en el mismo mes y año.", "error")
+        # Verifica si ya existe un pago mensual para el mismo alumno en el mismo mes y año
+        cursor.execute("SELECT COUNT(*) FROM ingresos WHERE nombre_alumno = %s AND MONTH(fecha_pago) = %s AND YEAR(fecha_pago) = %s AND tipo_pago = 'Mensual'", (nombre_alumno, fecha_pago.month, fecha_pago.year))
+        pago_mensual_existente = cursor.fetchone()[0]
+
+    if tipo_pago == "Mensual" and pago_mensual_existente > 0:
+        flash("Ya existe un pago mensual para este alumno en el mismo mes y año.", "error")
+        session['form_data'] = {
+            'nombre_alumno': nombre_alumno,
+            'fecha_pago': fecha_pago_str,
+            'monto': monto,
+            'medios_de_pago': medios_de_pago,
+            'tipo_pago': tipo_pago
+        }
+        cursor.close()
+        return redirect(url_for('ingresos'))
+
+    elif tipo_pago == "Diario":
+        # Verifica si ya existe un pago diario para el mismo alumno en la misma fecha
+        cursor.execute("SELECT COUNT(*) FROM ingresos WHERE nombre_alumno = %s AND fecha_pago = %s AND tipo_pago = 'Diario'", (nombre_alumno, fecha_pago))
+        pago_diario_existente = cursor.fetchone()[0]
+
+        if pago_diario_existente > 0:
+            flash("Ya existe un pago diario para este alumno en la misma fecha.", "error")
             session['form_data'] = {
                 'nombre_alumno': nombre_alumno,
                 'fecha_pago': fecha_pago_str,
@@ -686,17 +706,18 @@ def ingresos():
                 'medios_de_pago': medios_de_pago,
                 'tipo_pago': tipo_pago
             }
+            cursor.close()
             return redirect(url_for('ingresos'))
+
 
     if request.method == "POST":
         monto = request.form["monto"]
         medios_de_pago = request.form["medios_de_pago"]
-        tipo_pago = request.form["tipo_pago"]               
-        # Obtiene la fecha de pago del formulario
-        fecha_pago_str = request.form["fecha_pago"]
-        fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()        
+        tipo_pago = request.form["tipo_pago"]
+        
         # Obtiene la fecha actual
-        fecha_actual = datetime.now().date()       
+        fecha_actual = datetime.now().date()
+        
         if fecha_pago > fecha_actual:
             flash("La fecha de pago debe ser actual o anterior.", "error")
             session['form_data'] = {
@@ -706,44 +727,46 @@ def ingresos():
                 'medios_de_pago': medios_de_pago,
                 'tipo_pago': tipo_pago
             }
+            cursor.close()
             return redirect(url_for('ingresos'))
         
         if nombre_alumno and fecha_pago and monto and medios_de_pago:
             monto = monto.replace('$', '').replace(',', '')  # Elimina "$" y comas
             monto = float(monto) 
-            cursor = db_connection.cursor()
-            sql = "INSERT INTO ingresos (nombre_alumno, fecha_pago, monto, medios_de_pago,tipo_pago) VALUES (%s, %s, %s, %s, %s)"
-            data = (nombre_alumno, fecha_pago, monto, medios_de_pago,tipo_pago)
-            cursor.execute(sql, data)
+            cursor.execute("INSERT INTO ingresos (nombre_alumno, fecha_pago, monto, medios_de_pago, tipo_pago) VALUES (%s, %s, %s, %s, %s)", (nombre_alumno, fecha_pago, monto, medios_de_pago, tipo_pago))
             db_connection.commit()
             cursor.close()
             return redirect(url_for('ingresos'))
-    
-    
-    #Muestra la página de ingresos con la lista de datos
-    cursor = db_connection.cursor()
-    cursor.execute("SELECT id_ingresos, nombre_alumno,  fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos")
+
+    # Muestra la página de ingresos con la lista de datos
+    cursor.execute("SELECT id_ingresos, nombre_alumno, fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos")
     myresult = cursor.fetchall()
     
-    #Convierte los datos a un diccionario
+    # Convierte los datos a un diccionario
     insertObject = []
     columnNames = [column[0] for column in cursor.description]
     
     for record in myresult:
         insertObject.append(dict(zip(columnNames, record)))
+    
     cursor.close()
-    #Obtiene la lista de nombres y apellidos de los alumnos
-    #Muestra la página de ingresos con la lista de datos 
+
+    # Obtiene la lista de nombres y apellidos de los alumnos
     cursor = db_connection.cursor()
     cursor.execute("SELECT id_ingresos, nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos")
     myresult = cursor.fetchall()
+    
     # Obtiene la lista de nombres y apellidos de los alumnos
     cursor.execute("SELECT nombre, apellido FROM alumnos")
     alumnos = cursor.fetchall()
     cursor.close()
+    
     # Crea una lista de nombres y apellidos concatenados
     nombres_apellidos = [f"{alumno[0]} {alumno[1]}" for alumno in alumnos]
+    
     return render_template("ingresos.html", data=insertObject, form_data=form_data, nombres_apellidos=nombres_apellidos, medios_pago_disponibles=medios_pago_disponibles)
+
+
 
 #Eliminar Ingresos
 @app.route("/eliminar_ingresos/<string:id_ingresos>")
@@ -843,7 +866,7 @@ def editaringresos(id_ingresos):
 #Egresos
 @app.route("/egresos", methods=["GET", "POST"])
 def egresos():
-    form_data = session.pop('form_data', None)  # Obtiene los datos del formulario almacenados en sesión
+    form_data = session.pop('form_data', {})  # Obtiene los datos del formulario almacenados en sesión
     servicios= None
     fecha_pago = None
     fecha_actual = None 
@@ -859,25 +882,27 @@ def egresos():
         cursor.execute("SELECT id, nombre_medio_pago FROM medios_pago")
         medios_de_pago_rows = cursor.fetchall()
         cursor.close()
-
-        #Verifica si el servicio es un gasto fijo mensual
-        gastos_fijos_mensuales = ["luz", "agua", "gas", "internet"]
-        if servicios.lower() in gastos_fijos_mensuales:
-             #Verifica si el servicio ya se ha registrado este mes
-             cursor = db_connection.cursor()
-             cursor.execute("SELECT COUNT(*) FROM egresos WHERE servicios = %s AND MONTH(fecha_pago) = MONTH(CURRENT_DATE())", (servicios,))
-             count = cursor.fetchone()[0]
-             cursor.close()
-             if count > 0:
-                flash(f"El servicio {servicios} ya se ha registrado este mes.", "error")
-                session['form_data'] = {
-                    'servicios': servicios,
-                    'fecha_pago': fecha_pago,
-                    'monto': monto,
-                    'medios_de_pago': medios_de_pago
-                }
-                return redirect(url_for('egresos'))
         
+        # Extraer mes y año de la fecha de pago
+        mes_pago = datetime.strptime(fecha_pago, '%Y-%m-%d').month
+        anio_pago = datetime.strptime(fecha_pago, '%Y-%m-%d').year
+        
+        # Verifica si el servicio ya se ha registrado este mes y año
+        cursor = db_connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM egresos WHERE servicios = %s AND MONTH(fecha_pago) = %s AND YEAR(fecha_pago) = %s", (servicios, mes_pago, anio_pago))
+        count = cursor.fetchone()[0]
+        cursor.close()
+        
+        if count > 0:
+            flash(f"El servicio {servicios} ya se ha registrado este mes.", "error")
+            session['form_data'] = {
+                'servicios': servicios,
+                'fecha_pago': fecha_pago,
+                'monto': monto,
+                'medios_de_pago': medios_de_pago
+                }
+            return redirect(url_for('egresos'))
+
         #Obtiene la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
