@@ -11,24 +11,18 @@
         <div class="table-responsive d-flex justify-content-center align-items-center mt-4" >
         <table class="table table-bordered m-1 mb-5" style="background-color: white;">
             <thead>
-                <th class="col-tabla" scope="col">Tipo</th>
-                <th class="col-tabla" scope="col">Monto</th>
-            </thead>
-            <tbody>
                 <tr>
                     <td>Ingresos</td>
-                    <td>{{ total_ingresos }}</td>
-
+                    <td>${{ '{:,.2f}'.format(total_ingresos) }}</td>
                 </tr>
                 <tr>
                     <td>Egresos</td>
-                    <td>{{ total_egresos }}</td>
+                    <td>${{ '{:,.2f}'.format(total_egresos) }}</td>
                 </tr>
                 <tr>
                     <td>Saldo</td>
-                    <td>{{ saldo }}</td>
+                    <td>${{ '{:,.2f}'.format(saldo) }}</td>
                 </tr>
-            </tbody>
         </table>
     </div>
 
