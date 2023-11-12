@@ -19,6 +19,7 @@ from flask import make_response
 from reportlab.lib.styles import getSampleStyleSheet
 from config import config
 from datetime import timedelta
+from mysql.connector import connect, Error
 
 # Función para convertir timedelta a un formato serializable
 def convert_timedelta_to_str(td):
@@ -990,9 +991,8 @@ def caja():
     total_egresos = cursor.fetchone()[0]
     
     #Calcula el saldo restando los totales de egresos de los totales de ingresos
-    saldo = total_egresos - total_ingresos  
+    saldo = total_ingresos - total_egresos  
     return render_template('caja.html',total_ingresos=total_ingresos, total_egresos=total_egresos, saldo=saldo)
-
 
 #Agenda
 @app.route("/agenda", methods=["GET", "POST"])
