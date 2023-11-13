@@ -32,11 +32,36 @@
                                 <input type="date" class="form-control mb-3" name="fecha_pago" id="fecha_pago" required value="{{ form_data.fecha_pago if form_data else '' }}">
                                 <div id="fecha-pago-error" class="error-message"></div> 
                             </div>
-                            <div class="col ">
+                            <div class="col">
                                 <label class="label-form">Monto <span class="campo-obligatorio">*</span></label>
-                                <input type="text" class="form-control " name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
-                            </div>
-                          
+                                <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
+                                <script>
+                                    // Obtener el campo de entrada por su ID
+                                    var montoInput = document.getElementById('montoInput');
+                                    // Agregar un manejador de eventos para el evento 'input'
+                                    montoInput.addEventListener('input', function() {
+                                        // Obtener el valor actual del campo
+                                        var valor = montoInput.value;
+                                        // Quitar cualquier carácter que no sea un número o punto
+                                        valor = valor.replace(/[^0-9.]/g, '');
+                                        // Si el valor está vacío, asignar $0.00 y mover el cursor al principio
+                                        if (valor === '') {
+                                            montoInput.value = '$0.00';
+                                            montoInput.setSelectionRange(1, 1); // Mover el cursor al principio
+                                            return;
+                                        }
+                                        // Convertir a número, si no es finito asignar 0
+                                        valor = isFinite(parseFloat(valor)) ? parseFloat(valor) : 0;
+                                        // Formatear el valor con dos decimales
+                                        valor = valor.toFixed(2);
+                                        // Agregar separadores de miles y el signo de dólar
+                                        valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                        // Asignar el valor formateado de nuevo al campo
+                                        montoInput.value = valor;
+                                    });
+                                </script>
+                            </div>                            
+                                                      
                             <script>
                                 document.addEventListener('DOMContentLoaded', function() {
                                     var fechaPagoInput = document.getElementById('fecha_pago');
@@ -216,16 +241,18 @@
                                                                 var valor = montoInputEdit.value;
                                                                 // Quitar cualquier carácter que no sea un número o punto
                                                                 valor = valor.replace(/[^0-9.]/g, '');
+                                                                // Convertir a número, si no es finito asignar 0
+                                                                valor = isFinite(parseFloat(valor)) ? parseFloat(valor) : 0;
                                                                 // Formatear el valor con dos decimales
-                                                                valor = parseFloat(valor).toFixed(2);
+                                                                valor = valor.toFixed(2);
                                                                 // Agregar separadores de miles y el signo de dólar
                                                                 valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
                                                                 // Asignar el valor formateado de nuevo al campo
                                                                 montoInputEdit.value = valor;
                                                             });
                                                         </script>
-                                                    </div> 
-
+                                                    </div>                                                                                                     
+                                                    
                                                 </div>
                                                 <div class="row"> 
                                                     <div class="col">
