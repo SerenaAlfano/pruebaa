@@ -1008,15 +1008,18 @@ def caja():
     cursor = db_connection.cursor()
 
     #Consulta para obtener el total de ingresos
+    # Consulta para obtener el total de ingresos
     cursor.execute("SELECT SUM(monto) FROM ingresos")
-    total_ingresos = cursor.fetchone()[0]
+    total_ingresos_result = cursor.fetchone()
+    total_ingresos = total_ingresos_result[0] if total_ingresos_result and total_ingresos_result[0] is not None else 0
 
-    #Consulta para obtener el total de egresos
+    # Consulta para obtener el total de egresos
     cursor.execute("SELECT SUM(monto) FROM egresos")
-    total_egresos = cursor.fetchone()[0]
-    
-    #Calcula el saldo restando los totales de egresos de los totales de ingresos
-    saldo = total_ingresos - total_egresos  
+    total_egresos_result = cursor.fetchone()
+    total_egresos = total_egresos_result[0] if total_egresos_result and total_egresos_result[0] is not None else 0
+
+    # Calcula el saldo restando los totales de egresos de los totales de ingresos
+    saldo = total_ingresos - total_egresos
     return render_template('caja.html',total_ingresos=total_ingresos, total_egresos=total_egresos, saldo=saldo)
 
 #Agenda
