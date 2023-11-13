@@ -34,34 +34,35 @@
                             <div class="col-md-3">
                                 <label  class="label-form">Monto <span class="campo-obligatorio">*</span></label>
                                     <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data['monto'] if form_data else '' }}" id="montoInput">
-                            </div>
+                            </div>                                            
                             <script>
-                            // Obtiene el campo de entrada por su ID
-                            var montoInput = document.getElementById('montoInput');
-                            
-                            // Agrega un manejador de eventos para el evento 'input'
-                            montoInput.addEventListener('input', function() {
-                                // Obtiene la posición actual del cursor
-                                var cursorPosition = montoInput.selectionStart;
-                              
-                                // Obtiene el valor actual del campo
-                                var valor = montoInput.value;
+                                // Obtiene el campo de entrada por su ID
+                                var montoInput = document.getElementById('montoInput');
                                 
-                                // Quita cualquier carácter que no sea un número o punto
-                                valor = valor.replace(/[^0-9.]/g, '');
-                                
-                                // Formatea el valor con dos decimales
-                                valor = parseFloat(valor).toFixed(2);
-                                                       
-                                valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
-                                
-                                // Asigna el valor formateado de nuevo al campo
-                                montoInput.value = valor;
-                                
-                                // Restaura la posición del cursor después del formato
-                                var newPos = cursorPosition + (valor.length - montoInput.value.length);
-                                montoInput.setSelectionRange(newPos, newPos);
-                            });
+                                // Agrega un manejador de eventos para el evento 'input'
+                                montoInput.addEventListener('input', function() {
+                                    // Obtiene la posición actual del cursor
+                                    var cursorPosition = montoInput.selectionStart;
+                                  
+                                    // Obtiene el valor actual del campo
+                                    var valor = montoInput.value;
+                                    
+                                    // Quita cualquier carácter que no sea un número o punto
+                                    valor = valor.replace(/[^0-9.]/g, '');
+                                    
+                                    // Formatea el valor con dos decimales
+                                    valor = parseFloat(valor).toFixed(2);
+                                    
+                                    // Agrega separadores de miles
+                                    valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                    
+                                    // Asigna el valor formateado de nuevo al campo
+                                    montoInput.value = valor;
+                                    
+                                    // Restaura la posición del cursor después del formato
+                                    var newPos = cursorPosition + (valor.length - montoInput.value.length);
+                                    montoInput.setSelectionRange(newPos, newPos);
+                                });
                             </script> 
                             <div class="col-md-3">
                                 <label class="form-label label-with-arrow">
@@ -173,7 +174,7 @@
                                                     <label>Monto <span class="campo-obligatorio">*</span></label>
                                                     <input type="text" class="form-control" name="monto" placeholder="0.00" value="{{ d.monto }}" required value="{{ form_data['monto'] if form_data else '' }}" id="montoInput">
                                                 </div>                                             
-
+                                            
                                                 <script>
                                                     // Obtiene el campo de entrada por su ID
                                                     var montoInput = document.getElementById('montoInput');
@@ -203,6 +204,7 @@
                                                         montoInput.setSelectionRange(newPos, newPos);
                                                     });
                                                     </script>
+                                                </div>                                                
                                                 <div class="col-6">
                                                     <label class="label-with-arrow">
                                                     Medios de pago <span class="campo-obligatorio">*</span>
