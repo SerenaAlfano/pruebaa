@@ -1,23 +1,23 @@
+#Importación de módulos
 import mysql.connector
-import os 
-import re
+import os #Permite interactuar con el sistema operativo (encontrar directorios)
+import re #Permite manipular cadenas
 import json
-
-from flask import Flask, render_template, request, redirect, url_for, flash, session,  jsonify, send_from_directory
-from datetime import datetime
-from flask_mysqldb import MySQL
+from flask import Flask, render_template, request, redirect, url_for, flash, session,  jsonify, send_from_directory #Flask:Marco Web para construir apps
+#Funciones y objetos relacionados con el manejo de solicitudes HTTP y renderizado de plantillas en Flask.
+from datetime import datetime #Módulos para trabajar con fechas y horas
+from flask_mysqldb import MySQL #Extensión de Flask para integrar MySQL con una aplicación Flask
 from datetime import timedelta
 from datetime import datetime
-
-from flask_login import LoginManager,logout_user, login_user
-from io import BytesIO
-from reportlab.lib.pagesizes import letter
+from flask_login import LoginManager,logout_user, login_user #Funciones relacionadas con la gestión de sesiones de usuario en Flask
+from io import BytesIO #Objeto de flujo de bytes en memoria
+from reportlab.lib.pagesizes import letter #Biblioteca para generar documentos PDF en Python
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors 
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from flask import make_response
 from reportlab.lib.styles import getSampleStyleSheet
-from config import config
+from config import config #Módulo propio que contiene configuraciones específicas para la aplicación
 from datetime import timedelta
 from mysql.connector import connect, Error
 
@@ -32,7 +32,7 @@ def convert_timedelta_to_str(td):
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir,"src", "templates")
 
-app = Flask(__name__, template_folder = template_dir)
+app = Flask(__name__, template_folder = template_dir) #Crea una instancia de la aplicación Flask.
 
 db = MySQL(app)
 db_config = config["development"]
