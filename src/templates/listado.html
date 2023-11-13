@@ -179,14 +179,13 @@
                 </div>
             </div>
         </div>   
-        <!-- VALIDACIONES -->
-    
 
+        <!-- VALIDACIONES -->
     <script>
         function validarLongitudDNI() {
             var dniInput = document.getElementById('dni');
 
-            // Obtén el valor del campo del DNI
+            // Obtiene el valor del campo del DNI
             var dniValue = dniInput.value;
 
             // Verifica si la longitud del DNI es diferente de 8
@@ -212,10 +211,6 @@
             // Si la validación no pasa, devuelve false para evitar que el formulario se envíe
             return false;
         }
-
-        // Aquí puedes agregar otras validaciones si es necesario
-
-        // Devuelve true para permitir que el formulario se envíe
         return true;
     }
     </script>
@@ -300,19 +295,16 @@
                         cancelButtonText: "Cancelar"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Realiza la eliminación del alumno a través de una solicitud AJAX
                             $.ajax({
-                                type: "GET",  // Puedes cambiar esto a POST si lo prefieres
+                                type: "GET",  
                                 url: "/eliminar/" + id,
                                 success: function (response) {
-                                    // Eliminación exitosa, muestra un mensaje y recarga la página
                                     if (response.success) {
                                         Swal.fire("Alumno eliminado correctamente", "", "success").then(() => {
                                             // Recarga la página
                                             location.reload();
                                         });
                                     } else {
-                                        // Manejar errores si la eliminación no fue exitosa
                                         Swal.fire("Error al eliminar al alumno", "Ocurrió un error durante la eliminación.", "error");
                                     }
                                 }

@@ -25,21 +25,21 @@ switch($_GET['accion']) {
         break;
     
         case 'agregar':
-            // Obtener la fecha y hora del nuevo evento
+            // Obtiene la fecha y hora del nuevo evento
             $inicio = $_POST['inicio'];
             $fin = $_POST['fin'];
         
-            // Contar cuántos eventos existen para la misma fecha y hora
+            // Cuenta cuántos eventos existen para la misma fecha y hora
             $contarEventos = mysqli_query($conexion, "SELECT COUNT(*) AS cantidad FROM eventos WHERE inicio <= '$inicio' AND fin >= '$fin'");
             $resultadoContador = mysqli_fetch_assoc($contarEventos);
         
-            // Verificar si hay menos de 4 eventos para permitir la inserción
+            // Verifica si hay menos de 4 eventos para permitir la inserción
             if ($resultadoContador['cantidad'] < 4) {
                 $respuesta = mysqli_query($conexion, "INSERT INTO eventos (titulo, descripcion, inicio, fin, colortexto, colorfondo) VALUES 
                 ('$_POST[titulo]','$_POST[descripcion]','$inicio','$fin','$_POST[colortexto]','$_POST[colorfondo]')");
                 echo json_encode($respuesta);
             } else {
-                // Mostrar un mensaje de error
+                // Mostra un mensaje de error
                 echo json_encode(array('error' => 'No hay más cupos disponibles para este horario.'));
             }
             break;

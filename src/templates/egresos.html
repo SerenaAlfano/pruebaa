@@ -15,18 +15,16 @@
                                 <input type="text" class="form-control mb-3" name="servicios" required value="{{ form_data['servicios'] if form_data else '' }}">
                             </div>
                             <script>
-                                // Obtener el valor ingresado por el usuario en el campo de entrada de texto
+                                // Obtiene el valor ingresado por el usuario en el campo de entrada de texto
                                 const tipoGastoManual = document.querySelector('input[name="servicios"]').value.trim().toLowerCase();
                                 
-                                // Verificar si el tipo de gasto es uno de los gastos fijos mensuales
+                                // Verifica si el tipo de gasto es uno de los gastos fijos mensuales
                                 const gastosFijosMensuales = ["luz", "gas", "agua", "internet"];
                                 
                                 if (gastosFijosMensuales.includes(tipoGastoManual)) {
-                                    // Aquí debes consultar el backend para verificar si este gasto ya se registró este mes
-                                    // Si ya se registró, muestra un mensaje de error y evita enviar el formulario
-                                    // Si no se registró, permite enviar el formulario sin restricciones
+                                   
                                 } else {
-                                    // Para otros gastos, permite enviar el formulario sin restricciones
+                                  
                                 }
                             </script>                            
                             <div class="col-md-3">
@@ -38,30 +36,29 @@
                                     <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data['monto'] if form_data else '' }}" id="montoInput">
                             </div>
                             <script>
-                            // Obtener el campo de entrada por su ID
+                            // Obtiene el campo de entrada por su ID
                             var montoInput = document.getElementById('montoInput');
                             
-                            // Agregar un manejador de eventos para el evento 'input'
+                            // Agrega un manejador de eventos para el evento 'input'
                             montoInput.addEventListener('input', function() {
-                                // Obtener la posición actual del cursor
+                                // Obtiene la posición actual del cursor
                                 var cursorPosition = montoInput.selectionStart;
                               
-                                // Obtener el valor actual del campo
+                                // Obtiene el valor actual del campo
                                 var valor = montoInput.value;
                                 
-                                // Quitar cualquier carácter que no sea un número o punto
+                                // Quita cualquier carácter que no sea un número o punto
                                 valor = valor.replace(/[^0-9.]/g, '');
                                 
-                                // Formatear el valor con dos decimales
+                                // Formatea el valor con dos decimales
                                 valor = parseFloat(valor).toFixed(2);
-                                
-                                // Agregar separadores de miles y el signo de dólar
+                                                       
                                 valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
                                 
-                                // Asignar el valor formateado de nuevo al campo
+                                // Asigna el valor formateado de nuevo al campo
                                 montoInput.value = valor;
                                 
-                                // Restaurar la posición del cursor después del formato
+                                // Restaura la posición del cursor después del formato
                                 var newPos = cursorPosition + (valor.length - montoInput.value.length);
                                 montoInput.setSelectionRange(newPos, newPos);
                             });
@@ -86,7 +83,6 @@
                                     <button type="submit" class="btn-guardar" data-bs-toggle="modal" data-bs-target="#confirmarGuardarEgresos">Guardar</button>
                                 </div>
                             </div>
-
                             <div class="btn-container">
                                 <!-- Modal de confirmación para guardar un alumno -->
                                 <div class="modal fade" id="confirmarGuardarEgresos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -179,30 +175,30 @@
                                                 </div>                                             
 
                                                 <script>
-                                                    // Obtener el campo de entrada por su ID
+                                                    // Obtiene el campo de entrada por su ID
                                                     var montoInput = document.getElementById('montoInput');
                                                     
-                                                    // Agregar un manejador de eventos para el evento 'input'
+                                                    // Agrega un manejador de eventos para el evento 'input'
                                                     montoInput.addEventListener('input', function() {
-                                                        // Obtener la posición actual del cursor
+                                                        // Obtiene la posición actual del cursor
                                                         var cursorPosition = montoInput.selectionStart;
                                                       
-                                                        // Obtener el valor actual del campo
+                                                        // Obtiene el valor actual del campo
                                                         var valor = montoInput.value;
                                                         
-                                                        // Quitar cualquier carácter que no sea un número o punto
+                                                        // Quita cualquier carácter que no sea un número o punto
                                                         valor = valor.replace(/[^0-9.]/g, '');
                                                         
-                                                        // Formatear el valor con dos decimales
+                                                        // Formatea el valor con dos decimales
                                                         valor = parseFloat(valor).toFixed(2);
                                                         
-                                                        // Agregar separadores de miles y el signo de dólar
+                                                        // Agrega separadores de miles
                                                         valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
                                                         
-                                                        // Asignar el valor formateado de nuevo al campo
+                                                        // Asigna el valor formateado de nuevo al campo
                                                         montoInput.value = valor;
                                                         
-                                                        // Restaurar la posición del cursor después del formato
+                                                        // Restaura la posición del cursor después del formato
                                                         var newPos = cursorPosition + (valor.length - montoInput.value.length);
                                                         montoInput.setSelectionRange(newPos, newPos);
                                                     });
@@ -235,43 +231,43 @@
                         </div>
                         {% endfor %}
                         <script>
-                               // Obtener el campo de búsqueda y la tabla
-            var busquedaInput = document.getElementById('busquedaInput');
-            var tablaAlumnos = document.querySelector('.table');
-            
-            // Agregar un evento de escucha para la entrada del usuario
-            busquedaInput.addEventListener('input', function() {
-                var consulta = busquedaInput.value.toLowerCase();
-            
-                // Obtener todas las filas de la tabla
-                var filas = tablaAlumnos.querySelectorAll('tbody tr');
-            
-                // Iterar a través de las filas y celdas y ocultar/mostrar según la consulta
-                for (var i = 0; i < filas.length; i++) {
-                    var fila = filas[i];
-                    var mostrarFila = false;
-            
-                    // Obtener todas las celdas de la fila
-                    var celdas = fila.querySelectorAll('td');
-            
-                    // Iterar a través de las celdas y verificar si alguna contiene la consulta
-                    for (var j = 0; j < celdas.length; j++) {
-                        var celda = celdas[j];
-                        var contenidoCelda = celda.textContent.toLowerCase();
-            
-                        if (contenidoCelda.includes(consulta)) {
-                            mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
-                            break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
-                        }
-                    }
-            
-                    if (mostrarFila) {
-                        fila.style.display = ''; // Mostrar la fila
-                    } else {
-                        fila.style.display = 'none'; // Ocultar la fila si no hay coincidencias
-                    }
-                }
-            });
+                            // Obtiene el campo de búsqueda y la tabla
+                            var busquedaInput = document.getElementById('busquedaInput');
+                            var tablaAlumnos = document.querySelector('.table');
+                            
+                            // Agrega un evento de escucha para la entrada del usuario
+                            busquedaInput.addEventListener('input', function() {
+                                var consulta = busquedaInput.value.toLowerCase();
+                            
+                                // Obtiene todas las filas de la tabla
+                                var filas = tablaAlumnos.querySelectorAll('tbody tr');
+                            
+                                // Itera a través de las filas y celdas y oculta/muestra según la consulta
+                                for (var i = 0; i < filas.length; i++) {
+                                    var fila = filas[i];
+                                    var mostrarFila = false;
+                            
+                                    // Obtiene todas las celdas de la fila
+                                    var celdas = fila.querySelectorAll('td');
+                            
+                                    // Itera a través de las celdas y verifica si alguna contiene la consulta
+                                    for (var j = 0; j < celdas.length; j++) {
+                                        var celda = celdas[j];
+                                        var contenidoCelda = celda.textContent.toLowerCase();
+                            
+                                        if (contenidoCelda.includes(consulta)) {
+                                            mostrarFila = true; 
+                                            break; 
+                                        }
+                                    }
+                            
+                                    if (mostrarFila) {
+                                        fila.style.display = ''; // Muestra la fila
+                                    } else {
+                                        fila.style.display = 'none'; // Oculta la fila si no hay coincidencias
+                                    }
+                                }
+                            });
 
                         </script>
                     </tbody>
@@ -320,44 +316,40 @@
           }
         });
       
-        // Mostrar la página guardada al cargar la página.
+        // Muestra la página guardada al cargar la página.
         showPage(currentPage);
       </script>     
-<!-- Agrega el cuadro de diálogo de confirmación para eliminar un egreso -->
-<script>
-    function confirmarEliminacionEgresos(id, nombreEgreso) {
-        Swal.fire({
-            title: "Confirmar eliminación",
-            text: `¿Estás seguro de eliminar el egreso "${nombreEgreso}"?`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#FF5733",
-            cancelButtonColor: "#7ea56a",
-            confirmButtonText: "Sí, eliminar",
-            cancelButtonText: "Cancelar"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Realiza la eliminación del egreso a través de una solicitud AJAX
-                $.ajax({
-                    type: "GET",
-                    url: "/eliminar_egresos/" + id,
-                    success: function (response) {
-                        if (response.success) {
-                            Swal.fire("Egreso eliminado correctamente", "", "success").then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire("Error al eliminar el egreso", response.error_message, "error");
-                        }
+        <script>
+            function confirmarEliminacionEgresos(id, nombreEgreso) {
+                Swal.fire({
+                    title: "Confirmar eliminación",
+                    text: `¿Estás seguro de eliminar el egreso "${nombreEgreso}"?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#FF5733",
+                    cancelButtonColor: "#7ea56a",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Realiza la eliminación del egreso a través de una solicitud AJAX
+                        $.ajax({
+                            type: "GET",
+                            url: "/eliminar_egresos/" + id,
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire("Egreso eliminado correctamente", "", "success").then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire("Error al eliminar el egreso", response.error_message, "error");
+                                }
+                            }
+                        });
                     }
                 });
             }
-        });
-    }
-    </script>
-    
-    
-    
+        </script>   
     {% endblock %}
 </body>
         

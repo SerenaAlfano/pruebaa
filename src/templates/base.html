@@ -2,105 +2,123 @@
 <html>
   <head>
     <title>{% block title %}Título predeterminado{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link rel="icon" href="/static/img/logo.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.plot.ly/plotly-2.5.1.min.js"></script>
-    
   </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #7ea56a;">
-        <div class="container-fluid ">
-            <a href="{{ url_for('inicio') }}">
-                <img src="/static/img/logo.png" alt="Logo" >
-            </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-            <ul class="navbar-nav mx-auto text-center ">
-              <li class="nav-item">
-                <a class="nav-link " href="{{url_for('alta')}}">
-                    Alumnos
-                </a> 
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{url_for('listado')}}">
-                    Mis alumnos
-                </a> 
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " href="{{url_for('ingresos')}}">
-                    Ingresos
-                </a> 
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " href="{{url_for('egresos')}}">
-                    Egresos
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{url_for('caja')}}">
-                    Caja
-                </a> 
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{url_for('agenda')}}">
-                    Agenda
-                </a> 
-              </li>
-              
-            </ul>
-            <div class="text-center ">
-                <a class="nav-link" href="{{ url_for('logout') }}">Cerrar Sesión</a>  
-            </div>
-            <div class="text-center">
-              <a href="{{ url_for('descargar_pdf_manual') }}" target="_blank" >
-                <i class="btn-manual bi bi-question" data-toggle="tooltip"  data-placement="bottom" title="Manual de Usuario"></i>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg navbar-light"
+      style="background-color: #7ea56a"
+    >
+      <div class="container-fluid">
+        <a href="{{ url_for('inicio') }}">
+          <img src="/static/img/logo.png" alt="Logo" />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-between"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav mx-auto text-center">
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('alta')}}"> Alumnos </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('listado')}}">
+                Mis alumnos
               </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('ingresos')}}"> Ingresos </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('egresos')}}"> Egresos </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('caja')}}"> Caja </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('agenda')}}"> Agenda </a>
+            </li>
+          </ul>
+          <div class="text-center">
+            <a class="nav-link" href="{{ url_for('logout') }}">Cerrar Sesión</a>
           </div>
+          <div class="text-center">
+            <a href="{{ url_for('descargar_pdf_manual') }}" target="_blank">
+              <i
+                class="btn-manual bi bi-question"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="Manual de Usuario"
+              ></i>
+            </a>
           </div>
         </div>
-      </nav>
-    <main>
-         
-   
-        {% block content %}
-        {% endblock %}
-    </main>
-</body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script>
-  $(document).ready(function () {
+      </div>
+    </nav>
+    <main>{% block content %} {% endblock %}</main>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    $(document).ready(function () {
       $('[data-toggle="tooltip"]').tooltip();
-  });
+    });
   </script>
-  
-<script>
-  // Función para mostrar notificaciones
-  function showNotification(message) {
-    // Inserta un nuevo elemento en el área de notificaciones
-    var notification = '<div class="alert alert-warning alert-dismissible" role="alert">' +
-      message +
-      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-      '<span aria-hidden="true">&times;</span>' +
-      '</button>' +
-      '</div>';
-    $("#notification-area").append(notification);
-  }
 
-  // Mostrar el modal con la lista de alumnos adeudados
-  $("#open-modal-button").click(function () {
-    // Aquí debes agregar código para mostrar el modal y cargar la lista de alumnos adeudados
-    // Puedes usar JavaScript o jQuery para hacerlo
-  });
-</script>
+  <script>
+    // Función para mostrar notificaciones
+    function showNotification(message) {
+      var notification =
+        '<div class="alert alert-warning alert-dismissible" role="alert">' +
+        message +
+        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+        '<span aria-hidden="true">&times;</span>' +
+        "</button>" +
+        "</div>";
+      $("#notification-area").append(notification);
+    }
+
+    $("#open-modal-button").click(function () {});
+  </script>
 </html>

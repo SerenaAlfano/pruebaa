@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 <head>
     {% block title %}Ingresos{% endblock %}
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -36,27 +35,27 @@
                                 <label class="label-form">Monto <span class="campo-obligatorio">*</span></label>
                                 <input type="text" class="form-control" name="monto" placeholder="0.00" required value="{{ form_data.monto if form_data else '' }}" id="montoInput">
                                 <script>
-                                    // Obtener el campo de entrada por su ID
+                                    // Obtiene el campo de entrada por su ID
                                     var montoInput = document.getElementById('montoInput');
-                                    // Agregar un manejador de eventos para el evento 'input'
+                                    // Agrega un manejador de eventos para el evento 'input'
                                     montoInput.addEventListener('input', function() {
-                                        // Obtener el valor actual del campo
+                                        // Obtiene el valor actual del campo
                                         var valor = montoInput.value;
-                                        // Quitar cualquier carácter que no sea un número o punto
+                                        // Quita cualquier carácter que no sea un número o punto
                                         valor = valor.replace(/[^0-9.]/g, '');
                                         // Si el valor está vacío, asignar $0.00 y mover el cursor al principio
                                         if (valor === '') {
                                             montoInput.value = '$0.00';
-                                            montoInput.setSelectionRange(1, 1); // Mover el cursor al principio
+                                            montoInput.setSelectionRange(1, 1); 
                                             return;
                                         }
-                                        // Convertir a número, si no es finito asignar 0
+                                        // Convierte a número, si no es finito asigna 0
                                         valor = isFinite(parseFloat(valor)) ? parseFloat(valor) : 0;
-                                        // Formatear el valor con dos decimales
+                                        // Formatea el valor con dos decimales
                                         valor = valor.toFixed(2);
-                                        // Agregar separadores de miles y el signo de dólar
+                                        // Agrega separadores de miles y el signo de dólar
                                         valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
-                                        // Asignar el valor formateado de nuevo al campo
+                                        // Asigna el valor formateado de nuevo al campo
                                         montoInput.value = valor;
                                     });
                                 </script>
@@ -219,11 +218,9 @@
                                     <div class="modal-body ">
                                         <form action="{{ url_for('editaringresos', id_ingresos=d.id_ingresos) }}" method="POST">
                                             <div class="row">    
-                                                <!-- En el formulario de "Ingresos", muestra el nombre del alumno y agrega un campo oculto para almacenar su valor -->
                                                     <div class="col">
                                                         <label for="nombre_alumno">Nombre del alumno:</label>
-                                                        <input type="text" class="form-control " name="nombre_alumno" value="{{ d.nombre_alumno }}" readonly>
-                                                        <!-- Agregar un campo oculto para almacenar el valor del nombre del alumno -->   
+                                                        <input type="text" class="form-control " name="nombre_alumno" value="{{ d.nombre_alumno }}" readonly>  
                                                     </div>
                                                     <div class="col">
                                                         <label>Fecha de pago <span class="campo-obligatorio">*</span></label>                                        
@@ -233,21 +230,21 @@
                                                         <label>Monto <span class="campo-obligatorio">*</span></label>
                                                         <input type="text" class="form-control" name="monto" placeholder="0.00" value="{{d.monto}}" required id="montoInputEdit">
                                                         <script>
-                                                            // Obtener el campo de entrada por su ID
+                                                            // Obtiene el campo de entrada por su ID
                                                             var montoInputEdit = document.getElementById('montoInputEdit');
-                                                            // Agregar un manejador de eventos para el evento 'input'
+                                                            // Agrega un manejador de eventos para el evento 'input'
                                                             montoInputEdit.addEventListener('input', function() {
-                                                                // Obtener el valor actual del campo
+                                                                // Obtiene el valor actual del campo
                                                                 var valor = montoInputEdit.value;
-                                                                // Quitar cualquier carácter que no sea un número o punto
+                                                                // Quita cualquier carácter que no sea un número o punto
                                                                 valor = valor.replace(/[^0-9.]/g, '');
-                                                                // Convertir a número, si no es finito asignar 0
+                                                                // Convierte a número, si no es finito asignar 0
                                                                 valor = isFinite(parseFloat(valor)) ? parseFloat(valor) : 0;
-                                                                // Formatear el valor con dos decimales
+                                                                // Formatea el valor con dos decimales
                                                                 valor = valor.toFixed(2);
-                                                                // Agregar separadores de miles y el signo de dólar
+                                                                // Agrega separadores de miles y el signo de dólar
                                                                 valor = '$' + valor.replace(/\d(?=(\d{3})+\.)/g, '$&,');
-                                                                // Asignar el valor formateado de nuevo al campo
+                                                                // Asigna el valor formateado de nuevo al campo
                                                                 montoInputEdit.value = valor;
                                                             });
                                                         </script>
@@ -306,15 +303,14 @@
                                     text: "¿Estás seguro de eliminar el ingreso de " + nombre_alumno + "?",
                                     icon: "warning",
                                     showCancelButton: true,
-                                    confirmButtonColor: "#FF5733", // Cambia el color del botón de confirmación
-                                    cancelButtonColor: "#7ea56a", // Cambia el color del botón de cancelar
+                                    confirmButtonColor: "#FF5733", 
+                                    cancelButtonColor: "#7ea56a", 
                                     confirmButtonText: "Sí, eliminar",
                                     cancelButtonText: "Cancelar"
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        // Realiza la eliminación del ingreso a través de una solicitud AJAX
                                         $.ajax({
-                                            type: "GET",  // Puedes cambiar esto a POST si lo prefieres
+                                            type: "GET", 
                                             url: "/eliminar_ingresos/" + id,
                                             success: function (response) {
                                                 // Eliminación exitosa, muestra un mensaje y recarga la página
@@ -335,55 +331,55 @@
                             </script>
                             
                         <script>
-                               // Obtener el campo de búsqueda y la tabla
+                               // Obtiene el campo de búsqueda y la tabla
             var busquedaInput = document.getElementById('busquedaInput');
             var tablaAlumnos = document.querySelector('.table');
             
-            // Agregar un evento de escucha para la entrada del usuario
+            // Agrega un evento de escucha para la entrada del usuario
             busquedaInput.addEventListener('input', function() {
                 var consulta = busquedaInput.value.toLowerCase();
             
-                // Obtener todas las filas de la tabla
+                // Obtiene todas las filas de la tabla
                 var filas = tablaAlumnos.querySelectorAll('tbody tr');
             
-                // Iterar a través de las filas y celdas y ocultar/mostrar según la consulta
+                // Itera a través de las filas y celdas y oculta/muestra según la consulta
                 for (var i = 0; i < filas.length; i++) {
                     var fila = filas[i];
                     var mostrarFila = false;
             
-                    // Obtener todas las celdas de la fila
+                    // Obtiene todas las celdas de la fila
                     var celdas = fila.querySelectorAll('td');
             
-                    // Iterar a través de las celdas y verificar si alguna contiene la consulta
+                    // Itera a través de las celdas y verifica si alguna contiene la consulta
                     for (var j = 0; j < celdas.length; j++) {
                         var celda = celdas[j];
                         var contenidoCelda = celda.textContent.toLowerCase();
             
                         if (contenidoCelda.includes(consulta)) {
-                            mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
-                            break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                            mostrarFila = true; // Muestra la fila si se encuentra una coincidencia
+                            break;
                         }
                     }
             
                     if (mostrarFila) {
-                        fila.style.display = ''; // Mostrar la fila
+                        fila.style.display = '';
                     } else {
-                        fila.style.display = 'none'; // Ocultar la fila si no hay coincidencias
+                        fila.style.display = 'none'; // Oculta la fila si no hay coincidencias
                     }
                 }
             });
                         </script>  
                             <script>
-                                // Obtener el campo de entrada por su ID
+                                // Obtiene el campo de entrada por su ID
                                 var montoInput = document.getElementById('montoInput');
                                 var montoError = document.getElementById('montoError');
                             
-                                // Agregar un manejador de eventos para el evento 'input'
+                                // Agrega un manejador de eventos para el evento 'input'
                                 montoInput.addEventListener('input', function() {
-                                    // Obtener el valor ingresado
+                                    // Obtiene el valor ingresado
                                     var valor = montoInput.value;
                             
-                                    // Verificar si el valor no es un número válido
+                                    // Verifica si el valor no es un número válido
                                     if (!isValidNumber(valor)) {
                                         montoError.textContent = 'El monto ingresado no es válido.';
                                     } else {
@@ -393,7 +389,7 @@
                             
                                 // Función para verificar si el valor es un número válido
                                 function isValidNumber(value) {
-                                    // Usar una expresión regular para verificar si el valor contiene solo números y un punto decimal
+                                  
                                     return /^\d+(\.\d{1,2})?$/.test(value);
                                 }
                             </script>                  
@@ -443,7 +439,7 @@
           }
         });
       
-        // Mostrar la página guardada al cargar la página.
+        // Muestra la página guardada al cargar la página.
         showPage(currentPage);
       </script>     
 {% endblock %}

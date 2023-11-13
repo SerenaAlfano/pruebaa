@@ -148,12 +148,12 @@
             function limitarDigitosDNI() {
                 var dniInput = document.getElementById('dni');
         
-                // Obtén el valor del campo del DNI
+                // Obtiene el valor del campo del DNI
                 var dniValue = dniInput.value;
         
                 // Verifica si la longitud del DNI es mayor a 8
                 if (dniValue.length > 8) {
-                    // Corta el valor del DNI a los primeros 8 dígitos
+                    // Corta el valor del DNI en los primeros 8 dígitos
                     dniInput.value = dniValue.slice(0, 8);
                 }
             }
@@ -162,7 +162,7 @@
             function validarLongitudDNI() {
                 var dniInput = document.getElementById('dni');
         
-                // Obtén el valor del campo del DNI
+                // Obtiene el valor del campo del DNI
                 var dniValue = dniInput.value;
         
                 // Verifica si la longitud del DNI es menor a 8
@@ -215,7 +215,7 @@
             $.ajax({
                 type: "POST",
                 url: "/agregarAlumno",
-                data: $("#tuFormulario").serialize(),  // Asegúrate de que esto coincida con el formulario real
+                data: $("#tuFormulario").serialize(),  
                 success: function(response) {
                     // Muestra la alerta solo si se recibe la respuesta del servidor
                     if (response && response.script) {
@@ -223,7 +223,7 @@
                     }
                 },
                 error: function(error) {
-                    // Manejar errores si es necesario
+
                 }
             });
         });
@@ -248,10 +248,10 @@
         });
     }
 
-    // Expresión regular para validar que el campo de teléfono contiene solo números
+    // Expresión regular para validar que el campo de teléfono contenga solo números
     var numerosRegex = /^[0-9]+$/;
 
-    // Expresión regular para validar que los campos de nombre y apellido contienen solo letras y espacios
+    // Expresión regular para validar que los campos de nombre y apellido contengan solo letras y espacios
     var letrasRegex = /^[a-zA-Z\s]*$/;
 
     // Llama a la función de validación para el campo de nombre
@@ -332,11 +332,11 @@
             // Desaparece después de 5 segundos (5000 ms)
             setTimeout(function() {
                 alertContainer.style.display = 'none';
-            }, 5000); // Cambia este valor (5000) para ajustar la duración en milisegundos
+            }, 5000); 
         </script>
         
        <script>
-        // Obtener el campo de búsqueda y la tabla
+        // Obtiene el campo de búsqueda y la tabla
         var busquedaInput = document.getElementById('busquedaInput');
         var tablaAlumnos = document.querySelector('.table');
     
@@ -351,46 +351,46 @@
             fila.style.display = mostrar ? '' : 'none';
         }
     
-        // Agregar un evento de escucha para la entrada del usuario
+        // Agrega un evento de escucha para la entrada del usuario
         busquedaInput.addEventListener('input', function() {
-            var consulta = busquedaInput.value.trim().toLowerCase(); // Quitar espacios en blanco y convertir a minúsculas
+            var consulta = busquedaInput.value.trim().toLowerCase(); // Quita espacios en blanco y convertir a minúsculas
     
-            // Obtener todas las filas de la tabla
+            // Obtiene todas las filas de la tabla
             var filas = tablaAlumnos.querySelectorAll('tbody tr');
     
-            // Iterar a través de las filas y celdas y mostrar/ocultar según la consulta
+            // Itera a través de las filas y celdas y muestra/oculta según la consulta
             for (var i = 0; i < filas.length; i++) {
                 var fila = filas[i];
                 var mostrarFila = false;
     
-                // Obtener todas las celdas de la fila
+                // Obtiene todas las celdas de la fila
                 var celdas = fila.querySelectorAll('td');
     
-                // Iterar a través de las celdas y verificar si alguna contiene la consulta
+                // Itera a través de las celdas y verifica si alguna contiene la consulta
                 for (var j = 0; j < celdas.length; j++) {
                     var celda = celdas[j];
-                    var contenidoCelda = celda.textContent.trim().toLowerCase(); // Quitar espacios y convertir a minúsculas
+                    var contenidoCelda = celda.textContent.trim().toLowerCase(); 
     
-                    // Verificar si la consulta está vacía o si la celda contiene la consulta
+                    // Verifica si la consulta está vacía o si la celda contiene la consulta
                     if (consulta === "" || contenidoCelda.includes(consulta)) {
                         mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
                         break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
                     }
                     
-                    // Verificar si la celda contiene el número de mes o el nombre de mes
+                    // Verifica si la celda contiene el número de mes o el nombre de mes
                     var mesData = celda.getAttribute('data-mes');
                     if (mesData && (mesData == consulta || mesesMapa[consulta] == mesData)) {
-                        mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia
-                        break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                        mostrarFila = true; // Muestra la fila si se encuentra una coincidencia
+                        break; 
                     }
     
-                    // Verificar si la consulta parece ser una fecha en formato "DD/MM/YYYY"
+                    // Verifica si la consulta parece ser una fecha en formato "DD/MM/YYYY"
                     if (esFechaValida(consulta) && contenidoCelda.includes(consulta)) {
-                        mostrarFila = true; // Mostrar la fila si se encuentra una coincidencia de fecha
-                        break; // No es necesario verificar otras celdas una vez que se encuentra una coincidencia
+                        mostrarFila = true; // Muestra la fila si se encuentra una coincidencia de fecha
+                        break; 
                     }
     
-                    // Buscar por día, mes o año individualmente
+                    // Busca por día, mes o año individualmente
                     if (esFechaValida(contenidoCelda) && esFechaValida(consulta)) {
                         var partesFecha = contenidoCelda.split('/');
                         var partesConsulta = consulta.split('/');
@@ -418,7 +418,7 @@
                     }
                 }
     
-                mostrarOcultarFila(fila, mostrarFila); // Mostrar u ocultar la fila según la coincidencia
+                mostrarOcultarFila(fila, mostrarFila); 
             }
         });
     </script>     
@@ -434,7 +434,7 @@
             }
         });
 
-        // Validar que se haya seleccionado una opción en el campo "Curso"
+        // Valida que se haya seleccionado una opción en el campo "Curso"
         var cursoSelect = document.querySelector('[name="curso"]');
         if (cursoSelect.value.trim() === '') {
             todosCompletos = false;
@@ -463,24 +463,17 @@
         // Agrega un event listener para el envío del formulario
         form.addEventListener("submit", function(event) {
             event.preventDefault(); // Evita el envío del formulario
-
-            // Aquí puedes hacer una solicitud AJAX para enviar el formulario al servidor
-            // y luego mostrar el SweetAlert en la respuesta exitosa.
-
-            // Ejemplo de una solicitud AJAX (usando Fetch API):
             fetch("/agregarAlumno", {
                 method: "POST",
                 body: new FormData(form)
             })
             .then(function(response) {
                 if (response.ok) {
-                    // El formulario se envió con éxito, muestra el SweetAlert
                     Swal.fire({
                         title: "Alumno ingresado correctamente",
                         icon: "success"
                     });
                 } else {
-                    // Mostrar SweetAlert con un mensaje de error si es necesario
                     Swal.fire({
                         title: "Hubo un error al ingresar al alumno",
                         text: "Por favor, inténtalo de nuevo.",
@@ -496,10 +489,7 @@
 </script> 
 <script>
     function validarLetras(input) {
-        // Reemplaza todo lo que no sea una letra con una cadena vacía
         input.value = input.value.replace(/[^a-zA-Z]/g, '');
-
-        // Puedes mostrar un mensaje de error si se ingresan caracteres no permitidos
         var errorDivId = input.id + "-error";
         var errorDiv = document.getElementById(errorDivId);
         if (input.value.match(/[^a-zA-Z]/g)) {

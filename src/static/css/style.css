@@ -89,13 +89,13 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px; /* Ancho del formulario, ajusta según tus necesidades */
-  text-align: center; /* Alinea el contenido al centro */
+  width: 300px; 
+  text-align: center; 
 }
 .card {
   width: 12rem;
   height: 12rem;
-  transition: width 0.3s ease, height 0.3s ease; /* Agrega una transición suave */
+  transition: width 0.3s ease, height 0.3s ease;
   border-radius: 1em;
 }
 .card:hover{
@@ -370,21 +370,16 @@ body {
   width: 8%;
 }
 .td-table.custom-column {
-  width: 100px; /* Ancho igual para todas las celdas estilizadas */
-  word-wrap: break-word; /* Permite que el texto se divida en varias líneas si es necesario */
-  overflow-wrap: break-word; /* Compatibilidad con navegadores */
+  width: 100px; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
 }
-
-/* Establecer el ancho máximo para el campo "Email" en 15 caracteres */
 .td-table.custom-column.email-column {
-  max-width: 15em; /* Puedes ajustar el valor según tus necesidades */
+  max-width: 15em;
 }
-
-/* Establecer el estilo para convertir solo la primera letra en mayúscula en la columna "Email" */
 .td-table.custom-column.email-column {
   text-transform: capitalize;
 }
-
 .alert-container {
   position: fixed;
   top: 40%;
@@ -392,25 +387,19 @@ body {
   transform: translate(-50%, -50%);
   text-align: center;
 }
-
 .alert-message {
   display: inline-block;
   text-align: left;
 }
-
 .alert {
-  /* Estilos para tus alertas, por ejemplo: */
-  background-color: #FF0000; /* Fondo rojo */
-  color: #FFFFFF; /* Texto blanco */
+  background-color: #FF0000; 
+  color: #FFFFFF;
   padding: 10px;
   border-radius: 5px;
-  /* Agrega otros estilos personalizados según tus preferencias */
 }
-
 .fc-button-group{
   background-color: #7ea56a;
 }
-
 a{
   text-decoration: none !important;
   color: #333333 !important;
@@ -421,7 +410,6 @@ a{
   border-radius: 0.5em;
   border: 1px solid #cccccc;
 }
-
 .btn-lineales{
   border: none;
   color: #7ea56a !important;
@@ -436,16 +424,13 @@ a{
   padding: 0.4em;
   text-decoration: none !important;
 }
-
-
 #paginacion {
-  text-align: right; /* Alinea el contenido a la derecha */
+  text-align: right; 
 }
 
 .swal2-styled.swal2-confirm{
   background-color: #7ea56a !important;
 }
-
 .btn-manual{
   color: #FFFFFF;
   border-radius: 1em;

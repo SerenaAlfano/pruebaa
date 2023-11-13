@@ -1,5 +1,5 @@
 import mysql.connector
-import os #Permite acceder a los directorios
+import os 
 import re
 import json
 
@@ -90,7 +90,6 @@ def validar_telefono_titular(telefono_titular):
         return False 
     
 def validar_dni(dni):
-    # Utilizamos una expresión regular para verificar que el DNI cumpla con los requisitos
     patron = r'^\d{1,8}$'  # Acepta de 1 a 8 dígitos
 
     if re.match(patron, dni):
@@ -138,7 +137,7 @@ def inicio():
 #Nuevo alumno
 @app.route("/index")
 def alta():
-    form_data = session.pop('form_data', None)  # Obtener los datos del formulario almacenados en sesión
+    form_data = session.pop('form_data', None)  # Obtiene los datos del formulario almacenados en sesión
     cursor = db_connection.cursor()
     cursor.execute("SELECT * FROM alumnos")
     myresult = cursor.fetchall()
@@ -359,7 +358,7 @@ def agregarAlumno():
         
   
 
-    # Si el conteo es menor a 4, procedemos a insertar el nuevo alumno
+    # Si el conteo es menor a 4, inserta el nuevo alumno
     insert_query = "INSERT INTO alumnos (dni,apellido,nombre, email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     data = (dni,apellido, nombre,  email ,telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular)
     try:
@@ -634,30 +633,26 @@ def editar(id):
         cursor = db_connection.cursor()
         data = (dni, apellido,nombre,  email, telefono, fecha_nacimiento, fecha_inicio, colegio, curso, nivel_educativo, nombre_titular, telefono_titular, id)
         sql = "UPDATE alumnos SET dni = %s, apellido = %s, nombre = %s, email = %s, telefono = %s, fecha_nacimiento = %s, fecha_inicio = %s, colegio = %s, curso = %s, nivel_educativo = %s, nombre_titular = %s, telefono_titular = %s WHERE id = %s"
-
-
         try:
             cursor.execute(sql, data)
             db_connection.commit()
         except mysql.connector.Error as err:
             print(f"Error de MySQL: {err}")
             flash("Error al actualizar el alumno en la base de datos.", "error")
-
     return redirect(url_for('listado'))
 
 
 # Ingresos
 @app.route("/ingresos", methods=["GET", "POST"])
 def ingresos():
-    cursor = db_connection.cursor()  # Inicializa cursor
+    cursor = db_connection.cursor()  
     cursor.execute("SELECT nombre_medio_pago FROM medios_pago")
     medios_pago_disponibles = [medio_pago[0] for medio_pago in cursor.fetchall()]
 
     cursor.execute("SELECT nombre_tipo_pago FROM tipos_pago")
     tipos_pago_disponibles = [tipo_pago[0] for tipo_pago in cursor.fetchall()]
-    form_data = session.pop('form_data', {})  # Obtiene los datos del formulario almacenados en sesión
+    form_data = session.pop('form_data', {})  
     
-    # Define las variables con valores predeterminados (pueden ser None u otros valores apropiados)
     fecha_pago = None
     fecha_actual = None
     nombre_alumno = None
@@ -665,18 +660,16 @@ def ingresos():
     medios_de_pago = None
     tipo_pago = None
     
-        # Verifica si es una solicitud POST
     if request.method == "POST":
-        # Obtiene la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
         nombre_alumno = request.form["nombre_alumno"]
 
-        # Verifica si ya existe un pago para el mismo alumno en el mismo mes y año
+        
         cursor.execute("SELECT COUNT(*) FROM ingresos WHERE nombre_alumno = %s AND MONTH(fecha_pago) = %s AND YEAR(fecha_pago) = %s", (nombre_alumno, fecha_pago.month, fecha_pago.year))
         pago_existente = cursor.fetchone()[0]
 
-        # Verifica si ya existe un pago mensual para el mismo alumno en el mismo mes y año
+        
         cursor.execute("SELECT COUNT(*) FROM ingresos WHERE nombre_alumno = %s AND MONTH(fecha_pago) = %s AND YEAR(fecha_pago) = %s AND tipo_pago = 'Mensual'", (nombre_alumno, fecha_pago.month, fecha_pago.year))
         pago_mensual_existente = cursor.fetchone()[0]
 
@@ -693,7 +686,6 @@ def ingresos():
         return redirect(url_for('ingresos'))
 
     elif tipo_pago == "Diario":
-        # Verifica si ya existe un pago diario para el mismo alumno en la misma fecha
         cursor.execute("SELECT COUNT(*) FROM ingresos WHERE nombre_alumno = %s AND fecha_pago = %s AND tipo_pago = 'Diario'", (nombre_alumno, fecha_pago))
         pago_diario_existente = cursor.fetchone()[0]
 
@@ -715,7 +707,6 @@ def ingresos():
         medios_de_pago = request.form["medios_de_pago"]
         tipo_pago = request.form["tipo_pago"]
         
-        # Obtiene la fecha actual
         fecha_actual = datetime.now().date()
         
         if fecha_pago > fecha_actual:
@@ -737,21 +728,16 @@ def ingresos():
             db_connection.commit()
             cursor.close()
             return redirect(url_for('ingresos'))
-
-    # Muestra la página de ingresos con la lista de datos
+        
     cursor.execute("SELECT id_ingresos, nombre_alumno, fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos")
     myresult = cursor.fetchall()
-    
-    # Convierte los datos a un diccionario
     insertObject = []
     columnNames = [column[0] for column in cursor.description]
     
     for record in myresult:
         insertObject.append(dict(zip(columnNames, record)))
-    
     cursor.close()
 
-    # Obtiene la lista de nombres y apellidos de los alumnos
     cursor = db_connection.cursor()
     cursor.execute("SELECT id_ingresos, nombre_alumno, apellido_alumno, fecha_pago, monto, medios_de_pago, tipo_pago FROM ingresos")
     myresult = cursor.fetchall()
@@ -803,7 +789,7 @@ def obtener_tipos_pago():
 @app.route("/editaringresos/<int:id_ingresos>", methods=["POST", "GET"])
 
 def editaringresos(id_ingresos):
-    registro_editar = None  # Define registro_editar inicialmente como None
+    registro_editar = None  
     
     if request.method == "GET":
         cursor = db.database.cursor()
@@ -813,7 +799,7 @@ def editaringresos(id_ingresos):
         cursor.execute(medios_pago_query)
         medios_pago = [row[0] for row in cursor.fetchall()]
 
-        # Obtener opciones de tipos de pago desde la base de datos
+        # Obtiene las opciones de tipos de pago desde la base de datos
         tipos_pago_query = "SELECT nombre FROM tipos_pago"
         cursor.execute(tipos_pago_query)
         tipos_pago = [row[0] for row in cursor.fetchall()]
@@ -824,7 +810,7 @@ def editaringresos(id_ingresos):
         monto = registro_editar["monto"]
         # Formatea el monto como una cadena con el signo de peso, comas y punto
         monto_formateado = "${:,.2f}".format(monto)
-        medios_pago = obtener_medios_pago()  # Obtener las opciones de medios de pago
+        medios_pago = obtener_medios_pago()  # Obtiene las opciones de medios de pago
         tipos_pago = obtener_tipos_pago() 
         return render_template("editar_ingresos.html", monto_formateado=monto_formateado, registro=registro_editar, data=data, medios_pago=medios_pago, tipos_pago=tipos_pago)
 
@@ -852,8 +838,6 @@ def editaringresos(id_ingresos):
             cursor = db_connection.cursor()
             sql = "UPDATE ingresos SET nombre_alumno = %s,  fecha_pago = %s, monto = %s, medios_de_pago = %s ,  tipo_pago = %s WHERE id_ingresos = %s"
             data = (nombre_alumno, fecha_pago, monto, medios_de_pago, tipo_pago, id_ingresos)
-            
-
             cursor.execute(sql, data)
             db_connection.commit()
             # Realiza una consulta para obtener los datos actualizados
@@ -883,7 +867,7 @@ def egresos():
         medios_de_pago_rows = cursor.fetchall()
         cursor.close()
         
-        # Extraer mes y año de la fecha de pago
+        # Extrae mes y año de la fecha de pago
         mes_pago = datetime.strptime(fecha_pago, '%Y-%m-%d').month
         anio_pago = datetime.strptime(fecha_pago, '%Y-%m-%d').year
         
@@ -891,8 +875,7 @@ def egresos():
         cursor = db_connection.cursor()
         cursor.execute("SELECT COUNT(*) FROM egresos WHERE servicios = %s AND MONTH(fecha_pago) = %s AND YEAR(fecha_pago) = %s", (servicios, mes_pago, anio_pago))
         count = cursor.fetchone()[0]
-        cursor.close()
-        
+        cursor.close()  
         if count > 0:
             flash(f"El servicio {servicios} ya se ha registrado este mes.", "error")
             session['form_data'] = {
@@ -902,13 +885,12 @@ def egresos():
                 'medios_de_pago': medios_de_pago
                 }
             return redirect(url_for('egresos'))
-
         #Obtiene la fecha de pago del formulario
         fecha_pago_str = request.form["fecha_pago"]
         fecha_pago = datetime.strptime(fecha_pago_str, "%Y-%m-%d").date()
         #Obtiene la fecha actual
         fecha_actual = datetime.now().date()
-    # Compara la fecha de pago con la fecha actual
+    #Compara la fecha de pago con la fecha actual
     if fecha_pago is not None and fecha_actual is not None and fecha_pago > fecha_actual:
         flash("La fecha de pago debe ser actual o anterior.", "error")
         session['form_data'] = {
@@ -941,7 +923,6 @@ def egresos():
     return render_template("egresos.html", data=insertObject,form_data=form_data, medios_de_pago=medios_de_pago)
 
 # Eliminar egresos
-# Agrega una nueva ruta para eliminar egresos
 @app.route("/eliminar_egresos/<string:id>")
 def eliminar_egresos(id):
     try:
@@ -971,7 +952,6 @@ def editaregresos(id):
         if registro_editar:
             return render_template("editar_egresos.html", registro=registro_editar,data=data)
         else:
-            # Manejar el caso si no se encuentra el registro a editar
             flash("Registro no encontrado.", "error")
             return redirect(url_for('egresos'))
     if request.method == "POST":
@@ -1007,7 +987,6 @@ def editaregresos(id):
 def caja():
     cursor = db_connection.cursor()
 
-    #Consulta para obtener el total de ingresos
     # Consulta para obtener el total de ingresos
     cursor.execute("SELECT SUM(monto) FROM ingresos")
     total_ingresos_result = cursor.fetchone()
@@ -1074,7 +1053,7 @@ def descargar_pdf(id_ingresos):
 #PDF para descargar el listado de alumnos
 @app.route('/descargar_lista_alumnos_pdf')
 def descargar_lista_alumnos_pdf():
-    # Obtiene los datos de todos los alumnos en tu base de datos
+    # Obtiene los datos de todos los alumnos en la base de datos
     cursor = db_connection.cursor()
     cursor.execute("SELECT nombre, apellido, dni,  curso, nivel_educativo FROM alumnos")
     alumnos = cursor.fetchall()
@@ -1099,20 +1078,18 @@ def descargar_lista_alumnos_pdf():
     data = [['Nombre', 'Apellido','DNI' ,'Curso', 'Nivel Educativo']]
 
     for alumno in alumnos:
-
-
         data.append([
-            Paragraph(alumno[0], styles['Normal']),  # Nombre
-            Paragraph(alumno[1], styles['Normal']),  # Apellido
-            Paragraph(str(alumno[2]), styles['Normal']),  # DNI
-            Paragraph(alumno[3], styles['Normal']),  # Curso
-            Paragraph(alumno[4], styles['Normal']),  # Nivel Educativo
+            Paragraph(alumno[0], styles['Normal']),  #Nombre
+            Paragraph(alumno[1], styles['Normal']),  #Apellido
+            Paragraph(str(alumno[2]), styles['Normal']),  #DNI
+            Paragraph(alumno[3], styles['Normal']),  #Curso
+            Paragraph(alumno[4], styles['Normal']),  #Nivel Educativo
         ])
 
-    # Crea una tabla para mostrar los datos de los alumnos
+    #Crea una tabla para mostrar los datos de los alumnos
     table = Table(data)
 
-    # Establece el estilo de la tabla para centrar el contenido
+    #Establece el estilo de la tabla para centrar el contenido
     style = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.white),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
@@ -1139,7 +1116,7 @@ def descargar_lista_alumnos_pdf():
 
     return response
 
-# Definir la ruta para la descarga del PDF
+# Define la ruta para la descarga del PDF
 @app.route('/descargar_pdf_manual', methods=['GET'])
 def descargar_pdf_manual():
     directorio_pdf = r'C:\xampp\htdocs\prueba\pruebaa\src'
