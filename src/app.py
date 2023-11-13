@@ -366,6 +366,7 @@ def agregarAlumno():
         db_connection.commit() 
     except mysql.connector.Error as err:
         print(f"Error de MySQL: {err}") 
+        flash("Mensaje de error", "error")
     return redirect(url_for('listado'))
 
 
@@ -573,16 +574,13 @@ def editar(id):
         }
         return redirect(url_for('listado'))
     
-    # Obtiene la fecha de nacimiento del formulario
-    fecha_nacimiento_str = request.form["fecha_nacimiento"]
-    fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, "%Y-%m-%d").date()
+
 
     # Obtiene la fecha de inicio del formulario
     fecha_inicio_str = request.form["fecha_inicio"]
     fecha_inicio = datetime.strptime(fecha_inicio_str, "%Y-%m-%d").date()
 
-    # Obtiene la fecha actual
-    fecha_actual = datetime.now().date()
+
 
     # Compara la fecha de nacimiento con la fecha de inicio
     if fecha_nacimiento >= fecha_inicio:
