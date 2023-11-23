@@ -374,27 +374,50 @@ def agregarAlumno():
 @app.route("/listado")
 def listado():
     cursor = db_connection.cursor()
-    cursor.execute("SELECT * FROM alumnos ORDER BY apellido ASC;")
+    filtro = request.args.get('filtro', 'todos')
+    if filtro == 'todos':
+        cursor.execute("SELECT * FROM alumnos ORDER BY apellido ASC;")
+    elif filtro == 'activos':
+        cursor.execute("SELECT * FROM alumnos WHERE estado = 1 ORDER BY apellido ASC;")
+    elif filtro == 'desactivados':
+        cursor.execute("SELECT * FROM alumnos WHERE estado = 0 ORDER BY apellido ASC;")
+
     myresult = cursor.fetchall()
     insertObject = []
     columnNames = [column[0] for column in cursor.description]
     for record in myresult:
         insertObject.append(dict(zip(columnNames, record)))
     cursor.close()
-    return render_template("listado.html", data=insertObject)
+    return render_template("listado.html", data=insertObject, filtro=filtro)
+
+
 
 
 @app.route("/eliminar/<string:id>")
 def eliminar(id):
     try:
         cursor = db_connection.cursor()
-        sql = "DELETE FROM alumnos WHERE id = %s"
+        sql = "UPDATE alumnos SET estado = 0 WHERE id = %s"
         data = (id,)
         cursor.execute(sql, data)
         db_connection.commit()
         return jsonify({"success": True, "data": None})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
+    
+#Estado del alumno   
+@app.route("/activar_desactivar/<string:id>")
+def activar_desactivar_alumno(id):
+    try:
+        cursor = db_connection.cursor()
+        sql = "UPDATE alumnos SET estado = NOT estado WHERE id = %s"
+        data = (id,)
+        cursor.execute(sql, data)
+        db_connection.commit()
+        return jsonify({"success": True, "data": None})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
 
 # Actualizar
 @app.route("/editar/<string:id>", methods=["POST"])
